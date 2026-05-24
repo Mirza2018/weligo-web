@@ -77,7 +77,7 @@ export function SignUp() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder={t("auth.fullNamePh")}
-            className="h-12 w-full rounded-lg border border-input bg-background px-4 text-sm outline-none focus:border-primary"
+            className="h-12 w-full rounded-lg border border-input  px-4 text-sm outline-none focus:border-primary bg-white!"
           />
         </Field>
 
@@ -86,8 +86,8 @@ export function SignUp() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder={t("auth.emailPh") || "you@example.com"} // Fixed placeholder
-            className="h-12 w-full rounded-lg border border-input bg-background px-4 text-sm outline-none focus:border-primary"
+            placeholder={t("auth.email") || "you@example.com"} // Fixed placeholder
+            className="h-12 w-full rounded-lg border border-input  px-4 text-sm outline-none focus:border-primary bg-white!"
           />
         </Field>
 
@@ -97,7 +97,7 @@ export function SignUp() {
             value={pw}
             onChange={(e) => setPw(e.target.value)}
             placeholder={t("auth.passwordPh")}
-            className="h-12 w-full rounded-lg border border-input bg-background px-4 text-sm outline-none focus:border-primary"
+            className="h-12 w-full rounded-lg border border-input  px-4 text-sm outline-none focus:border-primary bg-white!"
           />
           <PasswordStrength password={pw} />
         </Field>
@@ -107,7 +107,7 @@ export function SignUp() {
             <select
               value={city}
               onChange={(e) => setCity(e.target.value)}
-              className="h-12 w-full appearance-none rounded-lg border border-input bg-background px-4 pr-10 text-sm outline-none focus:border-primary"
+              className="h-12 w-full appearance-none rounded-lg border border-input bg-white! px-4 pr-10 text-sm outline-none focus:border-primary "
             >
               <option value="">{t("auth.cityPh")}</option>
               <option value="Zürich">Zürich</option>

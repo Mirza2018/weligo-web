@@ -187,7 +187,7 @@ export const dict = {
     fullName: { de: "Vollständiger Name", en: "Full Name" },
     fullNamePh: { de: "Gib deinen Namen ein", en: "Enter your full name" },
     email: { de: "E-Mail-Adresse", en: "Email Address" },
-    emailHint: {
+    emailHint: {  
       de: "Wir senden deine Bestätigung hierhin.",
       en: "We'll send your waitlist confirmation here.",
     },

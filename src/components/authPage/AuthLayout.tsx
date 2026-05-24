@@ -21,17 +21,17 @@ export function AuthLayout({
 }) {
   return (
     <div className="grid min-h-screen grid-cols-1 bg-background lg:grid-cols-2">
-      <div className="flex flex-col px-6 py-10 sm:px-12 lg:px-20">
+      <div className="flex flex-col px-6 py-10 sm:px-12 lg:px-20 w-full">
         <Link to="/" className="self-start">
           <Logo />
         </Link>
         <div className="flex flex-1 flex-col justify-center py-10 fade-up">
-          <h1 className="text-4xl leading-tight tracking-tight sm:text-5xl">
+          <h1 className="text-4xl leading-tight tracking-tight sm:text-5xl font-semibold">
             {title}
             <br />
-            <span className="font-serif-italic">{italic}</span>
+            <span className="font-serif-italic ">{italic}</span>
           </h1>
-          <p className="mt-4 max-w-md text-sm text-muted-foreground">
+          <p className="mt-4 max-w-2xl md:text-lg   font-medium">
             {description}
           </p>
           <div className="mt-8 max-w-md">{children}</div>

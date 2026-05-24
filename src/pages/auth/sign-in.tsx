@@ -66,7 +66,7 @@ export function SignIn() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder={t("auth.fullNamePh")}
-            className="h-12 w-full rounded-lg border border-input bg-background px-4 text-sm outline-none focus:border-primary"
+            className="h-12 w-full rounded-lg border border-input bg-white! px-4 text-sm outline-none focus:border-primary "
           />
         </Field>
         <Field label={t("auth.password")}>
@@ -75,7 +75,7 @@ export function SignIn() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder={t("auth.passwordPh")}
-            className="h-12 w-full rounded-lg border border-input bg-background px-4 text-sm outline-none focus:border-primary"
+            className="h-12 w-full rounded-lg border border-input bg-background px-4 text-sm outline-none focus:border-primary bg-white!"
           />
         </Field>
         <div className="flex justify-end">
