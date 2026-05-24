@@ -1,10 +1,8 @@
 // src/redux/api/baseApi.ts
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { tagTypesList } from "../tagTypes";
 import { getBaseUrl } from "../getBaseUrl";
-import { clearAuth } from "../slices/authSlice";
-import Cookies from "universal-cookie";
 import type { RootState } from "../store";
+import { tagTypesList } from "../tagTypes";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: getBaseUrl(),
@@ -13,9 +11,9 @@ const baseQuery = fetchBaseQuery({
     const state = getState() as RootState;
     const token = state.auth.accessToken;
     const signUpToken = state.auth.signUpToken;
-    const resendSignUpToken = state.auth.resendSignUpToken;
-    const forgotPassToken = state.auth.forgotPasswordToken;
-    const resendForgotPasswordToken = state.auth.resendForgotPasswordToken;
+    // const resendSignUpToken = state.auth.resendSignUpToken;
+    // const forgotPassToken = state.auth.forgotPasswordToken;
+    // const resendForgotPasswordToken = state.auth.resendForgotPasswordToken;
     const resetPasswordToken = state.auth.resetPasswordToken;
 
     if (token) {

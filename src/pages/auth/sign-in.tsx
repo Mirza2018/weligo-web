@@ -13,7 +13,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { AuthLayout } from "../../components/authPage/AuthLayout";
 
 export function SignIn() {
-  const [userLogin, { isLoading }] = useUserLoginMutation();
+  const [userLogin] = useUserLoginMutation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

@@ -208,44 +208,44 @@ function ServicesStrip() {
   );
 }
 
-function CaregiverPreview() {
-  const { t } = useI18n();
-  return (
-    <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-      <p className="eyebrow">{t("home.providersEyebrow")}</p>
-      <h2 className="mt-2 text-3xl sm:text-4xl">
-        {t("home.providersTitleA")}
-        <span className="font-serif-italic">{t("home.providersTitleB")}</span>
-      </h2>
-      <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
-        {[0, 1, 2].map((i) => (
-          <div
-            key={i}
-            className="group relative aspect-[4/5] overflow-hidden rounded-3xl shadow-sm transition-transform hover:-translate-y-1"
-          >
-            <img
-              src={AllImages.hc1}
-              alt=""
-              loading="lazy"
-              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent" />
-            <div className="absolute left-4 top-4 inline-flex items-center gap-1 rounded-full bg-white/95 px-3 py-1 text-xs font-medium text-foreground">
-              <Star className="h-3 w-3 fill-primary text-primary" /> 5.0 (52)
-            </div>
-            <div className="absolute inset-x-0 bottom-0 p-5 text-white">
-              <p className="font-serif text-xl">Simon Keller</p>
-              <p className="text-xs text-white/80">Childcare · Zürich 8001</p>
-              <span className="mt-3 inline-flex rounded-full bg-primary px-3 py-1 font-mono text-[10px] uppercase tracking-wider">
-                CHF 28 / hr
-              </span>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
+// function CaregiverPreview() {
+//   const { t } = useI18n();
+//   return (
+//     <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+//       <p className="eyebrow">{t("home.providersEyebrow")}</p>
+//       <h2 className="mt-2 text-3xl sm:text-4xl">
+//         {t("home.providersTitleA")}
+//         <span className="font-serif-italic">{t("home.providersTitleB")}</span>
+//       </h2>
+//       <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
+//         {[0, 1, 2].map((i) => (
+//           <div
+//             key={i}
+//             className="group relative aspect-[4/5] overflow-hidden rounded-3xl shadow-sm transition-transform hover:-translate-y-1"
+//           >
+//             <img
+//               src={AllImages.hc1}
+//               alt=""
+//               loading="lazy"
+//               className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+//             />
+//             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent" />
+//             <div className="absolute left-4 top-4 inline-flex items-center gap-1 rounded-full bg-white/95 px-3 py-1 text-xs font-medium text-foreground">
+//               <Star className="h-3 w-3 fill-primary text-primary" /> 5.0 (52)
+//             </div>
+//             <div className="absolute inset-x-0 bottom-0 p-5 text-white">
+//               <p className="font-serif text-xl">Simon Keller</p>
+//               <p className="text-xs text-white/80">Childcare · Zürich 8001</p>
+//               <span className="mt-3 inline-flex rounded-full bg-primary px-3 py-1 font-mono text-[10px] uppercase tracking-wider">
+//                 CHF 28 / hr
+//               </span>
+//             </div>
+//           </div>
+//         ))}
+//       </div>
+//     </section>
+//   );
+// }
 
 function Testimonial() {
   const { t } = useI18n();
