@@ -3,12 +3,7 @@ import AllImages from "../../assets/AllImages";
 const rowA = [AllImages.h2, AllImages.h3, AllImages.h4, AllImages.h5];
 const rowB = [AllImages.h6, AllImages.h7, AllImages.h8, AllImages.h9];
 
-const heightsA = [
-  AllImages.h2,
-  AllImages.h3,
-  AllImages.h4,
-  AllImages.h5,
-];
+const heightsA = [AllImages.h2, AllImages.h3, AllImages.h4, AllImages.h5];
 const heightsB = [AllImages.h6, AllImages.h7, AllImages.h8, AllImages.h9];
 
 /**
@@ -19,10 +14,10 @@ export function MasonryRail() {
   const a = [...rowA, ...rowA, ...rowA];
   const b = [...rowB, ...rowB, ...rowB];
   return (
-    <div className="relative h-[480px] overflow-hidden sm:h-[560px]">
+    <div className="relative h-[480px] overflow-hidden sm:h-[560px] ">
       {/* Edge fades */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 z-30 w-24 bg-gradient-to-r from-background to-transparent" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 z-30 w-24 bg-gradient-to-l from-background to-transparent" />
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-30   bg-gradient-to-r from-background to-transparent" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-30  bg-gradient-to-l from-background to-transparent" />
 
       {/* Two stacked scrolling rows behind */}
       <div className="absolute inset-0 z-10 flex flex-col justify-center gap-4">
@@ -32,9 +27,14 @@ export function MasonryRail() {
             return (
               <div
                 key={`a-${i}`}
-                className={`relative shrink-0 overflow-hidden rounded-2xl shadow-md ${h} aspect-[4/3]`}
+                className={`relative shrink-0 overflow-hidden rounded-2xl shadow-md ${h} aspect-[4/4]`}
               >
-                <img src={src} alt="" loading="lazy" className="h-full w-64 object-cover " />
+                <img
+                  src={src}
+                  alt=""
+                  loading="lazy"
+                  className="h-full w-64 object-cover "
+                />
               </div>
             );
           })}
@@ -45,9 +45,14 @@ export function MasonryRail() {
             return (
               <div
                 key={`b-${i}`}
-                className={`relative shrink-0 overflow-hidden rounded-2xl shadow-md ${h} aspect-[4/3]`}
+                className={`relative shrink-0 overflow-hidden rounded-2xl shadow-md ${h} aspect-[1]`}
               >
-                <img src={src} alt="" loading="lazy" className="h-full w-64 object-cover" />
+                <img
+                  src={src}
+                  alt=""
+                  loading="lazy"
+                  className="h-full w-64 object-cover"
+                />
               </div>
             );
           })}
@@ -55,7 +60,7 @@ export function MasonryRail() {
       </div>
 
       {/* Static center featured image on top */}
-      <div className="pointer-events-none absolute left-1/2 top-1/2 z-20 h-[78%] w-[38%] max-w-[460px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-3xl shadow-2xl ring-1 ring-black/5">
+      <div className="pointer-events-none absolute left-1/2 top-1/2 z-20  h-full w-[32%] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-2xl">
         <img src={AllImages.h1} alt="" className="h-full w-full object-cover" />
       </div>
     </div>

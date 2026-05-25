@@ -93,24 +93,24 @@ export const dict = {
       en: "Browse verified profiles",
     },
     step1Desc: {
-      de: "Suche nach Leistungsart, Standort und Verfügbarkeit. Jede:r Betreuer:in ist hintergrundgeprüft und verifiziert.",
-      en: "Search by service type, location, and availability. Every caregiver is background-checked and verified.",
+      de: "Suche nach Servicetyp, Standort und Verfügbarkeit. Jede Betreuungsperson wurde einer Hintergrundprüfung unterzogen und verifiziert – mit echten Bewertungen von Schweizer Familien.",
+      en: "Search by service type, location, and availability. Every caregiver has been background-checked and verified, with real reviews from Swiss families.",
     },
     step2Title: {
       de: "Chatten und sofort buchen",
       en: "Chat and book instantly",
     },
     step2Desc: {
-      de: "Schreibe Anbieter:innen sicher über die App. Sobald du bereit bist, buche mit einem einzigen Tippen.",
-      en: "Message providers securely through the app. Once you're ready, book with a single tap.",
+      de: "Kommunizieren Sie sicher über die App mit den Anbietern, um alle Details abzustimmen. Sobald Sie bereit sind, buchen Sie mit nur einem Klick – ganz ohne endlose Telefonate.",
+      en: "Message providers securely through the app to align on details. Once you're ready, book with a single tap. No endless phone tag.",
     },
     step3Title: {
       de: "Sicher buchen und bezahlen",
       en: "Book and pay securely",
     },
     step3Desc: {
-      de: "Bestätige Buchungen mit einem Tippen. Bezahle nahtlos via TWINT, Kreditkarte oder Rechnung.",
-      en: "Confirm bookings with a tap. Pay seamlessly via TWINT, credit card, or invoice.",
+      de: "Bestätigen Sie Buchungen mit nur einem Klick. Bezahlen Sie bequem per TWINT, Kreditkarte oder Rechnung. Betreuungspersonen werden jede Woche automatisch bezahlt.",
+      en: "Confirm bookings with a tap. Pay seamlessly via TWINT, credit card, or invoice. Caregivers get paid automatically each week.",
     },
     faqEyebrow: { de: "FRAGEN", en: "QUESTIONS" },
     faqTitleA: { de: "Alles, was du dich ", en: "Everything you " },
@@ -187,7 +187,7 @@ export const dict = {
     fullName: { de: "Vollständiger Name", en: "Full Name" },
     fullNamePh: { de: "Gib deinen Namen ein", en: "Enter your full name" },
     email: { de: "E-Mail-Adresse", en: "Email Address" },
-    emailHint: {  
+    emailHint: {
       de: "Wir senden deine Bestätigung hierhin.",
       en: "We'll send your waitlist confirmation here.",
     },

@@ -32,7 +32,7 @@ export function Services() {
   return (
     <div>
       <section className="bg-primary-muted">
-        <div className="mx-auto max-w-5xl px-4 py-20 text-center sm:px-6 lg:px-8 fade-up">
+        <div className="mx-auto max-w-430 px-4 py-20 text-center sm:px-6 lg:px-8 fade-up">
           <p className="eyebrow">{t("services.eyebrow")}</p>
           <h1 className="mt-3 text-5xl leading-tight tracking-tight sm:text-6xl font-semibold">
             {t("services.titleA")}
@@ -44,8 +44,8 @@ export function Services() {
           </p>
         </div>
       </section>
-      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+      <section className="mx-auto  px-4 py-12 sm:px-6 lg:px-8 max-w-430">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
           {cards.map((c, i) => (
             <ServiceCard key={i} {...c} />
           ))}

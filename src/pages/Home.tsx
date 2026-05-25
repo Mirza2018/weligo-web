@@ -17,7 +17,7 @@ import {
 import { useState } from "react";
 import AllImages from "../assets/AllImages";
 import { useI18n } from "../lib/i18n";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MasonryRail } from "../components/homePage/MasonryRail";
 
 // export const Route = createFileRoute("/")({
@@ -30,7 +30,7 @@ export function Home() {
       <Hero />
       <ServicesStrip />
       {/* <CaregiverPreview /> */}
-      <Testimonial />
+      {/* <Testimonial /> */}
       <HowItWorks />
       <FAQ />
       <ProviderCTA />
@@ -42,8 +42,8 @@ function Hero() {
   const { t } = useI18n();
   return (
     <section className="bg-background">
-      <div className="mx-auto max-w-7xl px-4 pt-12 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl text-center fade-up">
+      <div className="mx-auto   pt-12 sm:px-6 ">
+        <div className="mx-auto max-w-4xl text-center fade-up">
           <h1 className="text-5xl leading-[1.05] tracking-tight sm:text-[72px] font-bold">
             {t("home.titleA")}
             <br />
@@ -54,7 +54,7 @@ function Hero() {
               </span>
             </span>
           </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-base text-muted-foreground">
+          <p className="mx-auto mt-5 max-w-xl text-base text-[#313233] font-medium">
             {t("home.sub")}
           </p>
           <SearchBar />
@@ -68,18 +68,22 @@ function Hero() {
 }
 
 function SearchBar() {
+  const router=useNavigate()
   return (
-    <div className="mx-auto mt-8 flex max-w-4xl flex-col gap-2 rounded-2xl border border-border bg-card p-2 shadow-sm sm:flex-row sm:items-center">
+    <div className="mx-auto mt-8 flex flex-col max-w-4xl gap-2 rounded-2xl border border-border bg-card p-2 shadow-sm sm:flex-row sm:items-center ">
       <Field label="What are you looking for?" icon={Baby} divider>
         Childcare
       </Field>
+
       <Field label="Location" icon={MapPin} divider>
         Zürich, 8001
       </Field>
+
       <Field label="Date & Time" icon={CalendarDays}>
         Sat, 18 May, 09:00
       </Field>
-      <button className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.02]">
+
+      <button onClick={() => { router("/waitlist");}} className="flex-shrink-0 inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.02] whitespace-nowrap">
         <Search className="h-4 w-4" /> Search
       </button>
     </div>
@@ -98,14 +102,14 @@ function Field({
 }) {
   return (
     <div
-      className={`flex flex-1 items-center gap-3 rounded-xl px-3 py-2 text-left transition-colors hover:bg-muted-bg ${divider ? "sm:rounded-none sm:border-r sm:border-border" : ""}`}
+      className={`flex flex-1 items-center gap-3 rounded-xl px-3 py-2 text-left transition-colors hover:bg-muted-bg ! ${divider ? "sm:rounded-none sm:border-r sm:border-border" : ""}`}
     >
       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-muted">
         <Icon className="h-5 w-5 text-primary" />
       </span>
-      <div className="min-w-0">
-        <p className="text-xs text-muted-foreground">{label}</p>
-        <p className="truncate text-sm font-semibold text-foreground">
+      <div className="min-w-0 w-42">
+        <p className="text-sm text-[#313233] font-semibold">{label}</p>
+        <p className="truncate text-lg font-bold text-foreground">
           {children}
         </p>
       </div>
@@ -167,7 +171,7 @@ function ServicesStrip() {
     },
   ];
   return (
-    <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+    <section className="mx-auto max-w-430 px-4 py-20 sm:px-6 lg:px-8">
       <p className="eyebrow">{t("home.servicesEyebrow")}</p>
       <h2 className="mt-2 text-3xl font-semibold sm:text-[48px]">
         {t("home.servicesTitleA")}
@@ -211,7 +215,7 @@ function ServicesStrip() {
 // function CaregiverPreview() {
 //   const { t } = useI18n();
 //   return (
-//     <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+//     <section className="mx-auto max-w-430 px-4 py-20 sm:px-6 lg:px-8">
 //       <p className="eyebrow">{t("home.providersEyebrow")}</p>
 //       <h2 className="mt-2 text-3xl sm:text-4xl">
 //         {t("home.providersTitleA")}
@@ -247,142 +251,142 @@ function ServicesStrip() {
 //   );
 // }
 
-function Testimonial() {
-  const { t } = useI18n();
-  const reviews = [
-    {
-      quote: t("home.quote"),
-      name: "Elena V.",
-      city: "Genève",
-      avatar: AllImages.hr4,
-    },
-    {
-      quote:
-        t("home.quote2") === "home.quote2"
-          ? "“Booking a tutor for our son took minutes. He's already more confident at school.”"
-          : t("home.quote2"),
-      name: "Marco R.",
-      city: "Zürich",
-      avatar: AllImages.hr1,
-    },
-    {
-      quote:
-        t("home.quote3") === "home.quote3"
-          ? "“Our cleaner is reliable, kind and thorough. Weligo simply works.”"
-          : t("home.quote3"),
-      name: "Sophie L.",
-      city: "Basel",
-      avatar: AllImages.ht1,
-    },
-  ];
-  const [idx, setIdx] = useState(0);
-  const r = reviews[idx];
-  const prev = () => setIdx((i) => (i - 1 + reviews.length) % reviews.length);
-  const next = () => setIdx((i) => (i + 1) % reviews.length);
+// function Testimonial() {
+//   const { t } = useI18n();
+//   const reviews = [
+//     {
+//       quote: t("home.quote"),
+//       name: "Elena V.",
+//       city: "Genève",
+//       avatar: AllImages.hr4,
+//     },
+//     {
+//       quote:
+//         t("home.quote2") === "home.quote2"
+//           ? "“Booking a tutor for our son took minutes. He's already more confident at school.”"
+//           : t("home.quote2"),
+//       name: "Marco R.",
+//       city: "Zürich",
+//       avatar: AllImages.hr1,
+//     },
+//     {
+//       quote:
+//         t("home.quote3") === "home.quote3"
+//           ? "“Our cleaner is reliable, kind and thorough. Weligo simply works.”"
+//           : t("home.quote3"),
+//       name: "Sophie L.",
+//       city: "Basel",
+//       avatar: AllImages.ht1,
+//     },
+//   ];
+//   const [idx, setIdx] = useState(0);
+//   const r = reviews[idx];
+//   const prev = () => setIdx((i) => (i - 1 + reviews.length) % reviews.length);
+//   const next = () => setIdx((i) => (i + 1) % reviews.length);
 
-  return (
-    <section className="bg-muted-bg">
-      <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <p className="eyebrow">{t("home.familiesEyebrow")}</p>
-          <h2 className="mt-3 font-serif text-4xl text-foreground font-semibold sm:text-[48px]">
-            {t("home.familiesTitleA")}
-            <span className="font-serif-italic text-primary">
-              {t("home.familiesTitleB")}
-            </span>
-          </h2>
-        </div>
+//   return (
+//     <section className="bg-muted-bg">
+//       <div className="mx-auto max-w-430 px-4 py-20 sm:px-6 lg:px-8">
+//         <div className="text-center">
+//           <p className="eyebrow">{t("home.familiesEyebrow")}</p>
+//           <h2 className="mt-3 font-serif text-4xl text-foreground font-semibold sm:text-[48px]">
+//             {t("home.familiesTitleA")}
+//             <span className="font-serif-italic text-primary">
+//               {t("home.familiesTitleB")}
+//             </span>
+//           </h2>
+//         </div>
 
-        <div className="mt-16 grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
-          {/* Quote + navigation on the left */}
-          <div key={idx} className="fade-up">
-            <div className="flex gap-1 text-amber-400">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star key={i} className="h-5 w-5 fill-current" />
-              ))}
-            </div>
-            <p className="mt-6 font-serif text-3xl leading-snug text-foreground sm:text-4xl">
-              {r.quote}
-            </p>
-            <div className="mt-10 flex items-center gap-6">
-              <div className="flex items-center gap-3">
-                <img
-                  src={r.avatar}
-                  alt=""
-                  className="h-11 w-11 rounded-full object-cover"
-                />
-                <div className="text-left">
-                  <p className="text-sm font-semibold">{r.name}</p>
-                  <p className="text-xs text-muted-foreground">{r.city}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={prev}
-                  aria-label="Previous review"
-                  className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background text-foreground transition-colors hover:bg-primary hover:text-primary-foreground"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                </button>
-                <button
-                  onClick={next}
-                  aria-label="Next review"
-                  className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background text-foreground transition-colors hover:bg-primary hover:text-primary-foreground"
-                >
-                  <ArrowRight className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
-          </div>
+//         <div className="mt-16 grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
+//           {/* Quote + navigation on the left */}
+//           <div key={idx} className="fade-up">
+//             <div className="flex gap-1 text-amber-400">
+//               {Array.from({ length: 5 }).map((_, i) => (
+//                 <Star key={i} className="h-5 w-5 fill-current" />
+//               ))}
+//             </div>
+//             <p className="mt-6 font-serif text-5xl font-semibold leading-snug text-foreground sm:text-4xl">
+//               {r.quote}
+//             </p>
+//             <div className="mt-10 flex items-center gap-6">
+//               <div className="flex items-center gap-3">
+//                 <img
+//                   src={r.avatar}
+//                   alt=""
+//                   className="h-11 w-11 rounded-full object-cover"
+//                 />
+//                 <div className="text-left">
+//                   <p className="text-sm font-semibold">{r.name}</p>
+//                   <p className="text-xs text-muted-foreground">{r.city}</p>
+//                 </div>
+//               </div>
+//               <div className="flex items-center gap-3">
+//                 <button
+//                   onClick={prev}
+//                   aria-label="Previous review"
+//                   className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background text-foreground transition-colors hover:bg-primary hover:text-primary-foreground"
+//                 >
+//                   <ArrowLeft className="h-4 w-4" />
+//                 </button>
+//                 <button
+//                   onClick={next}
+//                   aria-label="Next review"
+//                   className="flex h-11 w-11 items-center justify-center rounded-full border border-border bg-background text-foreground transition-colors hover:bg-primary hover:text-primary-foreground"
+//                 >
+//                   <ArrowRight className="h-4 w-4" />
+//                 </button>
+//               </div>
+//             </div>
+//           </div>
 
-          {/* Static asymmetric collage on the right */}
-          <div className="relative mx-auto h-[460px] w-full max-w-xl sm:h-[520px]">
-            <div className="absolute left-[6%] top-[2%] h-[36%] w-[34%] overflow-hidden  shadow-md">
-              <img
-                src={AllImages.hr1}
-                alt=""
-                loading="lazy"
-                className="h-full w-full object-cover"
-              />
-            </div>
-            <div className="absolute right-[4%] top-0 h-[44%] w-[40%] overflow-hidden  shadow-md">
-              <img
-                src={AllImages.hr2}
-                alt=""
-                loading="lazy"
-                className="h-full w-full object-cover"
-              />
-            </div>
-            <div className="absolute left-0 bottom-[6%] h-[32%] w-[28%] overflow-hidden  shadow-md">
-              <img
-                src={AllImages.hr3}
-                alt=""
-                loading="lazy"
-                className="h-full w-full object-cover"
-              />
-            </div>
-            <div className="absolute left-[30%] bottom-0 h-[44%] w-[34%] overflow-hidden shadow-md">
-              <img
-                src={AllImages.hr4}
-                alt=""
-                loading="lazy"
-                className="h-full w-full object-cover"
-              />
-            </div>
-            <div className="absolute right-0 bottom-[12%] h-[30%] w-[30%] overflow-hidden  shadow-md">
-              <img
-                src={AllImages.hr5}
-                alt=""
-                loading="lazy"
-                className="h-full w-full object-cover"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
+//           {/* Static asymmetric collage on the right */}
+//           <div className="relative mx-auto h-[460px] w-full  sm:h-[520px]">
+//             <div className="absolute left-[6%] top-[2%] h-[36%] w-[34%] overflow-hidden  shadow-md">
+//               <img
+//                 src={AllImages.hr1}
+//                 alt=""
+//                 loading="lazy"
+//                 className="h-full w-full object-cover"
+//               />
+//             </div>
+//             <div className="absolute right-[4%] top-0 h-[44%] w-[40%] overflow-hidden  shadow-md">
+//               <img
+//                 src={AllImages.hr2}
+//                 alt=""
+//                 loading="lazy"
+//                 className="h-full w-full object-cover"
+//               />
+//             </div>
+//             <div className="absolute left-0 bottom-[6%] h-[32%] w-[28%] overflow-hidden  shadow-md">
+//               <img
+//                 src={AllImages.hr3}
+//                 alt=""
+//                 loading="lazy"
+//                 className="h-full w-full object-cover"
+//               />
+//             </div>
+//             <div className="absolute left-[30%] bottom-0 h-[44%] w-[34%] overflow-hidden shadow-md">
+//               <img
+//                 src={AllImages.hr4}
+//                 alt=""
+//                 loading="lazy"
+//                 className="h-full w-full object-cover"
+//               />
+//             </div>
+//             <div className="absolute right-0 bottom-[12%] h-[30%] w-[30%] overflow-hidden  shadow-md">
+//               <img
+//                 src={AllImages.hr5}
+//                 alt=""
+//                 loading="lazy"
+//                 className="h-full w-full object-cover"
+//               />
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </section>
+//   );
+// }
 
 function HowItWorks() {
   const { t } = useI18n();
@@ -407,7 +411,7 @@ function HowItWorks() {
     },
   ];
   return (
-    <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+    <section className="mx-auto max-w-430 px-4 py-20 sm:px-6 lg:px-8">
       <div className="text-center">
         <p className="eyebrow">{t("home.howEyebrow")}</p>
         <h2 className="mt-2 text-3xl font-semibold sm:text-[48px]">
@@ -424,9 +428,9 @@ function HowItWorks() {
             <div>
               <p className="font-mono text-primary text-4xl font-bold">{s.n}</p>
               <p className="mt-2 text-4xl font-bold">{s.title}</p>
-              <p className="mt-3 max-w-md text-xl font-medium  ">{s.desc}</p>
+              <p className="mt-3  text-xl font-medium  ">{s.desc}</p>
             </div>
-            <div className="aspect-[16/10] overflow-hidden rounded-3xl">
+            <div className="aspect-[20/10] overflow-hidden rounded-3xl">
               <img
                 src={s.img}
                 alt=""
@@ -472,7 +476,7 @@ function FAQ() {
   const [open, setOpen] = useState<number | null>(0);
   return (
     <section className="bg-muted-bg">
-      <div className="mx-auto grid max-w-7xl gap-12 px-4 py-20 sm:px-6 md:grid-cols-[1fr_2fr] lg:px-8">
+      <div className="mx-auto grid max-w-430 gap-12 px-4 py-20 sm:px-6 md:grid-cols-[1fr_2fr] lg:px-8">
         <div>
           <p className="eyebrow">{t("home.faqEyebrow")}</p>
           <h2 className="mt-3 font-serif text-4xl leading-tight font-semibold sm:text-[48px]">
@@ -522,7 +526,7 @@ function ProviderCTA() {
   return (
     <section className="">
       <div className="rounded-3xl bg-primary-muted p-8 md:p-14">
-        <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-2 mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-2 mx-auto max-w-430 px-4 py-20 sm:px-6 lg:px-8">
           <div>
             <h2 className="font-serif text-4xl leading-[1.1] text-foreground font-bold sm:text-6xl">
               {t("home.earnTitle")}

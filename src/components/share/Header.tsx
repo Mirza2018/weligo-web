@@ -36,7 +36,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/85 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-8xl items-center justify-between px-4 sm:px-6 md:px-8 lg:px-16 xl:px-32">
+      <div className="mx-auto flex h-16 max-w-430 items-center justify-between px-4 ">
         {/* Logo */}
         <Link
           to="/"
