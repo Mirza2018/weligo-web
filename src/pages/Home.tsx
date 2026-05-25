@@ -450,7 +450,7 @@ function FAQ() {
   const items = [
     {
       q: "How are providers verified?",
-      a: "Every provider undergoes strict vetting with identity verification, criminal background check, interviews and references.",
+      a: "Every provider on Weligo undergoes a strict vetting process. This includes identity verification, a criminal background check (strafregisterauszug), a review of certifications, and a personal interview. We only accept about 15% of applicants to ensure highest quality care.",
     },
     {
       q: "How do payments work?",
@@ -525,46 +525,78 @@ function ProviderCTA() {
   const { t } = useI18n();
   return (
     <section className="">
-      <div className="rounded-3xl bg-primary-muted p-8 md:p-14">
-        <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-2 mx-auto max-w-430 px-4 py-20 sm:px-6 lg:px-8">
-          <div>
-            <h2 className="font-serif text-4xl leading-[1.1] text-foreground font-bold sm:text-6xl">
+      <div className="rounded-3xl bg-primary-muted p-8 md:p-14 flex flex-col justify-center items-center">
+        <div className=" max-w-430 px-4 py-20 sm:px-6 lg:px-8 ">
+          <div className="flex flex-col justify-center items-center">
+            <h2 className="font-serif text-4xl leading-[1.1] text-foreground font-bold sm:text-6xl text-center">
               {t("home.earnTitle")}
               <br />
-              {t("home.earnTitle2")}
+              {t("home.earnTitle2")}{" "}
+              <span className="font-serif-italic text-primary">
+                {" "}
+                {t("home.earnTitle3")}
+              </span>
             </h2>
             <p className="mt-5 max-w-md text-base text-muted-foreground">
               {t("home.earnDesc")}
             </p>
             <Link
-              to="/sign-up"
-              className="mt-7 inline-flex h-12 items-center gap-2 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.02]"
+              to="/waitlist"
+              className="mt-8 inline-flex h-12 items-center gap-2 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.02]"
             >
-              {t("home.becomeProvider")} <ArrowRight className="h-4 w-4" />
+              {t("common.joinWaitlist")} <ArrowRight className="h-4 w-4" />
             </Link>
-          </div>
-          <div className="relative mx-auto h-64 w-full max-w-md">
-            <Stat
-              label={t("home.statRateLabel")}
-              value="CHF 20"
-              className="absolute left-0 top-2 w-44"
-            />
-            <Stat
-              label={t("home.statRatingLabel")}
-              value="4.9"
-              className="absolute right-0 top-0 w-40"
-            />
-            <Stat
-              label={t("home.statBookingsLabel")}
-              value="12k+"
-              className="absolute left-12 bottom-2 w-44"
-            />
           </div>
         </div>
       </div>
     </section>
   );
 }
+//Main//
+// function ProviderCTA() {
+//   const { t } = useI18n();
+//   return (
+//     <section className="">
+//       <div className="rounded-3xl bg-primary-muted p-8 md:p-14">
+//         <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-2 mx-auto max-w-430 px-4 py-20 sm:px-6 lg:px-8">
+//           <div>
+//             <h2 className="font-serif text-4xl leading-[1.1] text-foreground font-bold sm:text-6xl">
+//               {t("home.earnTitle")}
+//               <br />
+//               {t("home.earnTitle2")}
+//             </h2>
+//             <p className="mt-5 max-w-md text-base text-muted-foreground">
+//               {t("home.earnDesc")}
+//             </p>
+//             <Link
+//               to="/sign-up"
+//               className="mt-7 inline-flex h-12 items-center gap-2 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.02]"
+//             >
+//               {t("home.becomeProvider")} <ArrowRight className="h-4 w-4" />
+//             </Link>
+//           </div>
+//           <div className="relative mx-auto h-64 w-full max-w-md">
+//             <Stat
+//               label={t("home.statRateLabel")}
+//               value="CHF 20"
+//               className="absolute left-0 top-2 w-44"
+//             />
+//             <Stat
+//               label={t("home.statRatingLabel")}
+//               value="4.9"
+//               className="absolute right-0 top-0 w-40"
+//             />
+//             <Stat
+//               label={t("home.statBookingsLabel")}
+//               value="12k+"
+//               className="absolute left-12 bottom-2 w-44"
+//             />
+//           </div>
+//         </div>
+//       </div>
+//     </section>
+//   );
+// }
 function Stat({
   label,
   value,

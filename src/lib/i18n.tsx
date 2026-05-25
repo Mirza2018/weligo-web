@@ -115,11 +115,18 @@ export const dict = {
     faqEyebrow: { de: "FRAGEN", en: "QUESTIONS" },
     faqTitleA: { de: "Alles, was du dich ", en: "Everything you " },
     faqTitleB: { de: "fragst", en: "might wonder" },
-    earnTitle: { de: "Flexibel verdienen.", en: "Earn flexibly." },
-    earnTitle2: { de: "Mach den Unterschied.", en: "Make a difference." },
+    // earnTitle: { de: "Flexibel verdienen.", en: "Earn flexibly." },
+    // earnTitle2: { de: "Mach den Unterschied.", en: "Make a difference." },
+    // earnDesc: {
+    //   de: "Legen Sie Ihre Preise fest. Wählen Sie Ihre Arbeitszeiten. Erhalten Sie wöchentliche Auszahlungen per TWINT. Schließen Sie sich Tausenden von Betreuungspersonen an, die Schweizer Familien unterstützen.",
+    //   en: "Set your rates. Choose your hours. Get paid weekly via TWINT. Join thousands of caregivers helping Swiss families.",
+    // },
+    earnTitle: { de: "Seien Sie unter den", en: "Be among the first" },
+    earnTitle2: { de: " ersten Familien auf", en: "families on " },
+    earnTitle3: { de: "Weligo", en: "Weligo." },
     earnDesc: {
-      de: "Bestimme deinen Preis. Wähle deine Stunden. Erhalte wöchentlich Auszahlungen via TWINT.",
-      en: "Set your rates. Choose your hours. Get paid weekly via TWINT.",
+      de: "Wir starten bald in Zürich. Treten Sie der Warteliste bei und erhalten Sie frühen Zugang vor dem öffentlichen Start.",
+      en: "We're launching soon in Zürich. Join the waitlist and get early access before the public launch.",
     },
     becomeProvider: { de: "Anbieter:in werden", en: "Become a provider" },
     statRateLabel: {
