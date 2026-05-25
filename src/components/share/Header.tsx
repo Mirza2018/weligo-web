@@ -47,7 +47,7 @@ export function Header() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden items-center gap-8 lg:flex">
+        <nav className="hidden items-center gap-8 xl:flex">
           {links.map((l) => (
             <NavLink
               key={l.to}
@@ -65,7 +65,7 @@ export function Header() {
         </nav>
 
         {/* Right Side - Desktop */}
-        <div className="hidden items-center gap-3 lg:flex">
+        <div className="hidden items-center gap-3 xl:flex">
           <LangSwitch />
           {!isLogin ? (
             <>
@@ -95,7 +95,7 @@ export function Header() {
         {/* Mobile Menu Button */}
         <button
           onClick={toggleMobileMenu}
-          className="lg:hidden p-2 rounded-md hover:bg-accent"
+          className="xl:hidden p-2 rounded-md hover:bg-accent"
           aria-label="Toggle menu"
         >
           <svg
@@ -121,7 +121,7 @@ export function Header() {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden border-t bg-background">
+        <div className="xl:hidden border-t bg-background">
           <div className="flex flex-col px-6 py-6 space-y-6">
             {links.map((l) => (
               <NavLink
