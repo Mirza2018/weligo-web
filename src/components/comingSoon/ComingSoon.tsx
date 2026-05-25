@@ -18,7 +18,7 @@ export function ComingSoon() {
           {t("common.comingSoonDesc")}
         </p>
         <Link
-          to="/waitlist"
+          to="/sign-up"
           className="mt-8 inline-flex h-12 items-center gap-2 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.02]"
         >
           {t("common.joinWaitlist")} <ArrowRight className="h-4 w-4" />

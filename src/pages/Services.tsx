@@ -12,6 +12,7 @@ export function Services() {
   const cards = [
     {
       title: t("services.childcare"),
+      desc: t("services.childcareDesc"),
       image: AllImages.s1,
       available: true,
       count: 1245,
@@ -19,15 +20,16 @@ export function Services() {
     },
     {
       title: t("services.tutoring"),
+      desc: t("services.tutoringDesc"),
       image: AllImages.s2,
       available: true,
       count: 312,
       price: 28,
     },
-    { title: t("services.senior"), image: AllImages.s3 },
-    { title: t("services.cleaning"), image: AllImages.s4 },
-    { title: t("services.pet"), image: AllImages.s5 },
-    { title: t("services.everyday"), image: AllImages.s6 },
+    { title: t("services.senior"),desc: t("services.seniorDesc"), image: AllImages.s3 },
+    { title: t("services.cleaning"),desc: t("services.cleaningDesc"),   image: AllImages.s4 },
+    { title: t("services.pet"), desc: t("services.petDesc"),  image: AllImages.s5 },
+    { title: t("services.everyday"), desc: t("services.everydayDesc"), image: AllImages.s6 },
   ];
   return (
     <div>

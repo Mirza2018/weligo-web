@@ -83,7 +83,7 @@ function SearchBar() {
         Sat, 18 May, 09:00
       </Field>
 
-      <button onClick={() => { router("/waitlist");}} className="flex-shrink-0 inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.02] whitespace-nowrap">
+      <button onClick={() => { router("/sign-up");}} className="cursor-pointer flex-shrink-0 inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.02] whitespace-nowrap">
         <Search className="h-4 w-4" /> Search
       </button>
     </div>
@@ -541,7 +541,7 @@ function ProviderCTA() {
               {t("home.earnDesc")}
             </p>
             <Link
-              to="/waitlist"
+              to="/sign-up"
               className="mt-8 inline-flex h-12 items-center gap-2 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.02]"
             >
               {t("common.joinWaitlist")} <ArrowRight className="h-4 w-4" />

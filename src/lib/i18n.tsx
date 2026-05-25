@@ -45,7 +45,7 @@ export const dict = {
       en: "Find trusted babysitters and nannies near you.",
     },
     svcTutorDesc: {
-      de: "Tutor:innen für alle Fächer und Stufen.",
+      de: "Verbinden Sie sich mit Nachhilfelehrern für alle Fächer und Lernstufen.",
       en: "Connect with tutors for all subjects and levels.",
     },
     svcSeniorDesc: {
@@ -139,7 +139,7 @@ export const dict = {
   services: {
     eyebrow: { de: "LEISTUNGEN", en: "SERVICES" },
     titleA: {
-      de: "Betreuung, die zu dir kommt — ",
+      de: "Betreuung, die zu dir kommt",
       en: "Care that meets you ",
     },
     titleB: { de: "wo du bist.", en: "where you are." },
@@ -153,9 +153,29 @@ export const dict = {
     cleaning: { de: "Hausreinigung.", en: "House Cleaning." },
     pet: { de: "Tierbetreuung.", en: "Pet Care." },
     everyday: { de: "Alltagshilfe.", en: "Everyday Support." },
-    cardDesc: {
-      de: "Von der Säuglingsbetreuung bis zur Nachmittagshilfe. Verifiziert, hintergrundgeprüft und von Familien bewertet.",
+    childcareDesc: {
+      de: "Von Neugeborenenbetreuung bis zur Nachmittagsbetreuung nach der Schule. Verifiziert, hintergrundgeprüft und von Familien bewertet.",
       en: "From newborn nannies to after-school care. Verified, background-checked, and rated by families.",
+    },
+    tutoringDesc: {
+      de: "Individuelle Nachhilfe, damit Schüler mit Selbstvertrauen lernen, wachsen und erfolgreich sein können.",
+      en: "Personalized tutoring to help students learn, grow, and succeed with confidence.",
+    },
+    seniorDesc: {
+      de: "Einfühlsame Seniorenbetreuung und Unterstützung für Komfort, Sicherheit und Wohlbefinden im Alltag.",
+      en: "Compassionate senior care and support for comfort, safety, and daily well-being.",
+    },
+    cleaningDesc: {
+      de: "Zuverlässige Hausreinigung für ein sauberes, frisches und komfortables Zuhause.",
+      en: "Reliable house cleaning services for a spotless, fresh, and comfortable home.",
+    },
+    petDesc: {
+      de: "Liebevolle Haustierbetreuung, damit Ihre Tiere glücklich, sicher und bestens versorgt sind.",
+      en: "Loving pet care services to keep your pets happy, safe, and well cared for.",
+    },
+    everydayDesc: {
+      de: "Verlässliche Unterstützung im Alltag, damit tägliche Aufgaben einfacher und stressfrei werden.",
+      en: "Trusted everyday support to make daily tasks easier, smoother, and stress-free.",
     },
     comingSoon: { de: "Bald verfügbar", en: "Coming Soon" },
     providers: { de: "Anbieter:innen", en: "providers" },
@@ -230,7 +250,7 @@ export const dict = {
     tagline: { de: "Betreuung, einfach gemacht.", en: "Care, made simple." },
     platform: { de: "Plattform", en: "Platform" },
     families: { de: "Familien", en: "Families" },
-    providers: { de: "Anbieter", en: "Providers" },
+    providers: { de: "Dienstleister", en: "Providers" },
     legal: { de: "Rechtliches", en: "Legal" },
     howItWorks: { de: "So funktioniert's", en: "How It Works" },
     aboutUs: { de: "Über uns", en: "About us" },
@@ -239,7 +259,7 @@ export const dict = {
     forFamilies: { de: "Für Familien", en: "For Families" },
     findChild: { de: "Kinderbetreuung finden", en: "Find Childcare" },
     findSenior: { de: "Seniorenbetreuung finden", en: "Find Senior Care" },
-    forProviders: { de: "Für Anbieter", en: "For Providers" },
+    forProviders: { de: "Für Dienstleister", en: "For Providers" },
     become: { de: "Betreuer:in werden", en: "Become a Caregiver" },
     help: { de: "Hilfe-Center", en: "Help Center" },
     terms: { de: "AGB", en: "Terms" },

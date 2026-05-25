@@ -1,22 +1,26 @@
+import { useNavigate } from "react-router-dom";
 import { useI18n } from "../../lib/i18n";
 
 
 export function ServiceCard({
   title,
+  desc,
   image,
   available = false,
   count,
   price,
 }: {
-  title: string;
+    title: string;
+  desc: string;
   image: string;
   available?: boolean;
   count?: number;
   price?: number;
 }) {
   const { t } = useI18n();
+  const router=useNavigate()
   return (
-    <article className="group relative aspect-[16/10] overflow-hidden rounded-3xl shadow-sm transition-transform duration-500 hover:-translate-y-1 hover:shadow-xl ">
+    <article onClick={() => { router("/sign-up");}}  className="group relative aspect-[16/10] overflow-hidden rounded-3xl shadow-sm transition-transform duration-500 hover:-translate-y-1 hover:shadow-xl pointer-cursor">
       {!available && <div className="absolute inset-0 z-10 bg-black/60" />}
       <img
         src={image}
@@ -34,8 +38,8 @@ export function ServiceCard({
       )}
       <div className="absolute inset-x-0 bottom-0 p-6 text-white">
         <h3 className="text-4xl font-bold">{title}</h3>
-        <p className="mt-2 max-w-md text-sm font-bold">
-          {t("services.cardDesc")}
+        <p className="mt-2 max-w-md text-sm font-medium">
+          {desc}
         </p>
         {available && count && price && (
           <p className="mt-3 uppercase tracking-wider text-white/90 font-bold">
