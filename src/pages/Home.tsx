@@ -597,21 +597,21 @@ function ProviderCTA() {
 //     </section>
 //   );
 // }
-function Stat({
-  label,
-  value,
-  className = "",
-}: {
-  label: string;
-  value: string;
-  className?: string;
-}) {
-  return (
-    <div
-      className={`rounded-2xl bg-[#1B164D] p-5 text-white shadow-md transition-transform hover:-translate-y-1 animate-[shake_3s_ease-in-out_infinite] ${className}`}
-    >
-      <p className="font-serif text-2xl font-semibold">{value}</p>
-      <p className="mt-1 text-xs text-white/75">{label}</p>
-    </div>
-  );
-}
+// function Stat({
+//   label,
+//   value,
+//   className = "",
+// }: {
+//   label: string;
+//   value: string;
+//   className?: string;
+// }) {
+//   return (
+//     <div
+//       className={`rounded-2xl bg-[#1B164D] p-5 text-white shadow-md transition-transform hover:-translate-y-1 animate-[shake_3s_ease-in-out_infinite] ${className}`}
+//     >
+//       <p className="font-serif text-2xl font-semibold">{value}</p>
+//       <p className="mt-1 text-xs text-white/75">{label}</p>
+//     </div>
+//   );
+// }
