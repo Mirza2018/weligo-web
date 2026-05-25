@@ -1,5 +1,5 @@
 import {
-  ArrowLeft,
+  // ArrowLeft,
   ArrowRight,
   Baby,
   CalendarDays,
@@ -11,7 +11,7 @@ import {
   Search,
   ShoppingBag,
   Sparkles,
-  Star,
+  // Star,
   Users,
 } from "lucide-react";
 import { useState } from "react";
