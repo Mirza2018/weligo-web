@@ -143,15 +143,15 @@ function ServicesStrip() {
       icon: Users,
       iconColor: "text-sky-500",
       descKey: "home.svcSeniorDesc",
-      badge: "text-sky-600",
+      badge: "text-sky-600 bg-[#D3E6FA]!",
     },
     {
       key: "services.pet",
-      tint: "bg-[color:var(--tint-green)]",
+      tint: "bg-[color:var(--tint-green)]!",
       icon: PawPrint,
       iconColor: "text-emerald-500",
       descKey: "home.svcPetDesc",
-      badge: "text-emerald-600",
+      badge: "text-emerald-600 bg-[#CCEBDC]!",
     },
     {
       key: "services.cleaning",
@@ -159,7 +159,7 @@ function ServicesStrip() {
       icon: Sparkles,
       iconColor: "text-rose-500",
       descKey: "home.svcCleanDesc",
-      badge: "text-rose-600",
+      badge: "text-rose-600 bg-[#F6CFD4]!",
     },
     {
       key: "services.everyday",
@@ -167,7 +167,7 @@ function ServicesStrip() {
       icon: ShoppingBag,
       iconColor: "text-primary",
       descKey: "home.svcEverydayDesc",
-      badge: "text-primary",
+      badge: "text-primary bg-[#DCD2F2]!",
     },
   ];
   return (
@@ -189,12 +189,12 @@ function ServicesStrip() {
               className={`group flex flex-col items-center justify-start gap-4 rounded-3xl ${it.tint} ${it.available ? "ring-2 ring-primary/40" : ""} p-6 text-center transition-transform hover:-translate-y-1`}
             >
               <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white shadow-sm">
-                <Icon className={`h-6 w-6 ${it.iconColor}`} />
+                <Icon className={`h-7 w-7 ${it.iconColor}`} />
               </span>
               <h3 className=" xl:text-xl text-foreground font-semibold">
                 {title}
               </h3>
-              <p className="text-xs leading-relaxed text-muted-foreground">
+              <p className="text-sm leading-relaxed text-[#5E6062]">
                 {t(it.descKey)}
               </p>
               {!it.available && (
