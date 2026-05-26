@@ -70,7 +70,7 @@ function Hero() {
 function SearchBar() {
   const router=useNavigate()
   return (
-    <div className="mx-auto mt-8 flex flex-col max-w-4xl gap-2 rounded-2xl border border-border bg-card p-2 shadow-sm sm:flex-row sm:items-center ">
+    <div className="mx-auto mt-8 flex flex-col max-w-4xl gap-2 rounded-2xl border border-border bg-card p-2 shadow-sm lg:flex-row lg:items-center ">
       <Field label="What are you looking for?" icon={Baby} divider>
         Childcare
       </Field>

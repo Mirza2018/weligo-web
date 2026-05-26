@@ -60,7 +60,7 @@ export function MasonryRail() {
       </div>
 
       {/* Static center featured image on top */}
-      <div className="pointer-events-none absolute left-1/2 top-1/2 z-20  h-full w-[32%] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-2xl">
+      <div className="pointer-events-none absolute left-1/2 top-1/2 z-20 hidden lg:block  h-full w-[32%] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-2xl">
         <img src={AllImages.h1} alt="" className="h-full w-full object-cover" />
       </div>
     </div>
