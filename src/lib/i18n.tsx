@@ -8,7 +8,7 @@ export const dict = {
     home: { de: "Startseite", en: "Home" },
     services: { de: "Leistungen", en: "Services" },
     families: { de: "Für Familien", en: "For Families" },
-    providers: { de: "Für Anbieter", en: "For Providers" },
+    providers: { de: "Für Dienstleister", en: "For Providers" },
     how: { de: "So funktioniert's", en: "How It Works" },
     about: { de: "Über uns", en: "About Us" },
     login: { de: "Anmelden", en: "Log In" },
@@ -64,7 +64,7 @@ export const dict = {
       de: "Hilfe bei Besorgungen und täglichen Aufgaben.",
       en: "Help with errands and daily tasks.",
     },
-    providersEyebrow: { de: "ANBIETER", en: "PROVIDERS" },
+    providersEyebrow: { de: "Dienstleister", en: "PROVIDERS" },
     providersTitleA: { de: "Triff einige unserer ", en: "Meet a few of our " },
     providersTitleB: { de: "Betreuer:innen.", en: "caregivers." },
     familiesEyebrow: { de: "FAMILIEN", en: "FAMILIES" },
@@ -74,7 +74,7 @@ export const dict = {
     },
     familiesTitleB: { de: "jedes Mal.", en: "every time." },
     quote: {
-      de: "„Die Qualität der Anbieter auf Weligo ist unübertroffen. Wir haben innerhalb von Stunden den perfekten Hundesitter gefunden.“",
+      de: "„Die Qualität der Dienstleister auf Weligo ist unübertroffen. Wir haben innerhalb von Stunden den perfekten Hundesitter gefunden.“",
       en: '"The quality of providers on Weligo is unmatched. We found the perfect dog walker within hours."',
     },
     quote2: {
@@ -101,7 +101,7 @@ export const dict = {
       en: "Chat and book instantly",
     },
     step2Desc: {
-      de: "Kommunizieren Sie sicher über die App mit den Anbietern, um alle Details abzustimmen. Sobald Sie bereit sind, buchen Sie mit nur einem Klick – ganz ohne endlose Telefonate.",
+      de: "Kommunizieren Sie sicher über die App mit den Dienstleister, um alle Details abzustimmen. Sobald Sie bereit sind, buchen Sie mit nur einem Klick – ganz ohne endlose Telefonate.",
       en: "Message providers securely through the app to align on details. Once you're ready, book with a single tap. No endless phone tag.",
     },
     step3Title: {
@@ -128,12 +128,15 @@ export const dict = {
       de: "Wir starten bald in Zürich. Treten Sie der Warteliste bei und erhalten Sie frühen Zugang vor dem öffentlichen Start.",
       en: "We're launching soon in Zürich. Join the waitlist and get early access before the public launch.",
     },
-    becomeProvider: { de: "Anbieter:in werden", en: "Become a provider" },
+    becomeProvider: { de: "Dienstleister werden", en: "Become a provider" },
     statRateLabel: {
       de: "Durchschnittlicher Stundensatz",
       en: "Average hourly rate",
     },
-    statRatingLabel: { de: "Anbieter-Bewertungen", en: "Provider ratings" },
+    statRatingLabel: {
+      de: "Bewertungen der Dienstleister",
+      en: "Provider ratings",
+    },
     statBookingsLabel: { de: "Monatliche Buchungen", en: "Monthly bookings" },
   },
   services: {
@@ -144,7 +147,7 @@ export const dict = {
     },
     titleB: { de: "wo du bist.", en: "where you are." },
     sub: {
-      de: "Jede:r Weligo-Anbieter:in ist identitätsgeprüft, hintergrundgeprüft und von anderen Schweizer Familien bewertet.",
+      de: "Jeder Weligo-Dienstleister wird identitätsgeprüft, hintergrundüberprüft und von anderen Schweizer Familien bewertet.",
       en: "Every Weligo provider is identity-checked, background-screened and reviewed by other Swiss families.",
     },
     childcare: { de: "Kinderbetreuung.", en: "Childcare." },
@@ -178,12 +181,12 @@ export const dict = {
       en: "Trusted everyday support to make daily tasks easier, smoother, and stress-free.",
     },
     comingSoon: { de: "Bald verfügbar", en: "Coming Soon" },
-    providers: { de: "Anbieter:innen", en: "providers" },
+    providers: { de: "Dienstleister", en: "providers" },
     from: { de: "ab CHF", en: "from CHF" },
     perHr: { de: "/Std", en: "/hr" },
   },
   trust: {
-    verified: { de: "Geprüfte Anbieter:innen", en: "Verified providers" },
+    verified: { de: "Geprüfte Dienstleister", en: "Verified providers" },
     verifiedSub: {
       de: "Jedes Profil ist geprüft",
       en: "Every profile is checked",
@@ -224,7 +227,7 @@ export const dict = {
     cityPh: { de: "Wähle deine Stadt", en: "Select your city" },
     role: { de: "Ich möchte beitreten als…", en: "I want to join in as a..." },
     family: { de: "Familie", en: "Family" },
-    provider: { de: "Anbieter:in", en: "Provider" },
+    provider: { de: "Dienstleister", en: "Provider" },
     login: { de: "Anmelden", en: "Log In" },
     forgot: { de: "Passwort vergessen", en: "Forgot password" },
     noAccount: { de: "Noch nicht registriert?", en: "Didn't register?" },

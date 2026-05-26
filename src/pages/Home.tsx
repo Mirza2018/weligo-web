@@ -460,10 +460,10 @@ function FAQ() {
       q: "Are the services insured?",
       a: "Yes, all bookings are covered by Weligo's liability insurance.",
     },
-    {
-      q: "Do I need to declare AHV / social security?",
-      a: "Weligo handles all the paperwork for compliant Swiss employment.",
-    },
+    // {
+    //   q: "Do I need to declare AHV / social security?",
+    //   a: "Weligo handles all the paperwork for compliant Swiss employment.",
+    // },
     {
       q: "What if I need to cancel?",
       a: "Free cancellation up to 24h before the booking.",
