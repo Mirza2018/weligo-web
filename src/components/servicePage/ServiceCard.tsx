@@ -20,7 +20,7 @@ export function ServiceCard({
   const { t } = useI18n();
   const router=useNavigate()
   return (
-    <article onClick={() => { router("/sign-up");}}  className="group relative aspect-[16/10] overflow-hidden rounded-3xl shadow-sm transition-transform duration-500 hover:-translate-y-1 hover:shadow-xl pointer-cursor">
+    <article onClick={() => { router("123/providers");}}  className="group relative aspect-[16/10] overflow-hidden rounded-3xl shadow-sm transition-transform duration-500 hover:-translate-y-1 hover:shadow-xl pointer-cursor">
       {!available && <div className="absolute inset-0 z-10 bg-black/60" />}
       <img
         src={image}

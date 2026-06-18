@@ -14,10 +14,10 @@ export function MasonryRail() {
   const a = [...rowA, ...rowA, ...rowA];
   const b = [...rowB, ...rowB, ...rowB];
   return (
-    <div className="relative h-[480px] overflow-hidden sm:h-[560px] ">
+    <div className="relative h-120 overflow-hidden sm:h-140 ">
       {/* Edge fades */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 z-30   bg-gradient-to-r from-background to-transparent" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 z-30  bg-gradient-to-l from-background to-transparent" />
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-30   bg-linear-to-r from-background to-transparent" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-30  bg-linear-to-l from-background to-transparent" />
 
       {/* Two stacked scrolling rows behind */}
       <div className="absolute inset-0 z-10 flex flex-col justify-center gap-4">
@@ -27,7 +27,7 @@ export function MasonryRail() {
             return (
               <div
                 key={`a-${i}`}
-                className={`relative shrink-0 overflow-hidden rounded-2xl shadow-md ${h} aspect-[4/4]`}
+                className={`relative shrink-0 overflow-hidden rounded-2xl shadow-md ${h} aspect-4/4`}
               >
                 <img
                   src={src}

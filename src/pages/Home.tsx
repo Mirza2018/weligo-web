@@ -83,7 +83,12 @@ function SearchBar() {
         Sat, 18 May, 09:00
       </Field>
 
-      <button onClick={() => { router("/sign-up");}} className="cursor-pointer flex-shrink-0 inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.02] whitespace-nowrap">
+      <button
+        onClick={() => {
+          router("/sign-up");
+        }}
+        className="cursor-pointer shrink-0 inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.02] whitespace-nowrap"
+      >
         <Search className="h-4 w-4" /> Search
       </button>
     </div>
@@ -430,7 +435,7 @@ function HowItWorks() {
               <p className="mt-2 text-4xl font-bold">{s.title}</p>
               <p className="mt-3  text-xl font-medium  ">{s.desc}</p>
             </div>
-            <div className="aspect-[20/10] overflow-hidden rounded-3xl">
+            <div className="aspect-20/10 overflow-hidden rounded-3xl">
               <img
                 src={s.img}
                 alt=""

@@ -28,6 +28,7 @@ import s3 from "./Images/services/s3.avif";
 import s4 from "./Images/services/s4.avif";
 import s5 from "./Images/services/s5.avif";
 import s6 from "./Images/services/s6.avif";
+import map from "./Images/providers/map.png";
 
 const AllImages = {
   logo,
@@ -60,6 +61,7 @@ const AllImages = {
   s4,
   s5,
   s6,
+  map,
 };
 
 export default AllImages;
