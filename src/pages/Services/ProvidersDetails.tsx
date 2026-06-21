@@ -13,8 +13,9 @@ import {
   ShieldCheck,
   Star,
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AllImages from "../../assets/AllImages";
+import { Separator } from "../../components/ui/separator";
 
 const profileTags = [
   "6 years experience",
@@ -142,7 +143,7 @@ const calendarDays = [
 
 const ProvidersDetails = () => {
   const navigate = useNavigate();
-
+ 
   return (
     <main className="min-h-screen bg-[#F8F9FC] text-[#202126]">
       <HeroSection onBack={() => navigate(-1)} />
@@ -157,7 +158,7 @@ const ProvidersDetails = () => {
           <LocationSection />
         </div>
 
-        <aside className="lg:sticky lg:top-8 lg:self-start">
+        <aside className="lg:sticky lg:top-16 lg:self-start">
           <BookingRequestCard />
         </aside>
       </div>
@@ -395,6 +396,7 @@ function AtGlanceCard() {
 }
 
 function BookingRequestCard() {
+    const navigate = useNavigate();
   return (
     <InfoCard className="bg-white p-4 sm:p-6">
       <div className="font-serif text-[44px] font-semibold leading-none text-primary">
@@ -414,10 +416,16 @@ function BookingRequestCard() {
         <ChevronRight className="h-5 w-5" />
       </button>
 
-      <button className="mt-7 flex h-11 w-full items-center justify-center gap-2 rounded-full bg-primary font-sans text-sm font-bold text-primary-foreground">
+      <Link to={"/services/:serviceId/providers/:providerId/purchase"}>
+      <button
+        onClick={() =>
+          navigate("/services/32934928/providers/64836383/purchase")
+        }
+        className="mt-7 flex h-11 w-full items-center justify-center gap-2 rounded-full bg-primary font-sans text-sm font-bold text-primary-foreground"
+      >
         Send booking request
         <ArrowRight className="h-5 w-5" />
-      </button>
+      </button></Link>
 
       <button className="mt-2 flex h-11 w-full items-center justify-center gap-2 rounded-full border border-primary bg-white font-sans text-sm font-bold text-primary">
         <MessageCircle className="h-5 w-5" />
@@ -562,7 +570,7 @@ function ReviewStatsCard() {
       <p className="mt-4 font-mono text-[10px] leading-tight text-[#9CA0AE]">
         Based on 128 verified reviews
       </p>
-      <div className="mt-5 space-y-2">
+      <div className="mt-5 space-y-2 ">
         {rows.map(([label, value, width]) => (
           <div key={label} className="grid grid-cols-[44px_1fr_30px] gap-2">
             <span className="font-sans text-xs">{label}</span>
@@ -575,6 +583,7 @@ function ReviewStatsCard() {
           </div>
         ))}
       </div>
+      <Separator orientation="horizontal" className="mt-7 text-amber-500 bg-amber-400" />
       <button className="mt-7 h-10 w-full rounded-full bg-primary font-sans text-xs font-bold text-primary-foreground">
         Give Review
       </button>
@@ -610,6 +619,7 @@ function ReviewCard({
       <p className="mt-3 font-serif-italic text-black text-sm font-semibold leading-relaxed">
         {text}
       </p>
+      
       <p className="mt-4 font-mono text-[10px] text-[#9CA0AE]">{meta}</p>
       {reply ? (
         <div className="mt-4 border-l-3 border-primary bg-[#FAF9F6] px-3 py-3 font-sans text-[11px] leading-snug text-[#555866] rounded-e-sm">

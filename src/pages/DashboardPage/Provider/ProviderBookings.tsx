@@ -70,29 +70,34 @@ export function ProviderBookings() {
         {t("nav.bookings")}
       </h2>
 
-      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+     <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
         <Tabs
           value={filter}
           onValueChange={(v) => {
             setFilter(v as Filter);
             setPage(1);
           }}
+          className="w-full xl:w-auto min-w-0"
         >
-          <TabsList className="flex flex-wrap h-auto bg-transparent p-0 gap-1">
+          <TabsList
+            className="flex w-full overflow-x-auto flex-nowrap justify-start
+                 xl:w-auto xl:flex-wrap xl:overflow-visible
+                 h-auto bg-transparent p-0 gap-1 bg-[#F4F4F6] py-1 px-1 border-[#2B2B2B]/10 border rounded-xl"
+          >
             {filters.map((f) => (
               <TabsTrigger
                 key={f}
                 value={f}
-                className="rounded-full px-3 py-1.5 text-sm data-[state=active]:bg-secondary data-[state=active]:text-secondary-foreground"
+                className="flex-shrink-0  whitespace-nowrap rounded-full px-3 py-1.5 text-sm data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:font-bold data-[state=active]:border data-[state=active]:border-[#2B2B2B]/10 data-[state=active]:shadow"
               >
                 {f === "all" ? t("bookings.all") : t(`bookingStatus.${f}`)} (
-                {counts[f] ?? 0})
+                {counts[f]})
               </TabsTrigger>
             ))}
           </TabsList>
         </Tabs>
 
-        <div className="relative w-full lg:w-72">
+        <div className="relative w-full xl:w-72">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             value={query}

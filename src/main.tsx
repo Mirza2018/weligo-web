@@ -34,12 +34,14 @@ import Providers from "./redux/lib/Providers";
 import { I18nProvider } from "./lib/i18n";
 import { TooltipProvider } from "./components/ui/tooltip";
 
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Providers>
       <TooltipProvider>
         <Toaster richColors position="top-center" />
         <I18nProvider>
+          {/* <ScrollToTop /> */}
           <RouterProvider router={router} />
         </I18nProvider>
       </TooltipProvider>

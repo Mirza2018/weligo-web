@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, ScrollRestoration } from "react-router-dom";
 import { Header } from "../components/share/Header";
 import { Footer } from "../components/share/Footer";
 
@@ -8,6 +8,7 @@ function MainLayout() {
       <Header />
 
       <main className="flex-1 ">
+        <ScrollRestoration />
         <Outlet />
       </main>
 

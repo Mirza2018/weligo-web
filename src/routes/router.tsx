@@ -26,6 +26,11 @@ import { ProviderEarningsPage } from "../pages/DashboardPage/Provider/Earnings";
 import { ProviderHelpAndSupportPage } from "../pages/DashboardPage/Provider/HelpAndSupport";
 import { ProviderReviewsPage } from "../pages/DashboardPage/Provider/Reviews";
 import { ProviderOverviewPage } from "../pages/DashboardPage/Provider/ProviderOverviewPage";
+import { ForFamiliesPage } from "../pages/ForFamiliesPage";
+import { ForProvidersPage } from "../pages/ForProvidersPage";
+import { HowItWorksPage } from "../pages/HowItWorksPage";
+import { AboutPage } from "../pages/AboutPage";
+import { PurchasePage } from "../pages/PurchasePage";
 
 const router = createBrowserRouter([
   {
@@ -50,23 +55,23 @@ const router = createBrowserRouter([
       },
       {
         path: "services/:serviceId/providers/:providerId/purchase",
-        // element: <Services />,
+        element: <PurchasePage />,
       },
       {
         path: "for-families",
-        element: <ComingSoon />,
+        element: <ForFamiliesPage />,
       },
       {
         path: "for-providers",
-        element: <ComingSoon />,
+        element: <ForProvidersPage />,
       },
       {
         path: "how-it-works",
-        element: <ComingSoon />,
+        element: <HowItWorksPage />,
       },
       {
         path: "about-us",
-        element: <ComingSoon />,
+        element: <AboutPage />,
       },
       {
         path: "waitlist",
