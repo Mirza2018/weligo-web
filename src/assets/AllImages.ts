@@ -28,6 +28,19 @@ import s3 from "./Images/services/s3.avif";
 import s4 from "./Images/services/s4.avif";
 import s5 from "./Images/services/s5.avif";
 import s6 from "./Images/services/s6.avif";
+import f1 from "./Images/family/f1.avif";
+import f2 from "./Images/family/f2.avif";
+import w1 from "./Images/work/h1.avif";
+import w2 from "./Images/work/h2.avif";
+import w3 from "./Images/work/h3.avif";
+import w4 from "./Images/work/h4.avif";
+import w5 from "./Images/work/h5.avif";
+import w6 from "./Images/work/h6.avif";
+import p1 from "./Images/providers/p1.avif";
+import a1 from "./Images/about/a1.avif";
+import a2 from "./Images/about/a2.avif";
+
+
 import map from "./Images/providers/map.png";
 
 const AllImages = {
@@ -62,6 +75,17 @@ const AllImages = {
   s5,
   s6,
   map,
+  f1,
+  f2,
+  w1,
+  w2,
+  w3,
+  w4,
+  w5,
+  w6,
+  p1,
+  a1,
+  a2
 };
 
 export default AllImages;

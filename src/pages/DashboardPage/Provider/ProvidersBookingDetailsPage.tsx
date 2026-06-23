@@ -32,11 +32,12 @@ import { cn } from "../../../lib/utils";
 import { SectionCard } from "../../../components/common/SectionCard";
 import { formatCHF } from "../../../lib/format";
 
+
 export function ProvidersBookingDetailsPage() {
   const { id } = useParams<{ id: string }>();
   const { t } = useI18n();
   const router = useNavigate();
-  const booking = getBooking(id);
+  const booking = getBooking(id ?? "");
   const [msgOpen, setMsgOpen] = useState(false);
 
   if (!booking) {
@@ -435,6 +436,13 @@ function InfoNote({
 
 /* ---------------- Reviews ---------------- */
 
+
+interface Review {
+  rating: number;
+  date: string;
+  text: string;
+  providerReply?: string;
+}
 function ReviewsPanel({
   reviews,
   firstName,
@@ -452,9 +460,9 @@ function ReviewsPanel({
                 <Star key={idx} className="h-4 w-4 fill-current" />
               ))}
             </div>
-            <span className="text-xs text-muted-foreground">{r.date}</span>
+            <span className="text-xs text-muted-foreground">{r?.date}</span>
           </div>
-          <p className="mt-3 text-sm text-foreground">{r.text}</p>
+          <p className="mt-3 text-sm text-foreground">{r?.text}</p>
           {r.providerReply && (
             <div className="mt-3 border-t border-border pt-3 text-sm">
               <p className="inline-flex items-start gap-1.5 text-primary">

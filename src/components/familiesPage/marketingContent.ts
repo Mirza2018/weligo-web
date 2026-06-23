@@ -2,6 +2,7 @@
 
 /** Centralised marketing copy for the 4 public pages — keeps i18n.tsx lean. */
 
+import AllImages from "../../assets/AllImages";
 import type { Lang } from "../../lib/i18n";
 
 type L = { de: string; en: string };
@@ -471,7 +472,10 @@ export function howItWorksContent(lang: Lang) {
     hero: {
       eyebrow: pick(lang, { de: "WIE ES FUNKTIONIERT", en: "HOW WELIGO" }),
       titleA: pick(lang, { de: "Einfach,", en: "Simple," }),
-      titleB: pick(lang, { de: "von Anfang bis Ende.", en: "start to finish." }),
+      titleB: pick(lang, {
+        de: "von Anfang bis Ende.",
+        en: "start to finish.",
+      }),
       sub: pick(lang, {
         de: "Von Ihrer ersten Suche bis zu Ihrer Buchungsbestätigung — so funktioniert es für Familien und Anbieter.",
         en: "From your first search to your booking confirmation — here's how it works for families and providers.",
@@ -481,7 +485,10 @@ export function howItWorksContent(lang: Lang) {
     },
     families: {
       eyebrow: pick(lang, { de: "FÜR FAMILIEN", en: "FOR FAMILIES" }),
-      titleA: pick(lang, { de: "Vom Bedarf zur Buchung,", en: "From need to booking," }),
+      titleA: pick(lang, {
+        de: "Vom Bedarf zur Buchung,",
+        en: "From need to booking,",
+      }),
       titleB: pick(lang, { de: "in Minuten.", en: "in minutes." }),
       steps: [
         {
@@ -491,37 +498,70 @@ export function howItWorksContent(lang: Lang) {
             en: "Enter your location, choose a care type, and set your schedule. Our smart filters help you find exactly what you need.",
           }),
           points: [
-            pick(lang, { de: "Nach Verfügbarkeit, Sprache und Erfahrung filtern", en: "Filter by availability, language, and experience" }),
-            pick(lang, { de: "In Echtzeit nach Standorten suchen", en: "See real-time provider locations" }),
-            pick(lang, { de: "Sätze, Bewertungen und Profile vergleichen", en: "Compare rates, reviews and profiles" }),
+            pick(lang, {
+              de: "Nach Verfügbarkeit, Sprache und Erfahrung filtern",
+              en: "Filter by availability, language, and experience",
+            }),
+            pick(lang, {
+              de: "In Echtzeit nach Standorten suchen",
+              en: "See real-time provider locations",
+            }),
+            pick(lang, {
+              de: "Sätze, Bewertungen und Profile vergleichen",
+              en: "Compare rates, reviews and profiles",
+            }),
           ],
-          img: IMG.search,
+          img: AllImages.w1,
         },
         {
-          title: pick(lang, { de: "Verifizierte Profile durchsuchen", en: "Browse verified profiles" }),
+          title: pick(lang, {
+            de: "Verifizierte Profile durchsuchen",
+            en: "Browse verified profiles",
+          }),
           body: pick(lang, {
             de: "Jeder Anbieter auf Weligo wurde manuell verifiziert. Lesen Sie Bewertungen, prüfen Sie Zertifikate und finden Sie Ihre Übereinstimmung.",
             en: "Every provider on Weligo has been manually verified. Read reviews, check certifications, and find your match.",
           }),
           points: [
-            pick(lang, { de: "Identität und Hintergrund verifiziert", en: "Identity and background verified" }),
-            pick(lang, { de: "Echte Bewertungen aus abgeschlossenen Buchungen", en: "Real reviews from completed bookings" }),
-            pick(lang, { de: "Sehen Sie die Verfügbarkeit live und Zertifikate", en: "See live availability and certifications" }),
+            pick(lang, {
+              de: "Identität und Hintergrund verifiziert",
+              en: "Identity and background verified",
+            }),
+            pick(lang, {
+              de: "Echte Bewertungen aus abgeschlossenen Buchungen",
+              en: "Real reviews from completed bookings",
+            }),
+            pick(lang, {
+              de: "Sehen Sie die Verfügbarkeit live und Zertifikate",
+              en: "See live availability and certifications",
+            }),
           ],
-          img: IMG.browse,
+          img: AllImages.w2,
         },
         {
-          title: pick(lang, { de: "Nachricht oder Video-Anruf", en: "Message or video-call" }),
+          title: pick(lang, {
+            de: "Nachricht oder Video-Anruf",
+            en: "Message or video-call",
+          }),
           body: pick(lang, {
             de: "Sprechen Sie zuerst. Stellen Sie Fragen. Treffen Sie sich virtuell, bevor Sie Ihre Buchung bestätigen.",
             en: "Talk first. Ask questions. Meet virtually before you confirm your booking.",
           }),
           points: [
-            pick(lang, { de: "Sicheres In-App-Messaging", en: "Secure in-app messaging" }),
-            pick(lang, { de: "Kostenlose Videoanrufe", en: "Free video calls" }),
-            pick(lang, { de: "Antworten in der Regel innerhalb 1 Stunde", en: "Replies usually within 1 hour" }),
+            pick(lang, {
+              de: "Sicheres In-App-Messaging",
+              en: "Secure in-app messaging",
+            }),
+            pick(lang, {
+              de: "Kostenlose Videoanrufe",
+              en: "Free video calls",
+            }),
+            pick(lang, {
+              de: "Antworten in der Regel innerhalb 1 Stunde",
+              en: "Replies usually within 1 hour",
+            }),
           ],
-          img: IMG.videoCall,
+          img: AllImages.w3,
         },
         {
           title: pick(lang, { de: "Buchen und bezahlen", en: "Book and pay" }),
@@ -530,57 +570,105 @@ export function howItWorksContent(lang: Lang) {
             en: "Confirm your booking in a few taps. Pay securely via TWINT or card — your money is held safely until care is complete.",
           }),
           points: [
-            pick(lang, { de: "TWINT und Kartenzahlungen", en: "TWINT and card payments" }),
-            pick(lang, { de: "Daten reservieren und Buchungen verwalten", en: "Reserve dates and manage bookings" }),
-            pick(lang, { de: "Volle Rückerstattung bei Stornierung innerhalb 24 Stunden", en: "Full refund on cancellation within 24h" }),
+            pick(lang, {
+              de: "TWINT und Kartenzahlungen",
+              en: "TWINT and card payments",
+            }),
+            pick(lang, {
+              de: "Daten reservieren und Buchungen verwalten",
+              en: "Reserve dates and manage bookings",
+            }),
+            pick(lang, {
+              de: "Volle Rückerstattung bei Stornierung innerhalb 24 Stunden",
+              en: "Full refund on cancellation within 24h",
+            }),
           ],
-          img: IMG.bookPay,
+          img: AllImages.w4,
         },
         {
-          title: pick(lang, { de: "Bewerten und erneut buchen", en: "Review & rebook" }),
+          title: pick(lang, {
+            de: "Bewerten und erneut buchen",
+            en: "Review & rebook",
+          }),
           body: pick(lang, {
             de: "Nach jeder Buchung hinterlassen Sie eine Bewertung, um Ihrem Anbieter zu helfen. Speichern Sie Ihre Lieblingsanbieter für eine einfache erneute Buchung.",
             en: "After each booking, leave a review to help your provider. Save your favourite providers for easy re-booking.",
           }),
           points: [
-            pick(lang, { de: "Bewertungen aus verifizierten Buchungen", en: "Reviews from verified bookings" }),
-            pick(lang, { de: "1-Klick-Wiederbuchung", en: "1-click rebooking" }),
-            pick(lang, { de: "Bauen Sie Ihr vertrautes Anbieter-Netzwerk auf", en: "Build your trusted provider network" }),
+            pick(lang, {
+              de: "Bewertungen aus verifizierten Buchungen",
+              en: "Reviews from verified bookings",
+            }),
+            pick(lang, {
+              de: "1-Klick-Wiederbuchung",
+              en: "1-click rebooking",
+            }),
+            pick(lang, {
+              de: "Bauen Sie Ihr vertrautes Anbieter-Netzwerk auf",
+              en: "Build your trusted provider network",
+            }),
           ],
-          img: IMG.review,
+          img: AllImages.w5,
         },
         {
-          title: pick(lang, { de: "Familien-Dashboard", en: "Family Dashboard" }),
+          title: pick(lang, {
+            de: "Familien-Dashboard",
+            en: "Family Dashboard",
+          }),
           body: pick(lang, {
             de: "Alle Ihre Buchungen, in einer Ansicht. Beschreibung. Sehen Sie kommende, abgeschlossene und stornierte Buchungen. Buchen Sie erneut oder stornieren Sie in wenigen Taps.",
             en: "All your bookings, in one view. Description. See upcoming, completed and cancelled bookings. Re-book or cancel in two taps.",
           }),
           points: [
-            pick(lang, { de: "Alle Ihre Buchungen, in einer Ansicht", en: "All your bookings, in one view" }),
-            pick(lang, { de: "Nachrichten an Anbieter verwalten", en: "Manage your messages with providers" }),
-            pick(lang, { de: "Alle Zahlungen und Quittungen", en: "All payments and receipts" }),
+            pick(lang, {
+              de: "Alle Ihre Buchungen, in einer Ansicht",
+              en: "All your bookings, in one view",
+            }),
+            pick(lang, {
+              de: "Nachrichten an Anbieter verwalten",
+              en: "Manage your messages with providers",
+            }),
+            pick(lang, {
+              de: "Alle Zahlungen und Quittungen",
+              en: "All payments and receipts",
+            }),
           ],
-          img: IMG.familyDashboard,
+          img: AllImages.w5,
         },
       ],
     },
     providers: {
       eyebrow: pick(lang, { de: "FÜR ANBIETER", en: "FOR PROVIDERS" }),
-      titleA: pick(lang, { de: "Von der Anmeldung zum Verdienen,", en: "From signup to earning," }),
+      titleA: pick(lang, {
+        de: "Von der Anmeldung zum Verdienen,",
+        en: "From signup to earning,",
+      }),
       titleB: pick(lang, { de: "in einer Woche.", en: "in a week." }),
       steps: [
         {
-          title: pick(lang, { de: "Erstellen Sie Ihr Profil", en: "Create your profile" }),
+          title: pick(lang, {
+            de: "Erstellen Sie Ihr Profil",
+            en: "Create your profile",
+          }),
           body: pick(lang, {
             de: "Bauen Sie Ihr professionelles Profil in weniger als 30 Minuten auf. Fügen Sie Erfahrung, Zertifikate und Ihren Stundensatz hinzu.",
             en: "Build a professional profile in less than 30 minutes. Add experience, certifications and your hourly rate.",
           }),
           points: [
-            pick(lang, { de: "Fügen Sie ein Foto und eine Bio hinzu", en: "Add a photo and a bio" }),
-            pick(lang, { de: "Legen Sie Ihre Sätze fest (CHF 22-60+)", en: "Set your own rates (CHF 22–60+)" }),
-            pick(lang, { de: "Laden Sie Sprachen und Zertifikate hoch", en: "Upload languages and certificates" }),
+            pick(lang, {
+              de: "Fügen Sie ein Foto und eine Bio hinzu",
+              en: "Add a photo and a bio",
+            }),
+            pick(lang, {
+              de: "Legen Sie Ihre Sätze fest (CHF 22-60+)",
+              en: "Set your own rates (CHF 22–60+)",
+            }),
+            pick(lang, {
+              de: "Laden Sie Sprachen und Zertifikate hoch",
+              en: "Upload languages and certificates",
+            }),
           ],
-          img: IMG.provider1,
+          img: AllImages.w6,
         },
         {
           title: pick(lang, { de: "Verifiziert werden", en: "Get verified" }),
@@ -590,62 +678,113 @@ export function howItWorksContent(lang: Lang) {
           }),
           points: [
             pick(lang, { de: "Ausweis-Verifizierung", en: "ID verification" }),
-            pick(lang, { de: "Hintergrundprüfung — Strafregisterauszug", en: "Background check — Strafregisterauszug" }),
+            pick(lang, {
+              de: "Hintergrundprüfung — Strafregisterauszug",
+              en: "Background check — Strafregisterauszug",
+            }),
             pick(lang, { de: "Referenzprüfungen", en: "Reference checks" }),
           ],
-          img: IMG.provider2,
+          img: AllImages.w6,
         },
         {
-          title: pick(lang, { de: "Buchungsanfragen erhalten", en: "Receive booking requests" }),
+          title: pick(lang, {
+            de: "Buchungsanfragen erhalten",
+            en: "Receive booking requests",
+          }),
           body: pick(lang, {
             de: "Sobald verifiziert, können Sie Familien finden und buchen. Sie kontrollieren Ihren Kalender — akzeptieren oder lehnen Sie Anfragen zu Ihren Bedingungen ab.",
             en: "Once verified, families can find and book you. You control your calendar — accept or decline requests on your terms.",
           }),
           points: [
-            pick(lang, { de: "Anfragen in Echtzeit", en: "Real-time request alerts" }),
-            pick(lang, { de: "Legen Sie Ihre eigenen Akzeptanzrichtlinien fest", en: "Set your own acceptance policies" }),
-            pick(lang, { de: "Verwalten Sie alles in Ihrer App", en: "Manage everything in one app" }),
+            pick(lang, {
+              de: "Anfragen in Echtzeit",
+              en: "Real-time request alerts",
+            }),
+            pick(lang, {
+              de: "Legen Sie Ihre eigenen Akzeptanzrichtlinien fest",
+              en: "Set your own acceptance policies",
+            }),
+            pick(lang, {
+              de: "Verwalten Sie alles in Ihrer App",
+              en: "Manage everything in one app",
+            }),
           ],
-          img: IMG.provider3,
+          img: AllImages.w6,
         },
         {
-          title: pick(lang, { de: "Bieten Sie grossartige Betreuung", en: "Provide great care" }),
+          title: pick(lang, {
+            de: "Bieten Sie grossartige Betreuung",
+            en: "Provide great care",
+          }),
           body: pick(lang, {
             de: "Zeigen Sie sich, machen Sie einen tollen Job, aktualisieren Sie die App und bauen Sie Ihren Ruf auf.",
             en: "Show up, do a great job, update the app log, and build your reputation.",
           }),
           points: [
-            pick(lang, { de: "Sichere In-App-Nachrichten an Familien", en: "Secure in-app messages to families" }),
-            pick(lang, { de: "Foto-Updates und Bewertungen", en: "Photo updates and ratings" }),
-            pick(lang, { de: "Bauen Sie Ihre Bewertungen auf", en: "Build up your reviews" }),
+            pick(lang, {
+              de: "Sichere In-App-Nachrichten an Familien",
+              en: "Secure in-app messages to families",
+            }),
+            pick(lang, {
+              de: "Foto-Updates und Bewertungen",
+              en: "Photo updates and ratings",
+            }),
+            pick(lang, {
+              de: "Bauen Sie Ihre Bewertungen auf",
+              en: "Build up your reviews",
+            }),
           ],
-          img: IMG.provider4,
+          img: AllImages.w6,
         },
         {
-          title: pick(lang, { de: "Wöchentlich bezahlt werden", en: "Get paid weekly" }),
+          title: pick(lang, {
+            de: "Wöchentlich bezahlt werden",
+            en: "Get paid weekly",
+          }),
           body: pick(lang, {
             de: "Abgeschlossene Buchungen werden jeden Dienstag per TWINT auf Ihre Bank überwiesen. Keine Rechnungen, keine Verzögerungen.",
             en: "Completed bookings are paid out every Tuesday via TWINT or bank transfer. No invoicing, no chasing payments.",
           }),
           points: [
-            pick(lang, { de: "Wöchentliche Auszahlungen per TWINT oder Bank", en: "Weekly payouts via TWINT or bank" }),
-            pick(lang, { de: "Klare Einnahmenübersicht", en: "Clear earnings overview" }),
-            pick(lang, { de: "Weligo übernimmt Steuern und Papierkram", en: "Weligo handles taxes and paperwork" }),
+            pick(lang, {
+              de: "Wöchentliche Auszahlungen per TWINT oder Bank",
+              en: "Weekly payouts via TWINT or bank",
+            }),
+            pick(lang, {
+              de: "Klare Einnahmenübersicht",
+              en: "Clear earnings overview",
+            }),
+            pick(lang, {
+              de: "Weligo übernimmt Steuern und Papierkram",
+              en: "Weligo handles taxes and paperwork",
+            }),
           ],
-          img: IMG.provider5,
+          img: AllImages.w6,
         },
         {
-          title: pick(lang, { de: "Anbieter-Dashboard", en: "Provider Dashboard" }),
+          title: pick(lang, {
+            de: "Anbieter-Dashboard",
+            en: "Provider Dashboard",
+          }),
           body: pick(lang, {
             de: "Ihre Einnahmen auf einen Blick. Beschreibung. Sehen Sie monatliche Einnahmen, abgeschlossene Buchungen und Ihre Bewertung — alles auf einem Bildschirm.",
             en: "Your earnings at a glance. Description. See monthly earnings, completed bookings and your rating — all on one screen.",
           }),
           points: [
-            pick(lang, { de: "Ihre Einnahmen auf einen Blick", en: "Your earnings at a glance" }),
-            pick(lang, { de: "Verwalten Sie Ihren Kalender", en: "Manage your calendar" }),
-            pick(lang, { de: "Ihre Bewertungen anzeigen", en: "View your reviews" }),
+            pick(lang, {
+              de: "Ihre Einnahmen auf einen Blick",
+              en: "Your earnings at a glance",
+            }),
+            pick(lang, {
+              de: "Verwalten Sie Ihren Kalender",
+              en: "Manage your calendar",
+            }),
+            pick(lang, {
+              de: "Ihre Bewertungen anzeigen",
+              en: "View your reviews",
+            }),
           ],
-          img: IMG.provider1,
+          img: AllImages.w6,
         },
       ],
     },

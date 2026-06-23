@@ -16,7 +16,7 @@ export function PageHero({
 }) {
   return (
     <section className="bg-secondary/60">
-      <div className="fade-up mx-auto max-w-430 px-4 py-20 text-center sm:px-6 lg:max-w-3xl lg:py-24">
+      <div className="fade-up mx-auto max-w-430 px-4 text-center sm:px-6 lg:max-w-3xl pt-13 pb-8.5">
         <p className="eyebrow">{eyebrow}</p>
         <h1 className="mt-3 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
           {titleA}
@@ -53,7 +53,7 @@ export function SectionHeader({
         {titleA} <span className="font-serif-italic text-primary">{titleB}</span>
       </h2>
       {sub && (
-        <p className={`mt-4 max-w-2xl text-sm text-muted-foreground sm:text-base ${align === "center" ? "mx-auto" : ""}`}>
+        <p className={`mt-4 max-w-2xl text-sm text-muted-foreground sm:text-lg ${align === "center" ? "mx-auto" : ""}`}>
           {sub}
         </p>
       )}

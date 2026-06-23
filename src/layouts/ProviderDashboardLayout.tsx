@@ -7,15 +7,15 @@ import { ProviderSidebar } from "../components/Dashboard/ProviderSidebar";
 function titleKeyForPath(path: string): string {
   if (path.match(/\/dashboard\/provider\/bookings\/[^/]+/))
     return "details.bookingHeading";
-  if (path.startsWith("/dashboard/provider/bookings")) return "nav.bookings";
-  if (path.startsWith("/dashboard/provider/calendar")) return "nav.calendar";
-  if (path.startsWith("/dashboard/provider/message")) return "nav.message";
-  if (path.startsWith("/dashboard/provider/earnings")) return "nav.earnings";
-  if (path.startsWith("/dashboard/provider/reviews")) return "nav.reviews";
-  if (path.startsWith("/dashboard/provider/help")) return "nav.helpSupport";
+  if (path.startsWith("/dashboard/provider/bookings")) return "navbar.bookings";
+  if (path.startsWith("/dashboard/provider/calendar")) return "navbar.calendar";
+  if (path.startsWith("/dashboard/provider/message")) return "navbar.message";
+  if (path.startsWith("/dashboard/provider/earnings")) return "navbar.earnings";
+  if (path.startsWith("/dashboard/provider/reviews")) return "navbar.reviews";
+  if (path.startsWith("/dashboard/provider/help")) return "navbar.helpSupport";
   if (path.startsWith("/dashboard/provider/settings"))
-    return "nav.profileSettings";
-  return "nav.overview";
+    return "navbar.profileSettings";
+  return "navbar.overview";
 }
 
 const ProviderDashboardLayout = () => {

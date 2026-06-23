@@ -1,5 +1,3 @@
-import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
   ArrowRight,
@@ -8,31 +6,33 @@ import {
   ChevronLeft,
   ChevronRight,
   Clock,
+  Home as HomeIcon,
   Hourglass,
   MapPin,
   Minus,
   Plus,
   ShieldCheck,
   Smile,
-  Home as HomeIcon,
   Star,
 } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 // import { Button } from "@/components/ui/button";
+import { UserAvatar } from "../components/common/UserAvatar";
 import { Button } from "../components/ui/button";
+import { Checkbox } from "../components/ui/checkbox";
 import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
-import { Checkbox } from "../components/ui/checkbox";
-import { UserAvatar } from "../components/common/UserAvatar";
 // import { LanguageSwitcher } from "@/components/dashboard/LanguageSwitcher";
-import { useI18n } from "../lib/i18n";
-import { formatCHF } from "../lib/format";
-import { cn } from "../lib/utils";
 import {
   getPurchaseProvider,
   type PurchaseProvider,
   type TimeSlot,
 } from "../assets/data/purchase-providers";
+import { formatCHF } from "../lib/format";
+import { useI18n } from "../lib/i18n";
+import { cn } from "../lib/utils";
 
 type Step = 1 | 2 | 3 | 4 | 5;
 

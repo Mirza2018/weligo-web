@@ -750,7 +750,13 @@ export const dict = {
   },
 } as const;
 
-type Ctx = { lang: Lang; setLang: (l: Lang) => void; t: (path: string) => string };
+type TranslateParams = Record<string, string | number>;
+
+type Ctx = {
+  lang: Lang;
+  setLang: (l: Lang) => void;
+  t: (path: string, params?: TranslateParams) => string;
+};
 const I18nContext = createContext<Ctx | null>(null);
 
 function resolve(obj: any, path: string): any {
@@ -759,14 +765,26 @@ function resolve(obj: any, path: string): any {
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [lang, setLang] = useState<Lang>("de");
-  const t = useCallback(
-    (path: string) => {
-      const node = resolve(dict, path);
-      if (node && typeof node === "object" && lang in node) return node[lang];
-      return path;
-    },
-    [lang],
-  );
+const t = useCallback(
+  (path: string, params?: Record<string, string | number>) => {
+    const node = resolve(dict, path);
+
+    if (node && typeof node === "object" && lang in node) {
+      let text = String(node[lang]);
+
+      if (params) {
+        Object.entries(params).forEach(([key, value]) => {
+          text = text.replaceAll(`{${key}}`, String(value));
+        });
+      }
+
+      return text;
+    }
+
+    return path;
+  },
+  [lang],
+);
   return <I18nContext.Provider value={{ lang, setLang, t }}>{children}</I18nContext.Provider>;
 }
 

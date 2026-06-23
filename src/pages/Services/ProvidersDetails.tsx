@@ -1,4 +1,3 @@
-import React from "react";
 import {
   ArrowRight,
   CalendarDays,
@@ -13,7 +12,8 @@ import {
   ShieldCheck,
   Star,
 } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import AllImages from "../../assets/AllImages";
 import { Separator } from "../../components/ui/separator";
 
@@ -416,16 +416,16 @@ function BookingRequestCard() {
         <ChevronRight className="h-5 w-5" />
       </button>
 
-      <Link to={"/services/:serviceId/providers/:providerId/purchase"}>
+      
       <button
         onClick={() =>
-          navigate("/services/32934928/providers/64836383/purchase")
+          navigate("/services/123/providers/456/purchase")
         }
         className="mt-7 flex h-11 w-full items-center justify-center gap-2 rounded-full bg-primary font-sans text-sm font-bold text-primary-foreground"
       >
         Send booking request
         <ArrowRight className="h-5 w-5" />
-      </button></Link>
+      </button>
 
       <button className="mt-2 flex h-11 w-full items-center justify-center gap-2 rounded-full border border-primary bg-white font-sans text-sm font-bold text-primary">
         <MessageCircle className="h-5 w-5" />
@@ -638,7 +638,7 @@ function AvailabilitySection() {
         When <span className="font-serif-italic text-primary">Simon</span> is
         free.
       </h2>
-      <div className="mt-5 grid gap-5 lg:grid-cols-[190px_274px]">
+      <div className="mt-5 grid gap-5 lg:grid-cols-[400px_700px]">
         <WeeklyHoursCard />
         <CalendarCard />
       </div>
@@ -728,12 +728,12 @@ function LocationSection() {
         Where <span className="font-serif-italic text-primary">Simon</span>{" "}
         works.
       </h2>
-      <div className="mt-4 grid gap-4 lg:grid-cols-[190px_274px]">
+      <div className="mt-4 grid gap-4 lg:grid-cols-[400px_700px]">
         <LocationInfoCard />
         <img
           src={AllImages.map}
           alt="Provider service area map"
-          className="h-[276px] w-full rounded-xl object-cover"
+          className="h-[360px] w-full rounded-xl object-cover"
         />
       </div>
     </section>

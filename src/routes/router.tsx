@@ -1,36 +1,36 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import MainLayout from "../layouts/MainLayout";
-import { Home } from "../pages/Home";
 import { ComingSoon } from "../components/comingSoon/ComingSoon";
-import { Services } from "../pages/Services";
+import { DashboardLayout } from "../layouts/DashboardPage";
+import MainLayout from "../layouts/MainLayout";
+import ProviderDashboardLayout from "../layouts/ProviderDashboardLayout";
+import { AboutPage } from "../pages/AboutPage";
 import { SignIn } from "../pages/auth/sign-in";
 import { SignUp } from "../pages/auth/sign-up";
-import ServiceProvider from "../pages/Services/ServiceProvider";
-import ProvidersDetails from "../pages/Services/ProvidersDetails";
-import { DashboardLayout } from "../layouts/DashboardPage";
-import { OverviewPage } from "../pages/DashboardPage/Family/OverviewPage";
-import { BookingsPage } from "../pages/DashboardPage/Family/BookingsPage";
 import { BookingDetailsPage } from "../pages/DashboardPage/Family/BookingDetailsPage";
+import { BookingsPage } from "../pages/DashboardPage/Family/BookingsPage";
 import { FavoritesPage } from "../pages/DashboardPage/Family/FavoritesPage";
 import { HelpAndSupportPage } from "../pages/DashboardPage/Family/HelpAndSupportPage";
 import { MessagePage } from "../pages/DashboardPage/Family/MessagePage";
-import { ReviewsPage } from "../pages/DashboardPage/Family/ReviewsPage";
+import { OverviewPage } from "../pages/DashboardPage/Family/OverviewPage";
 import { ProfileSettingsPage } from "../pages/DashboardPage/Family/ProfileSettingsPage";
+import { ReviewsPage } from "../pages/DashboardPage/Family/ReviewsPage";
 import { TransactionsPage } from "../pages/DashboardPage/Family/TransactionsPage";
-import ProviderDashboardLayout from "../layouts/ProviderDashboardLayout";
-import { ProviderBookings } from "../pages/DashboardPage/Provider/ProviderBookings";
-import { ProvidersBookingDetailsPage } from "../pages/DashboardPage/Provider/ProvidersBookingDetailsPage";
 import { ProviderCalendarPage } from "../pages/DashboardPage/Provider/Calendar";
 import { ProviderEarningsPage } from "../pages/DashboardPage/Provider/Earnings";
 import { ProviderHelpAndSupportPage } from "../pages/DashboardPage/Provider/HelpAndSupport";
-import { ProviderReviewsPage } from "../pages/DashboardPage/Provider/Reviews";
+import { ProviderBookings } from "../pages/DashboardPage/Provider/ProviderBookings";
 import { ProviderOverviewPage } from "../pages/DashboardPage/Provider/ProviderOverviewPage";
+import { ProvidersBookingDetailsPage } from "../pages/DashboardPage/Provider/ProvidersBookingDetailsPage";
+import { ProviderReviewsPage } from "../pages/DashboardPage/Provider/Reviews";
 import { ForFamiliesPage } from "../pages/ForFamiliesPage";
 import { ForProvidersPage } from "../pages/ForProvidersPage";
-import { HowItWorksPage } from "../pages/HowItWorksPage";
-import { AboutPage } from "../pages/AboutPage";
+import { Home } from "../pages/Home";
+import { HowItWorksPage2 } from "../pages/HowItWorksPage2";
 import { PurchasePage } from "../pages/PurchasePage";
+import { Services } from "../pages/Services";
+import ProvidersDetails from "../pages/Services/ProvidersDetails";
+import ServiceProvider from "../pages/Services/ServiceProvider";
 
 const router = createBrowserRouter([
   {
@@ -67,7 +67,8 @@ const router = createBrowserRouter([
       },
       {
         path: "how-it-works",
-        element: <HowItWorksPage />,
+        // element: <HowItWorksPage />,
+        element:<HowItWorksPage2/>
       },
       {
         path: "about-us",

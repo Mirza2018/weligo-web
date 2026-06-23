@@ -31,12 +31,14 @@ import { Button } from "../../../components/ui/button";
 import { cn } from "../../../lib/utils";
 import { SectionCard } from "../../../components/common/SectionCard";
 import { formatCHF } from "../../../lib/format";
+// import type { Review } from "@/assets/data/reviews";
 
 export function BookingDetailsPage() {
   const { id } = useParams<{ id: string }>();
+
   const { t } = useI18n();
   const router = useNavigate();
-  const booking = getBooking(id);
+  const booking = getBooking(id ?? "");
   const [msgOpen, setMsgOpen] = useState(false);
 
   if (!booking) {
@@ -434,6 +436,14 @@ function InfoNote({
 }
 
 /* ---------------- Reviews ---------------- */
+
+
+interface Review {
+  rating: number;
+  date: string;
+  text: string;
+  providerReply?: string;
+}
 
 function ReviewsPanel({
   reviews,
