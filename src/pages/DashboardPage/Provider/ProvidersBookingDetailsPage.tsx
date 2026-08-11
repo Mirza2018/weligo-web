@@ -15,6 +15,7 @@ import {
   Check,
   CircleAlert,
   Download,
+  Flag,
   HeartHandshake,
   MapPin,
   MessageCircle,
@@ -31,7 +32,7 @@ import { Button } from "../../../components/ui/button";
 import { cn } from "../../../lib/utils";
 import { SectionCard } from "../../../components/common/SectionCard";
 import { formatCHF } from "../../../lib/format";
-
+import { ReportIssueDialog } from "@/components/Dashboard/Provider/ReportDialog";
 
 export function ProvidersBookingDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -39,6 +40,7 @@ export function ProvidersBookingDetailsPage() {
   const router = useNavigate();
   const booking = getBooking(id ?? "");
   const [msgOpen, setMsgOpen] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
 
   if (!booking) {
     return (
@@ -80,8 +82,13 @@ export function ProvidersBookingDetailsPage() {
           </p>
         </div>
         {booking.paid && (
-          <span className="inline-flex h-9 items-center rounded-md bg-emerald-500 px-4 text-sm font-medium text-white">
-            {t("bookingStatus.paid")}
+          <span
+            onClick={() => setReportOpen(true)}
+            className="inline-flex h-9 items-center rounded-md bg-red-500 px-4 text-sm font-medium text-white cursor-pointer"
+          >
+            {/* {t("bookingStatus.paid")} */}
+            <Flag size={16} absoluteStrokeWidth />
+            {t("bookingStatus.report")}
           </span>
         )}
       </div>
@@ -110,6 +117,7 @@ export function ProvidersBookingDetailsPage() {
         onOpenChange={setMsgOpen}
         recipientName={booking.providerName}
       />
+      <ReportIssueDialog open={reportOpen} onOpenChange={setReportOpen} />
     </div>
   );
 }
@@ -435,7 +443,6 @@ function InfoNote({
 }
 
 /* ---------------- Reviews ---------------- */
-
 
 interface Review {
   rating: number;

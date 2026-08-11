@@ -5,8 +5,9 @@
 
 @import "tw-animate-css";
 
-@impo
-@custom-variant dark (&:is(.dark *));
+@impo @custom-variant dark (&:is(.dark *));
+@custom-variant checked (&[data-state="checked"]);
+@custom-variant unchecked (&[data-state="unchecked"]);
 
 /* Centralized Weligo design tokens. Change colors / fonts here only. */
 
@@ -89,7 +90,7 @@
   --destructive-foreground: #ffffff;
 
   --border: #ececf4;
-  --input: #D0D5DD;
+  --input: #d0d5dd;
   --ring: #6d5df6;
 
   --tint-yellow: #fcefd0;

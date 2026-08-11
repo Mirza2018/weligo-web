@@ -8,6 +8,7 @@ import { useState } from "react";
 // import { formatCHF } from "@/lib/format";
 // import { useI18n } from "@/lib/i18n";
 // import { cn } from "@/lib/utils";
+import { ReportIssueDialog } from "@/components/Dashboard/Family/ReportDialog";
 import {
   ArrowLeft,
   ArrowRight,
@@ -15,22 +16,23 @@ import {
   Check,
   CircleAlert,
   Download,
+  Flag,
   HeartHandshake,
   MapPin,
   MessageCircle,
   Star,
   X,
 } from "lucide-react";
-import { toast } from "sonner";
-import { useI18n } from "../../../lib/i18n";
-import { getBooking, type Booking } from "../../../assets/data/bookings";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { toast } from "sonner";
+import { getBooking, type Booking } from "../../../assets/data/bookings";
 import { SendMessageDialog } from "../../../components/Dashboard/Family/SendMessageDialog";
+import { SectionCard } from "../../../components/common/SectionCard";
 import { UserAvatar } from "../../../components/common/UserAvatar";
 import { Button } from "../../../components/ui/button";
-import { cn } from "../../../lib/utils";
-import { SectionCard } from "../../../components/common/SectionCard";
 import { formatCHF } from "../../../lib/format";
+import { useI18n } from "../../../lib/i18n";
+import { cn } from "../../../lib/utils";
 // import type { Review } from "@/assets/data/reviews";
 
 export function BookingDetailsPage() {
@@ -40,6 +42,7 @@ export function BookingDetailsPage() {
   const router = useNavigate();
   const booking = getBooking(id ?? "");
   const [msgOpen, setMsgOpen] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
 
   if (!booking) {
     return (
@@ -81,8 +84,13 @@ export function BookingDetailsPage() {
           </p>
         </div>
         {booking.paid && (
-          <span className="inline-flex h-9 items-center rounded-md bg-emerald-500 px-4 text-sm font-medium text-white">
-            {t("bookingStatus.paid")}
+          <span
+            onClick={() => setReportOpen(true)}
+            className="inline-flex h-9 items-center rounded-md bg-red-500 px-4 text-sm font-medium text-white cursor-pointer"
+          >
+            {/* {t("bookingStatus.paid")} */}
+            <Flag size={16} absoluteStrokeWidth />
+            {t("bookingStatus.report")}
           </span>
         )}
       </div>
@@ -111,6 +119,7 @@ export function BookingDetailsPage() {
         onOpenChange={setMsgOpen}
         recipientName={booking.providerName}
       />
+      <ReportIssueDialog open={reportOpen} onOpenChange={setReportOpen} />
     </div>
   );
 }
@@ -436,7 +445,6 @@ function InfoNote({
 }
 
 /* ---------------- Reviews ---------------- */
-
 
 interface Review {
   rating: number;

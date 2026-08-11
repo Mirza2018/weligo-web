@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import authSide from "../../assets/auth.mp4";
 import { Link } from "react-router-dom";
 import { Logo } from "./Logo";
+import AllImages from "@/assets/AllImages";
 
 /**
  * Two-column auth layout. The right column is a soft "video-like" looping
@@ -18,7 +19,9 @@ export function AuthLayout({
   italic: string;
   description: string;
   children: ReactNode;
-}) {
+  }) {
+  
+  const date=new Date();
   return (
     <div className="grid min-h-screen grid-cols-1 bg-background lg:grid-cols-2">
       <div className="flex flex-col px-6 py-10 sm:px-12 lg:px-20 w-full">
@@ -36,15 +39,20 @@ export function AuthLayout({
           </p>
           <div className="mt-8 max-w-md">{children}</div>
         </div>
-        <p className="text-xs text-muted-foreground">© Weligo 2026</p>
+        <p className=" text-primary">© Weligo { date.getFullYear()}</p>
       </div>
       <div className="relative hidden overflow-hidden lg:block">
-        <video
+        {/* <video
           src={authSide}
           autoPlay
           loop
           muted
           playsInline
+          className="absolute inset-0 h-full w-full object-cover"
+        /> */}
+        <img
+          src={AllImages.h1}
+          alt=""
           className="absolute inset-0 h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-primary/20 via-transparent to-transparent" />

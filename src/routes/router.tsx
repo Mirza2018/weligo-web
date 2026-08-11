@@ -1,5 +1,6 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 
+import { ChooseRole } from "@/pages/auth/choose-account";
 import { ComingSoon } from "../components/comingSoon/ComingSoon";
 import { DashboardLayout } from "../layouts/DashboardPage";
 import MainLayout from "../layouts/MainLayout";
@@ -31,6 +32,16 @@ import { PurchasePage } from "../pages/PurchasePage";
 import { Services } from "../pages/Services";
 import ProvidersDetails from "../pages/Services/ProvidersDetails";
 import ServiceProvider from "../pages/Services/ServiceProvider";
+import { SubmitCode } from "@/pages/auth/submit-code";
+import { ServiceSelection } from "@/pages/auth/service-selection";
+import { AddCertificates } from "@/pages/auth/add-certificates";
+import { AboutYou } from "@/pages/auth/about-you";
+import { MoreInfo } from "@/pages/auth/more-info";
+import { WelcomeToWeligo } from "@/pages/auth/welcome-weligo";
+import { SignUpProvider } from "@/pages/auth/sign-up-provider";
+import { SubmitCodeProvider } from "@/pages/auth/submit-code-provider";
+import { MoreInfoProvider } from "@/pages/auth/more-info-provider";
+import { WelcomeToWeligoProvider } from "@/pages/auth/welcome-weligo-provider";
 
 const router = createBrowserRouter([
   {
@@ -68,7 +79,7 @@ const router = createBrowserRouter([
       {
         path: "how-it-works",
         // element: <HowItWorksPage />,
-        element:<HowItWorksPage2/>
+        element: <HowItWorksPage2 />,
       },
       {
         path: "about-us",
@@ -166,12 +177,63 @@ const router = createBrowserRouter([
   },
 
   {
+    path: "*",
+    element: <Navigate to="/" />,
+  },
+  {
+    path: "/choose-account",
+    element: <ChooseRole />,
+  },
+  {
     path: "/sign-in",
     element: <SignIn />,
   },
   {
     path: "/sign-up",
     element: <SignUp />,
+  },
+
+  {
+    path: "/verify-family",
+    element: <SubmitCode />,
+  },
+  {
+    path: "/more-info",
+    element: <MoreInfo />,
+  },
+  {
+    path: "/welcome-weligo",
+    element: <WelcomeToWeligo />,
+  },
+
+  //
+  {
+    path: "/sign-up-provider",
+    element: <SignUpProvider />,
+  },
+  {
+    path: "/verify-provider",
+    element: <SubmitCodeProvider />,
+  },
+  {
+    path: "/serice-selection",
+    element: <ServiceSelection />,
+  },
+  {
+    path: "/add-certificates",
+    element: <AddCertificates />,
+  },
+  {
+    path: "/about-you",
+    element: <AboutYou />,
+  },
+  {
+    path: "/more-info-provider",
+    element: <MoreInfoProvider />,
+  },
+  {
+    path: "/welcome-weligo-provider",
+    element: <WelcomeToWeligoProvider />,
   },
 ]);
 

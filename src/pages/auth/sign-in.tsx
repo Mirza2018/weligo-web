@@ -65,7 +65,7 @@ export function SignIn() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder={t("auth.fullNamePh")}
+            placeholder={t("auth.emailPh")}
             className="h-12 w-full rounded-lg border border-input bg-white! px-4 text-sm outline-none focus:border-primary "
           />
         </Field>
@@ -83,7 +83,7 @@ export function SignIn() {
             to="/waitlist"
             className="text-sm font-medium text-primary hover:underline"
           >
-            {t("auth.forgot")}
+            {t("auth.forgetPassword")}
           </Link>
         </div>
         <button
@@ -95,7 +95,7 @@ export function SignIn() {
         <p className="text-center text-sm text-muted-foreground">
           {t("auth.noAccount")}{" "}
           <Link
-            to="/sign-up"
+            to="/choose-account"
             className="font-medium text-primary hover:underline"
           >
             {t("auth.registerLink")}

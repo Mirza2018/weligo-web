@@ -14,7 +14,7 @@ import { setAccessToken } from "../../redux/slices/authSlice";
 import { PasswordStrength } from "../../components/authPage/PasswordStrength";
 import { Checkbox } from "@/components/ui/checkbox";
 
-export function SignUp() {
+export function SignUpProvider() {
   const { t } = useI18n();
   const [userRegister, { isLoading }] = useUserRegisterMutation();
   const dispatch = useDispatch();
@@ -49,7 +49,7 @@ export function SignUp() {
       role: "family",
     };
 
-    navigate("/verify-family");
+    navigate("/verify-provider");
     return;
 
     try {

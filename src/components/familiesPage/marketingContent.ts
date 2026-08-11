@@ -169,8 +169,8 @@ export function familiesContent(lang: Lang) {
         },
       ],
       quote: pick(lang, {
-        de: "„Das ist kein Marketingtext. Das sind operative Verpflichtungen.“",
-        en: "\"This is not marketing copy. These are operational commitments.\"",
+        de: "“Das ist kein Marketingtext. Das sind operative Verpflichtungen.„",
+        en: '"This is not marketing copy. These are operational commitments."',
       }),
       verifiedBy: pick(lang, {
         de: "Verifiziert von 12.458 Familien in der ganzen Schweiz.",
@@ -222,7 +222,10 @@ export function familiesContent(lang: Lang) {
       },
     },
     checks: {
-      eyebrow: pick(lang, { de: "SICHERHEIT & VERIFIZIERUNG", en: "SAFETY & VERIFICATION" }),
+      eyebrow: pick(lang, {
+        de: "SICHERHEIT & VERIFIZIERUNG",
+        en: "SAFETY & VERIFICATION",
+      }),
       titleA: pick(lang, { de: "Vier Prüfungen.", en: "Four checks." }),
       titleB: pick(lang, { de: "Keine Abkürzungen.", en: "No shortcuts." }),
       sub: pick(lang, {
@@ -238,14 +241,20 @@ export function familiesContent(lang: Lang) {
           }),
         },
         {
-          title: pick(lang, { de: "Strafregisterprüfung", en: "Criminal record check" }),
+          title: pick(lang, {
+            de: "Strafregisterprüfung",
+            en: "Criminal record check",
+          }),
           body: pick(lang, {
             de: "Strafregisterauszug erforderlich für alle Anbieter in Kinder- und Seniorenbetreuung. Alle 12 Monate erneuert.",
             en: "Strafregisterauszug required for all child-facing and senior care providers. Renewed every 12 months.",
           }),
         },
         {
-          title: pick(lang, { de: "Erste-Hilfe-Zertifikat", en: "First aid certificate" }),
+          title: pick(lang, {
+            de: "Erste-Hilfe-Zertifikat",
+            en: "First aid certificate",
+          }),
           body: pick(lang, {
             de: "Aktuelles Schweizer-Rotes-Kreuz-Erste-Hilfe-Zertifikat für alle Kinder- und Seniorenbetreuer. Ablaufdatum im Profil sichtbar.",
             en: "Current Swiss Red Cross first aid certification for all childcare and senior care providers. Expiry date shown on profile.",
@@ -277,7 +286,10 @@ export function familiesContent(lang: Lang) {
         de: "Tausende Schweizer Familien haben ihren Betreuer auf Weligo gefunden. Ihre könnte die nächste sein.",
         en: "Thousands of Swiss families found their caregiver on Weligo. Yours could be next.",
       }),
-      button: pick(lang, { de: "Betreuung für meine Familie finden", en: "Find Care for my family" }),
+      button: pick(lang, {
+        de: "Betreuung für meine Familie finden",
+        en: "Find Care for my family",
+      }),
     },
   };
 }

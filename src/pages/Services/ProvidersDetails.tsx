@@ -638,7 +638,8 @@ function AvailabilitySection() {
         When <span className="font-serif-italic text-primary">Simon</span> is
         free.
       </h2>
-      <div className="mt-5 grid gap-5 lg:grid-cols-[400px_700px]">
+      {/* <div className="mt-5 grid gap-5 lg:grid-cols-[400px_700px]"> */}
+         <div className="mt-8 grid gap-5 lg:grid-cols-[280px_1fr]">
         <WeeklyHoursCard />
         <CalendarCard />
       </div>
@@ -728,7 +729,7 @@ function LocationSection() {
         Where <span className="font-serif-italic text-primary">Simon</span>{" "}
         works.
       </h2>
-      <div className="mt-4 grid gap-4 lg:grid-cols-[400px_700px]">
+      <div className="mt-8 grid gap-5 lg:grid-cols-[280px_1fr] items-start">
         <LocationInfoCard />
         <img
           src={AllImages.map}
@@ -753,11 +754,11 @@ function LocationInfoCard() {
         0.8km from the center. Works in the Z{"\u00FC"}rich metropolitan area
         within 10km.
       </p>
-      <div className="mt-5 border-t border-border pt-5">
+      {/* <div className="mt-5 border-t border-border pt-5">
         <SectionKicker className="text-[9px]">Travels up to</SectionKicker>
         <p className="mt-3 font-serif text-lg">10 km</p>
-      </div>
-      <div className="mt-5 border-t border-border pt-5">
+      </div> */}
+      {/* <div className="mt-5 border-t border-border pt-5">
         <SectionKicker className="text-[9px]">Districts served</SectionKicker>
         <div className="mt-3 flex flex-wrap gap-2">
           {["8001", "8002", "8003", "8004", "8005"].map((zip) => (
@@ -769,7 +770,7 @@ function LocationInfoCard() {
             </span>
           ))}
         </div>
-      </div>
+      </div> */}
     </InfoCard>
   );
 }
