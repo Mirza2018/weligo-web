@@ -17,7 +17,7 @@ const baseQuery = fetchBaseQuery({
     const resetPasswordToken = state.auth.resetPasswordToken;
 
     if (token) {
-      headers.set("authorization", `Bearer ${token}`);
+      headers.set("token", `${token}`);
     }
     // if (forgotPassToken) {
     //   headers.set("signUpToken", `signUpToken ${forgotPassToken}`);
@@ -25,16 +25,16 @@ const baseQuery = fetchBaseQuery({
     // if (resendForgotPasswordToken) {
     //   headers.set("signUpToken", `signUpToken ${resendForgotPasswordToken}`);
     // }
-    if (signUpToken) {
-      headers.set("authorization", `Bearer ${signUpToken}`);
-    }
+    // if (signUpToken) {
+    //   headers.set("authorization", `Bearer ${signUpToken}`);
+    // }
     // if (resendSignUpToken) {
     //   headers.set("authorization", `Bearer ${resendSignUpToken}`);
     // }
 
-    if (resetPasswordToken) {
-      headers.set("Forget-password", `Forget-password ${resetPasswordToken}`);
-    }
+    // if (resetPasswordToken) {
+    //   headers.set("Forget-password", `Forget-password ${resetPasswordToken}`);
+    // }
 
     return headers;
   },

@@ -42,7 +42,7 @@ import { SignUpProvider } from "@/pages/auth/sign-up-provider";
 import { SubmitCodeProvider } from "@/pages/auth/submit-code-provider";
 import { MoreInfoProvider } from "@/pages/auth/more-info-provider";
 import { WelcomeToWeligoProvider } from "@/pages/auth/welcome-weligo-provider";
-
+ 
 const router = createBrowserRouter([
   {
     path: "/",

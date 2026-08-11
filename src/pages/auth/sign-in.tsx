@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import { toast } from "sonner";
 
 import { useI18n } from "../../lib/i18n";
-import { setAccessToken } from "../../redux/slices/authSlice";
+import { setAccessToken, setUserInfo } from "../../redux/slices/authSlice";
 import { useUserLoginMutation } from "../../redux/api/authApi";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthLayout } from "../../components/authPage/AuthLayout";
@@ -39,6 +39,7 @@ export function SignIn() {
       const res = await userLogin(payload).unwrap();
 
       dispatch(setAccessToken(res?.data?.accessToken));
+      dispatch(setUserInfo(res?.data?.user));
 
       toast.success(res?.message, {
         id: toastId,

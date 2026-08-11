@@ -19,6 +19,8 @@ import AllImages from "../assets/AllImages";
 import { useI18n } from "../lib/i18n";
 import { Link, useNavigate } from "react-router-dom";
 import { MasonryRail } from "../components/homePage/MasonryRail";
+import { useGetCategoriesQuery } from "@/redux/api/websiteApi";
+import { getImageUrl } from "@/redux/getBaseUrl";
 
 // export const Route = createFileRoute("/")({
 //   component: Home,
@@ -68,7 +70,7 @@ function Hero() {
 }
 
 function SearchBar() {
-  const router=useNavigate()
+  const router = useNavigate();
   return (
     <div className="mx-auto mt-8 flex flex-col max-w-4xl gap-2 rounded-2xl border border-border bg-card p-2 shadow-sm lg:flex-row lg:items-center ">
       <Field label="What are you looking for?" icon={Baby} divider>
@@ -114,104 +116,131 @@ function Field({
       </span>
       <div className="min-w-0 w-42">
         <p className="text-sm text-[#313233] font-semibold">{label}</p>
-        <p className="truncate text-lg font-bold text-foreground">
-          {children}
-        </p>
+        <p className="truncate text-lg font-bold text-foreground">{children}</p>
       </div>
     </div>
   );
 }
 
 function ServicesStrip() {
+  const { data, isLoading } = useGetCategoriesQuery({});
   const { t } = useI18n();
-  const items = [
+
+  const categories = [...(data?.data ?? [])].sort((a, b) => a.order - b.order);
+
+  // Your existing 6 color combinations
+  const colorStyles = [
     {
-      key: "services.childcare",
-      tint: "bg-primary-muted",
-      icon: Baby,
+      tint: "bg-primary/10",
       iconColor: "text-primary",
       ring: "ring-primary/40",
-      descKey: "home.svcChildDesc",
-      available: true,
+      badge: "text-primary bg-[#DCD2F2]!",
     },
     {
-      key: "services.tutoring",
       tint: "bg-[color:var(--tint-yellow)]",
-      icon: GraduationCap,
       iconColor: "text-amber-500",
-      descKey: "home.svcTutorDesc",
-      available: true,
+      ring: "ring-amber-400/40",
+      badge: "text-amber-600 bg-[#F9E7B5]!",
     },
     {
-      key: "services.senior",
       tint: "bg-[color:var(--tint-blue)]",
-      icon: Users,
       iconColor: "text-sky-500",
-      descKey: "home.svcSeniorDesc",
+      ring: "ring-sky-400/40",
       badge: "text-sky-600 bg-[#D3E6FA]!",
     },
     {
-      key: "services.pet",
       tint: "bg-[color:var(--tint-green)]!",
-      icon: PawPrint,
       iconColor: "text-emerald-500",
-      descKey: "home.svcPetDesc",
+      ring: "ring-emerald-400/40",
       badge: "text-emerald-600 bg-[#CCEBDC]!",
     },
     {
-      key: "services.cleaning",
       tint: "bg-[color:var(--tint-red)]",
-      icon: Sparkles,
       iconColor: "text-rose-500",
-      descKey: "home.svcCleanDesc",
+      ring: "ring-rose-400/40",
       badge: "text-rose-600 bg-[#F6CFD4]!",
     },
     {
-      key: "services.everyday",
       tint: "bg-primary-muted",
-      icon: ShoppingBag,
       iconColor: "text-primary",
-      descKey: "home.svcEverydayDesc",
+      ring: "ring-primary/40",
       badge: "text-primary bg-[#DCD2F2]!",
     },
   ];
+
+  // Change this according to your API environment
+  const API_URL = import.meta.env.VITE_API_URL;
+
   return (
     <section className="mx-auto max-w-430 px-4 py-20 sm:px-6 lg:px-8">
       <p className="eyebrow">{t("home.servicesEyebrow")}</p>
+
       <h2 className="mt-2 text-3xl font-semibold sm:text-[48px]">
         {t("home.servicesTitleA")}
         <span className="font-serif-italic">{t("home.servicesTitleB")}</span>
         {t("home.servicesTitleC")}
       </h2>
+
       <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-        {items.map((it) => {
-          const Icon = it.icon;
-          const title = t(it.key).replace(/\.$/, "");
-          return (
-            <Link
-              key={it.key}
-              to="/services"
-              className={`group flex flex-col items-center justify-start gap-4 rounded-3xl ${it.tint} ${it.available ? "ring-2 ring-primary/40" : ""} p-6 text-center transition-transform hover:-translate-y-1`}
-            >
-              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white shadow-sm">
-                <Icon className={`h-7 w-7 ${it.iconColor}`} />
-              </span>
-              <h3 className=" xl:text-xl text-foreground font-semibold">
-                {title}
-              </h3>
-              <p className="text-sm leading-relaxed text-[#5E6062]">
-                {t(it.descKey)}
-              </p>
-              {!it.available && (
-                <span
-                  className={`mt-auto inline-flex rounded-full bg-white/70 px-3 py-1 text-xs font-medium ${it.badge}`}
+        {isLoading
+          ? Array.from({ length: 6 }).map((_, index) => (
+              <div
+                key={index}
+                className="h-[260px] animate-pulse rounded-3xl bg-muted"
+              />
+            ))
+          : categories.map((category, index) => {
+              // Repeat the 6 colors
+              const color = colorStyles[index % colorStyles.length];
+
+              const isAvailable = category.status === "active";
+
+              // Handle both full URL and relative API path
+              const iconUrl = category.icon?.startsWith("http")
+                ? category.icon
+                : `${getImageUrl(category.icon)}`;
+
+              return (
+                <Link
+                  key={category?._id}
+                  // to={`/services/${category?._id}`}
+                  to={`/services`}
+                  className={`group flex flex-col items-center justify-start gap-4 rounded-3xl ${
+                    color.tint
+                  } ${
+                    isAvailable ? `ring-2 ${color.ring}` : ""
+                  } p-6 text-center transition-transform hover:-translate-y-1`}
                 >
-                  {t("services.comingSoon")}
-                </span>
-              )}
-            </Link>
-          );
-        })}
+                  {/* Category Icon */}
+                  <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-white shadow-sm">
+                    <img
+                      src={iconUrl}
+                      alt={category.name}
+                      className={`h-8 w-8 object-contain ${color.iconColor}`}
+                    />
+                  </span>
+
+                  {/* Category Name */}
+                  <h3 className="text-foreground font-semibold xl:text-xl">
+                    {category.name}
+                  </h3>
+
+                  {/* Description */}
+                  <p className="text-sm leading-relaxed text-[#5E6062]">
+                    {category.description}
+                  </p>
+
+                  {/* Coming Soon */}
+                  {!isAvailable && (
+                    <span
+                      className={`mt-auto inline-flex rounded-full bg-white/70 px-3 py-1 text-xs font-medium ${color.badge}`}
+                    >
+                      {t("services.comingSoon")}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
       </div>
     </section>
   );
