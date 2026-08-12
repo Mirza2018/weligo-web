@@ -15,7 +15,7 @@ import {
 import storage from "./lib/storage"; // ← This is the fix
 
 const persistConfig = {
-  key: "weligo_dashboard",
+  key: "weligo_website",
   version: 1,
   storage,
   whitelist: ["auth"], // only persist auth

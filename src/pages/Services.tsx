@@ -4,7 +4,7 @@ import { ServiceCard } from "../components/servicePage/ServiceCard";
 import { TrustBar } from "../components/servicePage/TrustBar";
 import { useI18n } from "../lib/i18n";
 
-const ITEMS_PER_PAGE = 6;
+
 
 export function Services() {
   const { t } = useI18n();
@@ -13,7 +13,7 @@ export function Services() {
 
   const { data, isLoading, isFetching } = useGetCategoriesRateQuery({
     page,
-    limit: ITEMS_PER_PAGE,
+    limit: 6,
   });
 
   const categories = data?.data ?? [];
@@ -111,7 +111,7 @@ export function Services() {
 function ServiceCardSkeleton() {
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
-      {Array.from({ length: ITEMS_PER_PAGE }).map((_, index) => (
+      {Array.from({ length: 6 }).map((_, index) => (
         <div
           key={index}
           className="aspect-[16/10] animate-pulse overflow-hidden rounded-3xl bg-muted"

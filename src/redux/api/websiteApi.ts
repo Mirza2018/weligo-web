@@ -65,9 +65,19 @@ export const authApi = baseApi.injectEndpoints({
       },
       providesTags: [tagTypes.categories],
     }),
+    searchProviders: build.query({
+      query: (params) => {
+        return {
+          url: `/users/search-providers`,
+          method: "GET",
+          params,
+        };
+      },
+      providesTags: [tagTypes.categories],
+    }),
 
     ///END
   }),
 });
 
-export const { useGetCategoriesQuery, useGetCategoriesRateQuery } = authApi;
+export const { useGetCategoriesQuery, useGetCategoriesRateQuery, useSearchProvidersQuery } = authApi;

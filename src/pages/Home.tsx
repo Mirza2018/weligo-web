@@ -19,7 +19,7 @@ import AllImages from "../assets/AllImages";
 import { useI18n } from "../lib/i18n";
 import { Link, useNavigate } from "react-router-dom";
 import { MasonryRail } from "../components/homePage/MasonryRail";
-import { useGetCategoriesQuery } from "@/redux/api/websiteApi";
+import { useGetCategoriesQuery, useSearchProvidersQuery } from "@/redux/api/websiteApi";
 import { getImageUrl } from "@/redux/getBaseUrl";
 
 // export const Route = createFileRoute("/")({
@@ -41,6 +41,7 @@ export function Home() {
 }
 
 function Hero() {
+  const { data } = useSearchProvidersQuery({})
   const { t } = useI18n();
   return (
     <section className="bg-background">

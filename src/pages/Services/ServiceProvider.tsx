@@ -3,14 +3,17 @@ import { useI18n } from "../../lib/i18n";
 import { BadgeCheck, ChevronDown, MapPin, Search, Star } from "lucide-react";
 import AllImages from "../../assets/AllImages";
 import { useNavigate } from "react-router-dom";
+import { useSearchProvidersQuery } from "@/redux/api/websiteApi";
 
 const ServiceProvider = () => {
+  const { data } = useSearchProvidersQuery({});
+
   const { t } = useI18n();
   const [searchValue, setSearchValue] = useState("");
   const [mapSearchValue, setMapSearchValue] = useState("");
   const [filterValue, setFilterValue] = useState("");
 
-//   console.log(searchValue, mapSearchValue, filterValue);
+  //   console.log(searchValue, mapSearchValue, filterValue);
 
   return (
     <div className=" max-w-430 mx-auto border border-border px-4   sm:px-6 lg:px-4 h-screen">
@@ -140,7 +143,7 @@ function FilterDropdown({
 }
 
 function ProviderCard() {
-    const router = useNavigate();
+  const router = useNavigate();
   return (
     <article
       onClick={() => router("456")}
