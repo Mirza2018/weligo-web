@@ -1,87 +1,75 @@
+// src/routes/auth/provider/AboutYou.tsx
 import { ArrowLeft, ArrowRight, Calendar, Plus, User } from "lucide-react";
 import { useRef, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-import { useI18n } from "../../lib/i18n";
-import { AuthLayout } from "../../components/authPage/AuthLayout";
+// import { useI18n } from "../../../lib/i18n";
+// import { AuthLayout } from "../../../components/authPage/AuthLayout";
 import { Switch } from "@/components/ui/switch";
+import { useProviderOnboarding } from "@/context/ProviderOnboardingContext";
+import { useI18n } from "@/lib/i18n";
+import { AuthLayout } from "@/components/authPage/AuthLayout";
+// import type { ProviderPreferencesPayload } from "@/types/auth";
 
-type ToggleKey =
-  | "nonSmoker"
-  | "driversLicense"
-  | "ownVehicle"
-  | "hasChildren"
-  | "comfortableWithPets";
+// Keys now match the API's preferences object field-for-field (the original
+// had "driversLicense" here vs "driverLicense" in the API).
+type ToggleKey = keyof any;
 
 const MAX_AVATAR_MB = 10;
 
 export function AboutYou() {
   const navigate = useNavigate();
   const { t } = useI18n();
+  const { state, update } = useProviderOnboarding();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const dateInputRef = useRef<HTMLInputElement | null>(null);
 
   const TOGGLES: { key: ToggleKey; labelFallback: string }[] = [
     { key: "nonSmoker", labelFallback: t("auth.about1") },
-    { key: "driversLicense", labelFallback: t("auth.about2") },
+    { key: "driverLicense", labelFallback: t("auth.about2") },
     { key: "ownVehicle", labelFallback: t("auth.about3") },
     { key: "hasChildren", labelFallback: t("auth.about4") },
     { key: "comfortableWithPets", labelFallback: t("auth.about5") },
   ];
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
-  const [avatarFile, setAvatarFile] = useState<File | null>(null);
-  const [dob, setDob] = useState("");
-  const [toggles, setToggles] = useState<Record<ToggleKey, boolean>>({
-    nonSmoker: true,
-    driversLicense: true,
-    ownVehicle: true,
-    hasChildren: false,
-    comfortableWithPets: true,
-  });
-  const [submitting, setSubmitting] = useState(false);
-  const dateInputRef = useRef<HTMLInputElement | null>(null);
 
-  const handleAvatarClick = () => {
-    fileInputRef.current?.click();
-  };
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [avatarFile, setAvatarFile] = useState<File | null>(state.avatarFile);
+  const [dob, setDob] = useState(state.dob);
+  const [preferences, setPreferences] = useState<any>(
+    state.preferences,
+  );
+
+  const handleAvatarClick = () => fileInputRef.current?.click();
 
   const handleDateBoxClick = () => {
     const input = dateInputRef.current;
     if (!input) return;
-    if (typeof input.showPicker === "function") {
-      input.showPicker();
-    } else {
-      input.focus();
-    }
+    if (typeof input.showPicker === "function") input.showPicker();
+    else input.focus();
   };
 
   const handleAvatarSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
     const sizeMb = file.size / (1024 * 1024);
     if (sizeMb > MAX_AVATAR_MB) {
       toast.error(`Photo must be under ${MAX_AVATAR_MB}MB`);
       return;
     }
-
     setAvatarFile(file);
     setAvatarUrl(URL.createObjectURL(file));
     e.target.value = "";
   };
 
   const handleToggle = (key: ToggleKey, value: boolean) => {
-    setToggles((prev) => ({ ...prev, [key]: value }));
+    setPreferences((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleBack = () => {
-    navigate(-1);
-  };
+  const handleBack = () => navigate(-1);
 
-  const handleContinue = async () => {
-
-    navigate("/more-info-provider");
+  const handleContinue = () => {
     if (!dob) {
       toast.error(
         t("provider.dobRequired") ?? "Please enter your date of birth.",
@@ -89,46 +77,13 @@ export function AboutYou() {
       return;
     }
 
-    const formData = {
-      avatarFile,
-      avatarFileName: avatarFile?.name ?? null,
-      dob,
-      ...toggles,
-    };
-
-
-    console.log("About You form data:", formData);
-
-    setSubmitting(true);
-    const toastId = toast.loading("Please wait...");
-    try {
-      // TODO: replace console.log above with actual persistence call
-      toast.success(t("provider.profileSaved") ?? "Profile saved", {
-        id: toastId,
-        duration: 2000,
-      });
-      navigate("/onboarding/certificates");
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Something went wrong", {
-        id: toastId,
-        duration: 3000,
-      });
-    } finally {
-      setSubmitting(false);
-    }
+    update({ avatarFile, dob, preferences });
+    navigate("/more-info-provider");
   };
 
   return (
     <AuthLayout
-      title={
-        <>
-          {t("auth.aboutA")}
-          {/* <span className="font-serif italic text-primary">
-            {t("provider.tellFamiliesB") ?? "families"}
-          </span>{" "}
-          {t("provider.tellFamiliesC") ?? "about you."} */}
-        </>
-      }
+      title={<>{t("auth.aboutA")}</>}
       description={t("auth.aboutDesc")}
     >
       <div className="space-y-5">
@@ -204,7 +159,7 @@ export function AboutYou() {
               </label>
               <Switch
                 id={`toggle-${key}`}
-                checked={toggles[key]}
+                checked={preferences[key]}
                 onCheckedChange={(value) => handleToggle(key, value)}
               />
             </div>
@@ -223,8 +178,7 @@ export function AboutYou() {
           <button
             type="button"
             onClick={handleContinue}
-            disabled={submitting}
-            className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-primary text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.01] disabled:opacity-70"
+            className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-primary text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.01]"
           >
             {t("auth.continue") ?? "Continue"}
             <ArrowRight className="h-4 w-4" />

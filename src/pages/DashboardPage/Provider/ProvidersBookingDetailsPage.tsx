@@ -1,19 +1,12 @@
 import { useState } from "react";
-// import { Link, useRouter } from "@tanstack/react-router";
-// import { getBooking, type Booking, type Review } from "@/assets/data/bookings";
-// import { SectionCard } from "@/components/common/SectionCard";
-// import { UserAvatar } from "@/components/common/UserAvatar";
-// import { SendMessageDialog } from "@/components/Dashboard/Family/SendMessageDialog";
-// import { Button } from "@/components/ui/button";
-// import { formatCHF } from "@/lib/format";
-// import { useI18n } from "@/lib/i18n";
-// import { cn } from "@/lib/utils";
 import {
   ArrowLeft,
   ArrowRight,
   CalendarClock,
   Check,
   CircleAlert,
+  CircleCheckBig,
+  Clock,
   Download,
   Flag,
   HeartHandshake,
@@ -307,20 +300,59 @@ function ActionsPanel({
   onMessage: () => void;
 }) {
   const { t } = useI18n();
+  // const booking = {
+  //   status: "pending",
+  // };
+
+  const reviews = [
+    {
+      rating: 5,
+      date: "13 Apr 2026",
+      text: '"Laura was fantastic as always. Our daughter absolutely adores her."',
+      providerReply: '"Thank you Anna, it is always such a joy!"',
+    },
+  ];
 
   return (
     <SectionCard
       title={t("details.actions")}
       contentClassName="flex flex-col gap-3"
     >
-      {booking.status === "upcoming" && (
+      {booking.status === "pending" && (
         <>
           <Button
+            className="h-11 rounded-xl gap-2 bg-[#23C56C]!"
+            onClick={() => toast.success("Booking accepted")}
+          >
+            <Check />
+            Accepet Booking
+          </Button>
+          <Button
+            variant="destructive"
+            className="h-11 rounded-xl gap-2"
+            onClick={() => toast.success(t("toast.requestWithdrawn"))}
+          >
+            <X className="h-4 w-4" />
+            Decline Booking
+          </Button>
+          <InfoNote>
+            You have 24 hours to respond before this request expires
+            automatically.
+          </InfoNote>
+          <InfoNote>
+            Clients may cancel up to 24 hours before the booking for a full
+            refund. After that, you receive 50% of the booking value.
+          </InfoNote>
+        </>
+      )}
+      {booking.status === "confirmed" && (
+        <>
+          {/* <Button
             className="h-11 rounded-xl gap-2"
             onClick={() => toast(t("toast.rescheduleSoon"))}
           >
             {t("details.rescheduleBooking")} <ArrowRight className="h-4 w-4" />
-          </Button>
+          </Button> */}
           <Button
             variant="destructive"
             className="h-11 rounded-xl gap-2"
@@ -329,98 +361,83 @@ function ActionsPanel({
             {t("details.cancelBooking")} <ArrowRight className="h-4 w-4" />
           </Button>
           <InfoNote>
-            {t("details.cancellationPolicy")}{" "}
-            <a className="font-medium text-primary hover:underline" href="#">
-              {t("details.learnMore")} →
-            </a>
+            This booking is confirmed. The session starts on Sat, 18 May 2024 at
+            09:00.{" "}
           </InfoNote>
+          <InfoNote>{t("details.cancellationPolicy")} </InfoNote>
         </>
       )}
-
-      {booking.status === "awaitingConfirmation" && (
+      {booking.status === "in-progress" && (
         <>
           <Button
-            className="h-11 rounded-xl gap-2"
-            onClick={() => toast.success(t("toast.markedComplete"))}
+            className="h-11 rounded-xl gap-2 bg-[#F88B08]!"
+            onClick={() => toast.success("Job started")}
           >
-            <Check className="h-4 w-4" />
-            {t("details.markComplete")}
+            Start Job <ArrowRight className="h-4 w-4" />
           </Button>
+          <Button
+            variant="destructive"
+            className="h-11 rounded-xl gap-2"
+            onClick={() => toast.success(t("toast.bookingCancelled"))}
+          >
+            {t("details.cancelBooking")} <ArrowRight className="h-4 w-4" />
+          </Button>
+
           <InfoNote>
-            <span className="font-semibold text-foreground">Sarah</span> has
-            marked this session as complete. Please confirm to release their
-            payment.
+            The session is scheduled for 8/9/26 at 9am. Tap start when you
+            arrive and are ready to begin
           </InfoNote>
         </>
       )}
-
-      {booking.status === "inProgress" && (
+      {booking.status === "provider-completed" && (
         <>
-          <Button className="h-11 rounded-xl gap-2" onClick={onMessage}>
-            <MessageCircle className="h-4 w-4" />
-            Message {firstName}
-          </Button>
-          <InfoNote>
-            Your session is currently in progress. You'll be asked to confirm
-            once{" "}
-            <span className="font-semibold text-foreground">{firstName}</span>{" "}
-            marks it complete.
-          </InfoNote>
+          <div className="flex flex-col items-start gap-2 rounded-xl border border-[#E8943F] bg-[#E8943F]/10 px-3 py-2.5  text-[#E8943F]">
+            <div>
+              <Clock size={50} />
+            </div>
+            {/* <Icon className="mt-0.5 h-4 w-4 shrink-0" /> */}
+            <div className=" text-2xl font-bold">Waiting for confirmation</div>
+            <p className="leading-snug font-semibold">
+              You've marked this job as done. Emma has been notified and needs
+              to confirm on their side before payment is released.
+            </p>
+          </div>
+
+          {/* <InfoNote>
+            Once you mark done and confirms on their side, CHF 50 will be
+            released to your account
+          </InfoNote> */}
         </>
       )}
-
       {booking.status === "completed" && !booking.reviews && (
         <>
-          <Button className="h-11 rounded-xl gap-2">
-            <Star className="h-4 w-4" />
-            {t("details.leaveReview")}
-          </Button>
-          <Button variant="secondary" className="h-11 rounded-xl gap-2">
-            <CalendarClock className="h-4 w-4" />
-            Rebook {firstName}
-          </Button>
-          <InfoNote icon={HeartHandshake}>
-            Your session is complete. Help other families by leaving an honest
-            review for {firstName}.
-          </InfoNote>
-        </>
-      )}
-
-      {booking.status === "completed" && booking.reviews && (
-        <p className="text-sm text-muted-foreground">
-          Thank you for sharing your review for {firstName}.
-        </p>
-      )}
-
-      {booking.status === "requested" && (
-        <>
-          <Button className="h-11 rounded-xl gap-2" onClick={onMessage}>
-            <MessageCircle className="h-4 w-4" />
-            Message {firstName}
-          </Button>
-          <Button
-            variant="secondary"
-            className="h-11 rounded-xl gap-2"
-            onClick={() => toast.success(t("toast.requestWithdrawn"))}
-          >
-            <X className="h-4 w-4" />
-            {t("details.withdrawRequest")}
-          </Button>
-          <InfoNote>
-            Waiting for{" "}
-            <span className="font-semibold text-foreground">{firstName}</span>{" "}
-            to accept your request. You won't be charged until they confirm.
-          </InfoNote>
+          <div className="flex flex-col items-start gap-2 rounded-xl border border-[#23C56C] bg-[#23C56C]/10 px-3 py-2.5  text-[#23C56C]">
+            <div>
+              <CircleCheckBig size={50} />
+            </div>
+            {/* <Icon className="mt-0.5 h-4 w-4 shrink-0" /> */}
+            <div className=" text-2xl font-bold">Payment released!</div>
+            <p className="leading-snug font-semibold">
+              CHF 51.00 has been sent to your account. Well done!
+            </p>
+            <p className="text-black text-sm ">
+              Paid to your TWINT account · Processing time 1-2 business days
+            </p>
+          </div>
+          <ReviewsPanel reviews={reviews} firstName={firstName} />
+          <Button className="h-11 rounded-xl gap-2">Add Your Review</Button>
         </>
       )}
 
       {booking.status === "cancelled" && (
         <>
-          <Button variant="secondary" className="h-11 rounded-xl gap-2">
-            <CalendarClock className="h-4 w-4" />
-            Rebook {firstName}
-          </Button>
-          <InfoNote>This booking was cancelled. You were not charged.</InfoNote>
+          <div className="flex flex-col items-start gap-2 rounded-xl border border-[#FB2C36] bg-[#FB2C36]/10 px-3 py-2.5  text-[#FB2C36]">
+            <div>
+              <X size={50} />
+            </div>
+            {/* <Icon className="mt-0.5 h-4 w-4 shrink-0" /> */}
+            <div className=" text-2xl font-bold">Cancelled by you</div>
+          </div>
         </>
       )}
     </SectionCard>
@@ -450,6 +467,7 @@ interface Review {
   text: string;
   providerReply?: string;
 }
+
 function ReviewsPanel({
   reviews,
   firstName,
@@ -467,9 +485,9 @@ function ReviewsPanel({
                 <Star key={idx} className="h-4 w-4 fill-current" />
               ))}
             </div>
-            <span className="text-xs text-muted-foreground">{r?.date}</span>
+            <span className="text-xs text-muted-foreground">{r.date}</span>
           </div>
-          <p className="mt-3 text-sm text-foreground">{r?.text}</p>
+          <p className="mt-3 text-sm text-foreground">{r.text}</p>
           {r.providerReply && (
             <div className="mt-3 border-t border-border pt-3 text-sm">
               <p className="inline-flex items-start gap-1.5 text-primary">

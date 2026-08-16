@@ -385,6 +385,27 @@ export const dict = {
       de: "Verbinde dich mit geprüften Betreuer:innen für Kinderbetreuung, Seniorenbetreuung, Tierbetreuung, Reinigung und Nachhilfe.",
       en: "Connect with verified caregivers for childcare, senior care, pet care, house cleaning and tutoring.",
     },
+    search: {
+      categoryLabel: { de: "Was suchst du?", en: "What are you looking for?" },
+      categoryPlaceholder: { de: "Kategorie wählen", en: "Choose a category" },
+      categoryRequired: {
+        de: "Bitte wähle eine Kategorie aus, um zu suchen.",
+        en: "Please select a category to search.",
+      },
+      comingSoon: { de: "Bald verfügbar", en: "Coming soon" },
+      locationLabel: { de: "Standort", en: "Location" },
+      locationPlaceholder: {
+        de: "Ort oder Adresse eingeben",
+        en: "Enter a place or address",
+      },
+      dateLabel: { de: "Datum & Uhrzeit", en: "Date & Time" },
+      datePlaceholder: { de: "Beliebig", en: "Anytime" },
+      button: { de: "Suchen", en: "Search" },
+    },
+    noFeatured: {
+      de: "Momentan sind keine Anbieter:innen verfügbar.",
+      en: "No providers available right now.",
+    },
     servicesEyebrow: { de: "LEISTUNGEN", en: "SERVICES" },
     servicesTitleA: { de: "Betreuung für ", en: "Care for " },
     servicesTitleB: { de: "jeden Lebensabschnitt", en: "every chapter" },
@@ -828,6 +849,45 @@ export const dict = {
     providers: { de: "Dienstleister", en: "providers" },
     from: { de: "ab CHF", en: "from CHF" },
     perHr: { de: "/Std", en: "/hr" },
+
+    // titleA: { de: "Verfügbare", en: "Available" },
+    // titleB: { de: "Betreuer:innen", en: "Providers" },
+    // titleC: { de: "in deiner Nähe", en: "near you" },
+    searchPlaceholder: {
+      de: "Nach Name oder Adresse suchen",
+      en: "Search by name or address",
+    },
+    mapSearchPlaceholder: {
+      de: "Ort auf der Karte suchen",
+      en: "Search a place on the map",
+    },
+    sortBy: { de: "Sortieren nach", en: "Sort by" },
+    sort: {
+      nearest: { de: "In der Nähe", en: "Nearest" },
+      topRated: { de: "Am besten bewertet", en: "Top rated" },
+      priceLow: { de: "Preis (aufsteigend)", en: "Price (Low > High)" },
+      priceHigh: { de: "Preis (absteigend)", en: "Price (High > Low)" },
+    },
+    loadingCount: {
+      de: "Anbieter:innen werden geladen…",
+      en: "Loading providers…",
+    },
+    foundCount: {
+      de: "{count} Anbieter:innen gefunden",
+      en: "{count} Providers found",
+    },
+    noResultsTitle: {
+      de: "Keine Anbieter:innen gefunden",
+      en: "No providers found",
+    },
+    noResultsSub: {
+      de: "Versuche es mit anderen Suchbegriffen oder Filtern.",
+      en: "Try adjusting your search or filters.",
+    },
+    error: {
+      de: "Anbieter:innen konnten nicht geladen werden. Bitte versuche es erneut.",
+      en: "Couldn't load providers. Please try again.",
+    },
   },
   trust: {
     verified: { de: "Geprüfte Dienstleister", en: "Verified providers" },

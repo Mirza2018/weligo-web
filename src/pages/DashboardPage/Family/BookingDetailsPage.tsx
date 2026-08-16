@@ -309,13 +309,41 @@ function ActionsPanel({
   onMessage: () => void;
 }) {
   const { t } = useI18n();
+  // const booking = {
+  //   status: "cancelled",
+  // };
+
+  const reviews = [
+    {
+      rating: 5,
+      date: "13 Apr 2026",
+      text: '"Laura was fantastic as always. Our daughter absolutely adores her."',
+      providerReply: '"Thank you Anna, it is always such a joy!"',
+    },
+  ];
 
   return (
     <SectionCard
       title={t("details.actions")}
       contentClassName="flex flex-col gap-3"
     >
-      {booking.status === "upcoming" && (
+      {booking.status === "pending" && (
+        <>
+          <Button
+            variant="default"
+            className="h-11 rounded-xl gap-2"
+            onClick={() => toast.success(t("toast.requestWithdrawn"))}
+          >
+            <X className="h-4 w-4" />
+            Withdraw Request
+          </Button>
+          <InfoNote>
+            Waiting for Simon to accept your request. You won't be charged until
+            she confirms.
+          </InfoNote>
+        </>
+      )}
+      {booking.status === "confirmed" && (
         <>
           <Button
             className="h-11 rounded-xl gap-2"
@@ -331,15 +359,21 @@ function ActionsPanel({
             {t("details.cancelBooking")} <ArrowRight className="h-4 w-4" />
           </Button>
           <InfoNote>
-            {t("details.cancellationPolicy")}{" "}
-            <a className="font-medium text-primary hover:underline" href="#">
-              {t("details.learnMore")} →
-            </a>
+            Free cancellation up to 24 hours before the booking starts. After
+            that, a 50% fee applies.
+          </InfoNote>
+        </>
+      )}
+      {booking.status === "in-progress" && (
+        <>
+          <InfoNote>
+            Your session is currently in progress. You'll be asked to confirm
+            once Simon marks it complete.
           </InfoNote>
         </>
       )}
 
-      {booking.status === "awaitingConfirmation" && (
+      {booking.status === "provider-completed" && (
         <>
           <Button
             className="h-11 rounded-xl gap-2"
@@ -349,24 +383,8 @@ function ActionsPanel({
             {t("details.markComplete")}
           </Button>
           <InfoNote>
-            <span className="font-semibold text-foreground">Sarah</span> has
-            marked this session as complete. Please confirm to release their
-            payment.
-          </InfoNote>
-        </>
-      )}
-
-      {booking.status === "inProgress" && (
-        <>
-          <Button className="h-11 rounded-xl gap-2" onClick={onMessage}>
-            <MessageCircle className="h-4 w-4" />
-            Message {firstName}
-          </Button>
-          <InfoNote>
-            Your session is currently in progress. You'll be asked to confirm
-            once{" "}
-            <span className="font-semibold text-foreground">{firstName}</span>{" "}
-            marks it complete.
+            Sarah has marked this session as complete. Please confirm to release
+            their payment.
           </InfoNote>
         </>
       )}
@@ -385,39 +403,20 @@ function ActionsPanel({
             Your session is complete. Help other families by leaving an honest
             review for {firstName}.
           </InfoNote>
-        </>
-      )}
 
-      {booking.status === "completed" && booking.reviews && (
-        <p className="text-sm text-muted-foreground">
-          Thank you for sharing your review for {firstName}.
-        </p>
-      )}
-
-      {booking.status === "requested" && (
-        <>
-          <Button className="h-11 rounded-xl gap-2" onClick={onMessage}>
-            <MessageCircle className="h-4 w-4" />
-            Message {firstName}
-          </Button>
-          <Button
-            variant="secondary"
-            className="h-11 rounded-xl gap-2"
-            onClick={() => toast.success(t("toast.requestWithdrawn"))}
-          >
-            <X className="h-4 w-4" />
-            {t("details.withdrawRequest")}
-          </Button>
-          <InfoNote>
-            Waiting for{" "}
-            <span className="font-semibold text-foreground">{firstName}</span>{" "}
-            to accept your request. You won't be charged until they confirm.
-          </InfoNote>
+          <ReviewsPanel reviews={reviews} firstName={firstName} />
         </>
       )}
 
       {booking.status === "cancelled" && (
         <>
+          <div className="flex flex-col items-start gap-2 rounded-xl border border-[#FB2C36] bg-[#FB2C36]/10 px-3 py-2.5  text-[#FB2C36]">
+            <div>
+              <X size={50} />
+            </div>
+            {/* <Icon className="mt-0.5 h-4 w-4 shrink-0" /> */}
+            <div className=" text-2xl font-bold">Cancelled by Provider</div>
+          </div>
           <Button variant="secondary" className="h-11 rounded-xl gap-2">
             <CalendarClock className="h-4 w-4" />
             Rebook {firstName}

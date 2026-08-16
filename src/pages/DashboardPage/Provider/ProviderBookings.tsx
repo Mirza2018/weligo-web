@@ -22,10 +22,10 @@ const PAGE_SIZE = 15;
 const filters: Filter[] = [
   "all",
   "pending",
-  "inProgress",
+  "confirmed",
+  "in-progress",
+  "provider-completed",
   "completed",
-  "upcoming",
-  "awaitingPayment",
   "cancelled",
 ];
 

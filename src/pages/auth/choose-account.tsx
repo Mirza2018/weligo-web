@@ -15,7 +15,7 @@ export function ChooseRole() {
 
   const handleContinue = () => {
     if (role === "family") {
-      navigate("/sign-up");
+      navigate("/sign-up-family");
     } else {
       navigate("/sign-up-provider");
     }

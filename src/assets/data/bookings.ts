@@ -1,13 +1,10 @@
 export type BookingStatus =
-  | "upcoming"
-  | "awaitingConfirmation"
-  | "awaitingPayment"
-  | "inProgress"
-  | "completed"
-  | "requested"
   | "pending"
+  | "confirmed"
+  | "in-progress"
+  | "provider-completed"
+  | "completed"
   | "cancelled";
-
 
 export type Review = {
   rating: number;
@@ -117,5 +114,7 @@ export const bookings: Booking[] = [
 export const nextBooking: Booking = bookings[2];
 
 export function getBooking(id: string): Booking | undefined {
-  return bookings.find((b) => b.id === id || b.code.toLowerCase() === id.toLowerCase());
+  return bookings.find(
+    (b) => b.id === id || b.code.toLowerCase() === id.toLowerCase(),
+  );
 }

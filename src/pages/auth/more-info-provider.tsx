@@ -1,11 +1,19 @@
+// src/routes/auth/provider/MoreInfoProvider.tsx
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useState } from "react";
 
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { toast } from "sonner";
 
-import { useI18n } from "../../lib/i18n";
-import { AuthLayout } from "../../components/authPage/AuthLayout";
+// import { useI18n } from "../../../lib/i18n";
+// import { AuthLayout } from "../../../components/authPage/AuthLayout";
+import { useUserUpdateProviderProfileMutation } from "@/redux/api/authApi";
+// import { setUserInfo } from "../../../redux/slices/authSlice";
+import { useProviderOnboarding } from "@/context/ProviderOnboardingContext";
+import { setUserInfo } from "@/redux/slices/authSlice";
+import { AuthLayout } from "@/components/authPage/AuthLayout";
+import { useI18n } from "@/lib/i18n";
 
 const REFERRAL_OPTIONS = [
   { value: "google-search", labelFallback: "Google search" },
@@ -17,53 +25,87 @@ const REFERRAL_OPTIONS = [
 
 export function MoreInfoProvider() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { t } = useI18n();
+  const { state, update, reset } = useProviderOnboarding();
+  const [updateProfile, { isLoading }] = useUserUpdateProviderProfileMutation();
 
-  const [phone, setPhone] = useState("");
-  const [referral, setReferral] = useState("");
-  const [submitting, setSubmitting] = useState(false);
+  const [phone, setPhone] = useState(state.phone);
+  const [referral, setReferral] = useState(state.referralSource);
+  const [shortBioTitle, setShortBioTitle] = useState(state.shortBioTitle);
+  const [shortBio, setShortBio] = useState(state.shortBio);
+  const [longBioTitle, setLongBioTitle] = useState(state.longBioTitle);
+  const [longBio, setLongBio] = useState(state.longBio);
 
   const handleBack = () => {
+    update({
+      phone,
+      referralSource: referral,
+      shortBioTitle,
+      shortBio,
+      longBioTitle,
+      longBio,
+    });
     navigate(-1);
   };
 
   const handleContinue = async () => {
     if (!phone.trim()) {
-      toast.error(t("auth.phoneRequired"));
+      toast.error(t("auth.phoneRequired") ?? "Please enter your phone number.");
+      return;
+    }
+    if (!state.categoryId) {
+      toast.error("Please go back and select the service you provide.");
+      navigate("/service-selection");
       return;
     }
 
-    const formData = {
-      phone,
-      referral,
-    };
-
-    console.log("More Info form data:", formData);
-
- navigate("/welcome-weligo-provider");
-    return;
-
-    setSubmitting(true);
     const toastId = toast.loading("Please wait...");
     try {
-      // TODO: replace console.log above with actual persistence call
-      toast.success(t("auth.infoSaved") ?? "Info saved", {
+      const res = await updateProfile({
+        image: state.avatarFile,
+        certificateFiles: state.certificates.map((c) => c.file),
+        data: {
+          phone,
+          referralSource: referral,
+          dateOfBirth: state.dob || undefined,
+          categoryId: state.categoryId,
+          hourlyRate: state.hourlyRate,
+          experience: state.experience,
+          lenguages: state.languages,
+          shortBioTitle,
+          shortBio,
+          longBioTitle,
+          longBio,
+          preferences: state.preferences,
+          certificates: state.certificates.map((c) => ({
+            type: c.type,
+            description: c.description,
+          })),
+        },
+      }).unwrap();
+
+      // The token itself was already set (via setAccessToken) right after
+      // OTP verification - the only thing this step adds is the real user
+      // record, once the provider profile has actually been saved.
+      dispatch(setUserInfo(res.data));
+      reset();
+
+      toast.success(res?.message || t("auth.infoSaved") || "Profile saved", {
         id: toastId,
         duration: 2000,
       });
-      navigate("/");
+      navigate("/welcome-weligo-provider");
     } catch (error: any) {
       toast.error(error?.data?.message || "Something went wrong", {
         id: toastId,
         duration: 3000,
       });
-    } finally {
-      setSubmitting(false);
     }
   };
 
   return (
-    <AuthLayout title={t("auth.moreInfoA")} description={t("auth.moreInfoB")}>
+    <AuthLayout title={t("auth.moreInfoA")} italic={t("auth.moreInfoB")}>
       <div className="space-y-5">
         <div>
           <label className="mb-1.5 block text-sm font-medium text-foreground">
@@ -76,9 +118,6 @@ export function MoreInfoProvider() {
             placeholder={t("auth.phonePh")}
             className="h-12 w-full rounded-lg border border-input bg-white px-4 text-sm outline-none focus:border-primary"
           />
-          <p className="mt-1.5 text-xs text-muted-foreground">
-            {t("auth.phoneDetails")}
-          </p>
         </div>
 
         <div>
@@ -100,24 +139,61 @@ export function MoreInfoProvider() {
                 </option>
               ))}
             </select>
-            <svg
-              className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="m6 9 6 6 6-6" />
-            </svg>
           </div>
+        </div>
+
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-foreground">
+            Short bio title
+          </label>
+          <input
+            value={shortBioTitle}
+            onChange={(e) => setShortBioTitle(e.target.value)}
+            placeholder="e.g. Loving and experienced child caretaker."
+            className="h-12 w-full rounded-lg border border-input bg-white px-4 text-sm outline-none focus:border-primary"
+          />
+        </div>
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-foreground">
+            Short bio
+          </label>
+          <textarea
+            value={shortBio}
+            onChange={(e) => setShortBio(e.target.value.slice(0, 300))}
+            rows={3}
+            placeholder="A couple of sentences families see first."
+            className="w-full resize-none rounded-lg border border-input bg-white px-4 py-3 text-sm outline-none focus:border-primary"
+          />
+        </div>
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-foreground">
+            Full bio title
+          </label>
+          <input
+            value={longBioTitle}
+            onChange={(e) => setLongBioTitle(e.target.value)}
+            placeholder="e.g. Six years caring for the kids of Zürich."
+            className="h-12 w-full rounded-lg border border-input bg-white px-4 text-sm outline-none focus:border-primary"
+          />
+        </div>
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-foreground">
+            Full bio
+          </label>
+          <textarea
+            value={longBio}
+            onChange={(e) => setLongBio(e.target.value.slice(0, 1000))}
+            rows={5}
+            placeholder="Tell families more about your experience and approach."
+            className="w-full resize-none rounded-lg border border-input bg-white px-4 py-3 text-sm outline-none focus:border-primary"
+          />
         </div>
 
         <div className="flex gap-3 pt-2">
           <button
             type="button"
             onClick={handleBack}
+            disabled={isLoading}
             className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary/10 px-6 text-sm font-medium text-primary transition-colors hover:bg-primary/15"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -126,11 +202,11 @@ export function MoreInfoProvider() {
           <button
             type="button"
             onClick={handleContinue}
-            disabled={submitting}
+            disabled={isLoading}
             className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-primary text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.01] disabled:opacity-70"
           >
-            {t("auth.continue")}
-            <ArrowRight className="h-4 w-4" />
+            {isLoading ? "Saving…" : t("auth.continue")}
+            {!isLoading && <ArrowRight className="h-4 w-4" />}
           </button>
         </div>
       </div>

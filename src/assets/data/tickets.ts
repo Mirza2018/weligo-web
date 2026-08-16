@@ -40,9 +40,23 @@ export const tickets: Ticket[] = [
 ];
 
 export const issueTypes = [
-  "Booking issue",
-  "Payment problem",
-  "Provider behavior",
-  "Account & login",
+  "Booking Issue",
+  "Reschedule Appointment",
+  "Cancel Booking",
+  "Provider Didn't Arrive",
+  "Late Arrival",
+  "Service Quality Concern",
+  "Incorrect Charges / Billing",
+  "Refund Request",
+  "Payment Failed",
+  "Payment Inquiry",
+  "Account & Login Issues",
+  "Profile Update",
+  "Communication with Provider",
+  "Technical Issue",
+  "Promo Code / Discount Issue",
+  "Report a Provider",
+  "Safety Concern",
+  "General Inquiry",
   "Other",
 ];

@@ -1,3 +1,4 @@
+// src/routes/auth/WelcomeToWeligo.tsx
 import { ArrowRight } from "lucide-react";
 
 import { useNavigate } from "react-router-dom";
@@ -5,31 +6,33 @@ import { useNavigate } from "react-router-dom";
 import { useI18n } from "../../lib/i18n";
 import { AuthLayout } from "../../components/authPage/AuthLayout";
 
-
 export function WelcomeToWeligo() {
   const navigate = useNavigate();
   const { t } = useI18n();
-  
-const STEPS = [
-  {
-    number: "01",
-    titleFallback: t("auth.welcomePage1"),
-    descriptionFallback: t("auth.welcomePage1Desc"),
-  },
-  {
-    number: "02",
-    titleFallback: t("auth.welcomePage2"),
-    descriptionFallback: t("auth.welcomePage2Desc"),
-  },
-  {
-    number: "03",
-    titleFallback: t("auth.welcomePage3"),
-    descriptionFallback: t("auth.welcomePage3Desc"),
-  },
-];
+
+  const STEPS = [
+    {
+      number: "01",
+      titleFallback: t("auth.welcomePage1"),
+      descriptionFallback: t("auth.welcomePage1Desc"),
+    },
+    {
+      number: "02",
+      titleFallback: t("auth.welcomePage2"),
+      descriptionFallback: t("auth.welcomePage2Desc"),
+    },
+    {
+      number: "03",
+      titleFallback: t("auth.welcomePage3"),
+      descriptionFallback: t("auth.welcomePage3Desc"),
+    },
+  ];
 
   const handleStartBrowsing = () => {
-    navigate("/sign-in");
+    // The account is already created and logged in at this point (OTP
+    // verified + profile completed), so this goes to the app, not back to
+    // sign-in.
+    navigate("/");
   };
 
   return (
@@ -43,9 +46,7 @@ const STEPS = [
           {STEPS.map((step, index) => (
             <div
               key={step.number}
-              className={`flex items-start gap-4 py-3.5 ${
-                index !== STEPS.length - 1 ? "border-b border-input" : ""
-              }`}
+              className={`flex items-start gap-4 py-3.5 ${index !== STEPS.length - 1 ? "border-b border-input" : ""}`}
             >
               <span className="pt-0.5 font-serif text-lg font-bold text-primary">
                 {step.number}

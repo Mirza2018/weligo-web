@@ -1,5 +1,7 @@
-import { useState } from "react";
+// src/pages/dashboard/family/ProfileSettingsPage.tsx
+import { useEffect, useRef, useState } from "react";
 import { Camera, Eye, EyeOff } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
 import { Label } from "../../../components/ui/label";
@@ -14,6 +16,15 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
+import {
+  useUserProfileQuery,
+  useUserUpdateFamilyProfileMutation,
+  useUserPasswordChangeMutation,
+} from "@/redux/api/authApi";
+import { setUserInfo } from "@/redux/slices/authSlice";
+
+import type { RootState } from "@/redux/store";
+import { getImageUrl } from "@/redux/getBaseUrl";
 
 const profileSchema = z.object({
   firstName: z.string().min(1, "Required"),
@@ -39,7 +50,7 @@ type PasswordValues = z.infer<typeof passwordSchema>;
 
 export function ProfileSettingsPage() {
   return (
-    <div className=" flex max-w-md flex-col gap-6 pb-24">
+    <div className="flex max-w-md flex-col gap-6 pb-24">
       <h2 className="font-serif text-3xl font-medium">Profile Settings</h2>
       <Tabs defaultValue="profile">
         <TabsList>
@@ -58,50 +69,128 @@ export function ProfileSettingsPage() {
 }
 
 function ProfileForm() {
+  const dispatch = useDispatch();
+  const storedUser = useSelector((state: RootState) => state.auth.userInfo);
+  // Refetches on mount so settings always reflects the latest server state,
+  // even if the Redux copy is stale.
+  const { data: profileData } = useUserProfileQuery({});
+  const [updateProfile, { isLoading: isSaving }] =
+    useUserUpdateFamilyProfileMutation();
+
+  const user = profileData?.data ?? storedUser;
+
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<ProfileValues>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      firstName: "Nina",
-      lastName: "Zürcher",
-      email: "nina@example.com",
-      phone: "+41 79 123 45 67",
-      city: "Zürich",
-      postalCode: "8008",
-      address: "Bahnhofweg 17",
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      city: "",
+      postalCode: "",
+      address: "",
     },
   });
 
-  const onSubmit = async (_v: ProfileValues) => {
-    await new Promise((r) => setTimeout(r, 300));
-    toast.success("Profile updated");
+  // Populate the form once real user data has loaded.
+  useEffect(() => {
+    if (!user) return;
+    reset({
+      firstName: user.firstName ?? "",
+      lastName: user.lastName ?? "",
+      email: user.email ?? "",
+      phone: user.phone ?? "",
+      city: user.city ?? "",
+      postalCode: user.postalCode ?? "",
+      address: user.address ?? "",
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?._id]);
+
+  function handleAvatarClick() {
+    fileInputRef.current?.click();
+  }
+
+  function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setAvatarFile(file);
+    setAvatarPreview(URL.createObjectURL(file));
+  }
+
+  const onSubmit = async (values: ProfileValues) => {
+    try {
+      const res = await updateProfile({
+        firstName: values.firstName,
+        lastName: values.lastName,
+        fullName: `${values.firstName} ${values.lastName}`.trim(),
+        phone: values.phone,
+        city: values.city,
+        postalCode: values.postalCode,
+        address: values.address,
+        image: avatarFile,
+      }).unwrap();
+
+      dispatch(setUserInfo(res.data));
+      setAvatarFile(null);
+      toast.success(res?.message || "Profile updated");
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Couldn't update your profile.");
+    }
   };
+
+  const avatarSrc =
+    avatarPreview ??
+    (user?.profileImage
+      ? (getImageUrl(user.profileImage) ?? undefined)
+      : undefined);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-5">
       <div className="relative w-fit">
-        <UserAvatar name="Nina Zürcher" size={80} />
+        <UserAvatar
+          name={user?.fullName ?? ""}
+          imageUrl={avatarSrc}
+          size={80}
+        />
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={handleAvatarChange}
+        />
         <button
           type="button"
           aria-label="Change avatar"
-          onClick={() => toast.info("Avatar upload coming soon")}
+          onClick={handleAvatarClick}
           className="absolute -bottom-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground shadow"
         >
           <Camera className="h-3.5 w-3.5" />
         </button>
       </div>
 
-      <Field id="firstName" label="First Name" error={errors.firstName?.message}>
+      <Field
+        id="firstName"
+        label="First Name"
+        error={errors.firstName?.message}
+      >
         <Input id="firstName" {...register("firstName")} />
       </Field>
       <Field id="lastName" label="Last Name" error={errors.lastName?.message}>
         <Input id="lastName" {...register("lastName")} />
       </Field>
       <Field id="email" label="Email" error={errors.email?.message}>
-        <Input id="email" type="email" {...register("email")} />
+        <Input id="email" type="email" disabled {...register("email")} />
       </Field>
       <Field id="phone" label="Phone Number" error={errors.phone?.message}>
         <Input id="phone" {...register("phone")} />
@@ -109,7 +198,11 @@ function ProfileForm() {
       <Field id="city" label="City" error={errors.city?.message}>
         <Input id="city" {...register("city")} />
       </Field>
-      <Field id="postalCode" label="Postal Code" error={errors.postalCode?.message}>
+      <Field
+        id="postalCode"
+        label="Postal Code"
+        error={errors.postalCode?.message}
+      >
         <Input id="postalCode" {...register("postalCode")} />
       </Field>
       <Field id="address" label="Address" error={errors.address?.message}>
@@ -117,8 +210,8 @@ function ProfileForm() {
       </Field>
 
       <div className="flex justify-end">
-        <Button type="submit" disabled={isSubmitting}>
-          Edit Information
+        <Button type="submit" disabled={isSubmitting || isSaving}>
+          {isSaving ? "Saving…" : "Edit Information"}
         </Button>
       </div>
     </form>
@@ -127,7 +220,8 @@ function ProfileForm() {
 
 function PasswordForm() {
   const [showCurrent, setShowCurrent] = useState(false);
-  const [showNew, setShowNew] = useState(true);
+  const [showNew, setShowNew] = useState(false);
+  const [changePassword, { isLoading }] = useUserPasswordChangeMutation();
 
   const {
     register,
@@ -139,25 +233,43 @@ function PasswordForm() {
     defaultValues: { currentPassword: "", newPassword: "" },
   });
 
-  const onSubmit = async (_v: PasswordValues) => {
-    await new Promise((r) => setTimeout(r, 300));
-    toast.success("Password updated");
-    reset();
+  const onSubmit = async (values: PasswordValues) => {
+    try {
+      const res = await changePassword({
+        oldPassword: values.currentPassword,
+        newPassword: values.newPassword,
+      }).unwrap();
+      toast.success(res?.message || "Password updated");
+      reset();
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Couldn't update your password.");
+    }
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-5">
-      <Field id="currentPassword" label="Current Password" error={errors.currentPassword?.message}>
+      <Field
+        id="currentPassword"
+        label="Current Password"
+        error={errors.currentPassword?.message}
+      >
         <div className="relative">
           <Input
             id="currentPassword"
             type={showCurrent ? "text" : "password"}
             {...register("currentPassword")}
           />
-          <ToggleEye shown={showCurrent} onClick={() => setShowCurrent((v) => !v)} />
+          <ToggleEye
+            shown={showCurrent}
+            onClick={() => setShowCurrent((v) => !v)}
+          />
         </div>
       </Field>
-      <Field id="newPassword" label="New Password" error={errors.newPassword?.message}>
+      <Field
+        id="newPassword"
+        label="New Password"
+        error={errors.newPassword?.message}
+      >
         <div className="relative">
           <Input
             id="newPassword"
@@ -168,8 +280,8 @@ function PasswordForm() {
         </div>
       </Field>
       <div className="flex justify-end">
-        <Button type="submit" disabled={isSubmitting}>
-          Update Password
+        <Button type="submit" disabled={isSubmitting || isLoading}>
+          {isLoading ? "Updating…" : "Update Password"}
         </Button>
       </div>
     </form>
@@ -196,7 +308,13 @@ function Field({
   );
 }
 
-function ToggleEye({ shown, onClick }: { shown: boolean; onClick: () => void }) {
+function ToggleEye({
+  shown,
+  onClick,
+}: {
+  shown: boolean;
+  onClick: () => void;
+}) {
   return (
     <button
       type="button"

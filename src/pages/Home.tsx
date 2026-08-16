@@ -19,8 +19,12 @@ import AllImages from "../assets/AllImages";
 import { useI18n } from "../lib/i18n";
 import { Link, useNavigate } from "react-router-dom";
 import { MasonryRail } from "../components/homePage/MasonryRail";
-import { useGetCategoriesQuery, useSearchProvidersQuery } from "@/redux/api/websiteApi";
+import {
+  useGetCategoriesQuery,
+  useSearchProvidersQuery,
+} from "@/redux/api/websiteApi";
 import { getImageUrl } from "@/redux/getBaseUrl";
+import Hero2 from "@/components/home/Hero2";
 
 // export const Route = createFileRoute("/")({
 //   component: Home,
@@ -29,7 +33,8 @@ import { getImageUrl } from "@/redux/getBaseUrl";
 export function Home() {
   return (
     <div>
-      <Hero />
+      {/* <Hero /> */}
+      <Hero2 />
       <ServicesStrip />
       {/* <CaregiverPreview /> */}
       {/* <Testimonial /> */}
@@ -41,7 +46,7 @@ export function Home() {
 }
 
 function Hero() {
-  const { data } = useSearchProvidersQuery({})
+  const { data } = useSearchProvidersQuery({});
   const { t } = useI18n();
   return (
     <section className="bg-background">
@@ -204,8 +209,8 @@ function ServicesStrip() {
               return (
                 <Link
                   key={category?._id}
-                  // to={`/services/${category?._id}`}
-                  to={`/services`}
+                  to={`/services/${category?._id}/providers`}
+                  // to={`/services/category?._id`}
                   className={`group flex flex-col items-center justify-start gap-4 rounded-3xl ${
                     color.tint
                   } ${

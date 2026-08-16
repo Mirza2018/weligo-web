@@ -1,18 +1,17 @@
-import { ArrowLeft, ArrowRight, Check, Trash2 } from "lucide-react";
+// src/routes/auth/provider/AddCertificates.tsx
+import { ArrowLeft, ArrowRight, Trash2 } from "lucide-react";
 import { useRef, useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-import { useI18n } from "../../lib/i18n";
-import { AuthLayout } from "../../components/authPage/AuthLayout";
 
-type CertificateFile = {
-  id: string;
-  name: string;
-  sizeLabel: string;
-  file?: File;
-};
+import {
+  useProviderOnboarding,
+  type OnboardingCertificate,
+} from "@/context/ProviderOnboardingContext";
+import { useI18n } from "@/lib/i18n";
+import { AuthLayout } from "@/components/authPage/AuthLayout";
 
 const MAX_FILE_SIZE_MB = 20;
 
@@ -24,42 +23,39 @@ function formatSize(bytes: number) {
 export function AddCertificates() {
   const navigate = useNavigate();
   const { t } = useI18n();
+  const { state, update } = useProviderOnboarding();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  const [certificates, setCertificates] = useState<CertificateFile[]>([
-    { id: "seed-1", name: "Name of document.pdf", sizeLabel: "13MB" },
-    { id: "seed-2", name: "Name of document.pdf", sizeLabel: "13MB" },
-  ]);
+  const [certificates, setCertificates] = useState<OnboardingCertificate[]>(
+    state.certificates,
+  );
   const [confirmed, setConfirmed] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
 
-  const handleAddClick = () => {
-    fileInputRef.current?.click();
-  };
+  const handleAddClick = () => fileInputRef.current?.click();
 
   const handleFilesSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    const next: CertificateFile[] = [];
+    const next: OnboardingCertificate[] = [];
     Array.from(files).forEach((file) => {
       const sizeMb = file.size / (1024 * 1024);
       if (sizeMb > MAX_FILE_SIZE_MB) {
         toast.error(`${file.name} is over ${MAX_FILE_SIZE_MB}MB`);
         return;
       }
+      // Filename without extension is a reasonable starting "type" title -
+      // the person can rename it below.
+      const baseName = file.name.replace(/\.[^/.]+$/, "");
       next.push({
         id: `${file.name}-${file.lastModified}-${Math.random()}`,
-        name: file.name,
-        sizeLabel: formatSize(file.size),
         file,
+        type: baseName,
+        description: "",
       });
     });
 
-    if (next.length) {
-      setCertificates((prev) => [...prev, ...next]);
-    }
-
+    if (next.length) setCertificates((prev) => [...prev, ...next]);
     e.target.value = "";
   };
 
@@ -67,20 +63,24 @@ export function AddCertificates() {
     setCertificates((prev) => prev.filter((cert) => cert.id !== id));
   };
 
-  const handleBack = () => {
-    navigate(-1);
+  const updateCert = (id: string, patch: Partial<OnboardingCertificate>) => {
+    setCertificates((prev) =>
+      prev.map((c) => (c.id === id ? { ...c, ...patch } : c)),
+    );
   };
 
-  const handleContinue = async () => {
+  const handleBack = () => navigate(-1);
 
-
-
-    navigate("/about-you");
+  const handleContinue = () => {
     if (certificates.length === 0) {
       toast.error(
         t("provider.addAtLeastOneCert") ??
           "Please add at least one certificate.",
       );
+      return;
+    }
+    if (certificates.some((c) => !c.type.trim())) {
+      toast.error("Please give every certificate a title.");
       return;
     }
     if (!confirmed) {
@@ -91,29 +91,13 @@ export function AddCertificates() {
       return;
     }
 
-    setSubmitting(true);
-    const toastId = toast.loading("Please wait...");
-    try {
-      // TODO: upload certificates and move to next onboarding step
-      toast.success(t("provider.certsSaved") ?? "Certificates saved", {
-        id: toastId,
-        duration: 2000,
-      });
-      navigate("/onboarding/review");
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Upload failed", {
-        id: toastId,
-        duration: 3000,
-      });
-    } finally {
-      setSubmitting(false);
-    }
+    update({ certificates });
+    navigate("/about-you");
   };
 
   return (
     <AuthLayout
       title={t("auth.certificateA")}
-      // italic={t("provider.addYourB") ?? "certificates."}
       description={t("auth.certificateDesc")}
     >
       <div className="space-y-4">
@@ -131,29 +115,38 @@ export function AddCertificates() {
             {certificates.map((cert) => (
               <div
                 key={cert.id}
-                className="flex items-center justify-between rounded-xl border border-input bg-white px-4 py-3"
+                className="space-y-2 rounded-xl border border-input bg-white px-4 py-3"
               >
-                <div className="flex items-center gap-3">
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-white">
-                    <Check className="h-4 w-4" strokeWidth={3} />
+                <div className="flex items-center justify-between gap-2">
+                  <span className="truncate text-xs text-muted-foreground">
+                    {cert.file.name} &middot; {formatSize(cert.file.size)}
                   </span>
-                  <span>
-                    <span className="block text-sm font-semibold text-foreground">
-                      {cert.name}
-                    </span>
-                    <span className="block text-xs text-muted-foreground">
-                      {cert.sizeLabel}
-                    </span>
-                  </span>
+                  <button
+                    type="button"
+                    onClick={() => handleRemove(cert.id)}
+                    aria-label={`Remove ${cert.file.name}`}
+                    className="shrink-0 text-red-500 transition-colors hover:text-red-600"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => handleRemove(cert.id)}
-                  aria-label={`Remove ${cert.name}`}
-                  className="text-red-500 transition-colors hover:text-red-600"
-                >
-                  <Trash2 className="h-5 w-5" />
-                </button>
+                <input
+                  value={cert.type}
+                  onChange={(e) =>
+                    updateCert(cert.id, { type: e.target.value })
+                  }
+                  placeholder="Certificate title, e.g. First aid certificate"
+                  className="h-9 w-full rounded-md border border-input bg-white px-3 text-sm outline-none focus:border-primary"
+                />
+                <textarea
+                  value={cert.description}
+                  onChange={(e) =>
+                    updateCert(cert.id, { description: e.target.value })
+                  }
+                  placeholder="Short description (optional)"
+                  rows={2}
+                  className="w-full resize-none rounded-md border border-input bg-white px-3 py-2 text-sm outline-none focus:border-primary"
+                />
               </div>
             ))}
           </div>
@@ -175,13 +168,13 @@ export function AddCertificates() {
             className="peer sr-only"
           />
           <span
-            className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center  border transition-colors ${
+            className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center border transition-colors ${
               confirmed
                 ? "border-primary bg-primary text-primary-foreground"
                 : "border-input bg-white"
             }`}
           >
-            {confirmed && <Check className="h-3.5 w-3.5" strokeWidth={3} />}
+            {confirmed && <span className="text-xs">✓</span>}
           </span>
           <span className="text-sm text-foreground">
             {t("auth.certificateConfirmation")}
@@ -200,8 +193,7 @@ export function AddCertificates() {
           <button
             type="button"
             onClick={handleContinue}
-            disabled={submitting}
-            className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-primary text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.01] disabled:opacity-70"
+            className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-primary text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.01]"
           >
             {t("auth.continue")}
             <ArrowRight className="h-4 w-4" />

@@ -42,7 +42,8 @@ import { SignUpProvider } from "@/pages/auth/sign-up-provider";
 import { SubmitCodeProvider } from "@/pages/auth/submit-code-provider";
 import { MoreInfoProvider } from "@/pages/auth/more-info-provider";
 import { WelcomeToWeligoProvider } from "@/pages/auth/welcome-weligo-provider";
- 
+import { ProfileSettingsPageProvider } from "@/pages/DashboardPage/Family/ProfileSettingsPageProvider";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -159,7 +160,7 @@ const router = createBrowserRouter([
       },
       {
         path: "help",
-        element: <ProviderHelpAndSupportPage />,
+        element: <HelpAndSupportPage />,
       },
       {
         path: "message",
@@ -171,7 +172,7 @@ const router = createBrowserRouter([
       },
       {
         path: "settings",
-        element: <ProfileSettingsPage />,
+        element: <ProfileSettingsPageProvider />,
       },
     ],
   },
@@ -181,15 +182,15 @@ const router = createBrowserRouter([
     element: <Navigate to="/" />,
   },
   {
-    path: "/choose-account",
-    element: <ChooseRole />,
-  },
-  {
     path: "/sign-in",
     element: <SignIn />,
   },
   {
-    path: "/sign-up",
+    path: "/choose-account",
+    element: <ChooseRole />,
+  },
+  {
+    path: "/sign-up-family",
     element: <SignUp />,
   },
 
@@ -216,7 +217,7 @@ const router = createBrowserRouter([
     element: <SubmitCodeProvider />,
   },
   {
-    path: "/serice-selection",
+    path: "/service-selection",
     element: <ServiceSelection />,
   },
   {

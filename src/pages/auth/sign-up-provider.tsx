@@ -1,5 +1,4 @@
-// src/routes/sign-up.tsx
-
+// src/routes/auth/sign-up-provider.tsx
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { useState } from "react";
 
@@ -8,11 +7,15 @@ import { useDispatch } from "react-redux";
 
 import { Link, useNavigate } from "react-router-dom";
 import { AuthLayout } from "../../components/authPage/AuthLayout";
+import { AddressAutocompleteField } from "../../components/auth/AddressAutocompleteField";
 import { useI18n } from "../../lib/i18n";
 import { useUserRegisterMutation } from "../../redux/api/authApi";
 import { setAccessToken } from "../../redux/slices/authSlice";
+// import { saveSignupEmail } from "../../lib/signupSession";
 import { PasswordStrength } from "../../components/authPage/PasswordStrength";
 import { Checkbox } from "@/components/ui/checkbox";
+import type { GeoPoint } from "@/types/website";
+import { saveSignupEmail } from "@/redux/lib/signupSession";
 
 export function SignUpProvider() {
   const { t } = useI18n();
@@ -25,44 +28,67 @@ export function SignUpProvider() {
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
   const [city, setCity] = useState("");
-  const [code, setCode] = useState("");
+  const [postalCode, setPostalCode] = useState("");
   const [address, setAddress] = useState("");
-  // const [role, setRole] = useState<"family" | "provider">("family");
+  const [location, setLocation] = useState<GeoPoint | null>(null);
+  const [agree, setAgree] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const toastId = toast.loading("Please wait...");
 
-    if (!firstName || !lastName || !email || !pw || !city || !address || !code) {
+    if (
+      !firstName ||
+      !lastName ||
+      !email ||
+      !pw ||
+      !city ||
+      !address ||
+      !postalCode
+    ) {
       toast.error("Please fill in all fields.", { id: toastId });
+      return;
+    }
+    if (!agree) {
+      toast.error(
+        t("auth.mustAgree") ?? "Please accept the terms to continue.",
+        { id: toastId },
+      );
       return;
     }
 
     const payload = {
       firstName,
       lastName,
+      fullName: `${firstName} ${lastName}`.trim(),
       email,
       password: pw,
+      role: "provider" as const,
       city,
-      code,
+      postalCode,
       address,
-      role: "family",
+      location: location ?? {
+        type: "Point" as const,
+        coordinates: [0, 0] as [number, number],
+      },
     };
-
-    navigate("/verify-provider");
-    return;
 
     try {
       const res = await userRegister(payload).unwrap();
 
-      dispatch(setAccessToken(res?.data?.accessToken));
+      // Temporary token so the OTP step (and the rest of onboarding) can
+      // authenticate - prepareHeaders attaches state.auth.accessToken
+      // automatically. It gets replaced with the real token once OTP
+      // verification succeeds.
+      dispatch(setAccessToken(res.data.createUserToken));
+      saveSignupEmail(email);
 
       toast.success(res?.message || "OTP sent to your email", {
         id: toastId,
         duration: 2000,
       });
 
-      navigate("/");
+      navigate("/verify-provider");
     } catch (error: any) {
       toast.error(error?.data?.message || "Registration failed", {
         id: toastId,
@@ -78,13 +104,13 @@ export function SignUpProvider() {
       description={t("auth.signUpDesc")}
     >
       <form className="space-y-5" onSubmit={handleSubmit}>
-        <div className=" grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-4">
           <Field label={t("auth.firstName")}>
             <input
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               placeholder={t("auth.firstNamePh")}
-              className="h-12 w-full rounded-lg border border-input  px-4 text-sm outline-none focus:border-primary bg-white!"
+              className="h-12 w-full rounded-lg border border-input px-4 text-sm outline-none focus:border-primary bg-white!"
             />
           </Field>
           <Field label={t("auth.lastName")}>
@@ -92,7 +118,7 @@ export function SignUpProvider() {
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
               placeholder={t("auth.lastNamePh")}
-              className="h-12 w-full rounded-lg border border-input  px-4 text-sm outline-none focus:border-primary bg-white!"
+              className="h-12 w-full rounded-lg border border-input px-4 text-sm outline-none focus:border-primary bg-white!"
             />
           </Field>
         </div>
@@ -101,8 +127,8 @@ export function SignUpProvider() {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder={t("auth.email") || "you@example.com"} // Fixed placeholder
-            className="h-12 w-full rounded-lg border border-input  px-4 text-sm outline-none focus:border-primary bg-white!"
+            placeholder={t("auth.email") || "you@example.com"}
+            className="h-12 w-full rounded-lg border border-input px-4 text-sm outline-none focus:border-primary bg-white!"
           />
         </Field>
         <Field label={t("auth.password")}>
@@ -111,18 +137,18 @@ export function SignUpProvider() {
             value={pw}
             onChange={(e) => setPw(e.target.value)}
             placeholder={t("auth.passwordPh")}
-            className="h-12 w-full rounded-lg border border-input  px-4 text-sm outline-none focus:border-primary bg-white!"
+            className="h-12 w-full rounded-lg border border-input px-4 text-sm outline-none focus:border-primary bg-white!"
           />
           <PasswordStrength password={pw} />
         </Field>
 
-        <div className=" grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-4">
           <Field label={t("auth.city")}>
             <div className="relative">
               <select
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
-                className="h-12 w-full appearance-none rounded-lg border border-input bg-white! px-4 pr-10 text-sm outline-none focus:border-primary "
+                className="h-12 w-full appearance-none rounded-lg border border-input bg-white! px-4 pr-10 text-sm outline-none focus:border-primary"
               >
                 <option value="">{t("auth.cityPh")}</option>
                 <option value="Zürich">Zürich</option>
@@ -136,23 +162,35 @@ export function SignUpProvider() {
           </Field>
           <Field label={t("auth.postCode")}>
             <input
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
+              value={postalCode}
+              onChange={(e) => setPostalCode(e.target.value)}
               placeholder={t("auth.postCodePh")}
-              className="h-12 w-full rounded-lg border border-input  px-4 text-sm outline-none focus:border-primary bg-white!"
+              className="h-12 w-full rounded-lg border border-input px-4 text-sm outline-none focus:border-primary bg-white!"
             />
           </Field>
         </div>
-        <Field label={t("auth.address")}>
-          <input
+        <Field
+          label={t("auth.address")}
+          hint="Start typing and pick your address from the list."
+        >
+          <AddressAutocompleteField
             value={address}
-            onChange={(e) => setAddress(e.target.value)}
+            onChange={setAddress}
             placeholder={t("auth.addressPh")}
-            className="h-12 w-full rounded-lg border border-input  px-4 text-sm outline-none focus:border-primary bg-white!"
+            className="h-12 w-full rounded-lg border border-input px-4 text-sm outline-none focus:border-primary bg-white!"
+            onPlaceSelected={(place) => {
+              setAddress(place.formattedAddress);
+              if (place.city) setCity((c) => c || place.city);
+              if (place.postalCode) setPostalCode((p) => p || place.postalCode);
+              setLocation({
+                type: "Point",
+                coordinates: [place.lng, place.lat],
+              });
+            }}
           />
         </Field>
-        <p className="text- text-sm text-muted-foreground flex items-center gap-2">
-          <Checkbox />
+        <p className="text-sm text-muted-foreground flex items-center gap-2">
+          <Checkbox checked={agree} onCheckedChange={(v) => setAgree(!!v)} />
           {t("auth.agree")}
           <Link
             to="/terms"
@@ -180,7 +218,7 @@ export function SignUpProvider() {
         <p className="text-center font-medium">
           {t("auth.hasAccount")}{" "}
           <Link
-            to="/verify-family"
+            to="/sign-in"
             className="font-bold text-primary hover:underline"
           >
             {t("auth.login")}

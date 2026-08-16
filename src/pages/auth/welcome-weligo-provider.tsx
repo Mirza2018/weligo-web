@@ -1,35 +1,44 @@
+// src/routes/auth/provider/WelcomeToWeligoProvider.tsx
 import { ArrowRight } from "lucide-react";
 
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useI18n } from "@/lib/i18n";
+import { clearAuth } from "@/redux/slices/authSlice";
+import { AuthLayout } from "@/components/authPage/AuthLayout";
 
-import { useI18n } from "../../lib/i18n";
-import { AuthLayout } from "../../components/authPage/AuthLayout";
-
-
+// import { useI18n } from "../../../lib/i18n";
+// import { AuthLayout } from "../../../components/authPage/AuthLayout";
+// import { clearAuth } from "../../../redux/slices/authSlice";
 
 export function WelcomeToWeligoProvider() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { t } = useI18n();
-  
-const STEPS = [
-  {
-    number: "01",
-    titleFallback: t("auth.welcomePage4"),
-    descriptionFallback: t("auth.welcomePage4Desc"),
-  },
-  {
-    number: "02",
-    titleFallback: t("auth.welcomePage5"),
-    descriptionFallback: t("auth.welcomePage5Desc"),
-  },
-  {
-    number: "03",
-    titleFallback: t("auth.welcomePage6"),
-    descriptionFallback: t("auth.welcomePage6Desc"),
-  },
-];
+
+  const STEPS = [
+    {
+      number: "01",
+      titleFallback: t("auth.welcomePage4"),
+      descriptionFallback: t("auth.welcomePage4Desc"),
+    },
+    {
+      number: "02",
+      titleFallback: t("auth.welcomePage5"),
+      descriptionFallback: t("auth.welcomePage5Desc"),
+    },
+    {
+      number: "03",
+      titleFallback: t("auth.welcomePage6"),
+      descriptionFallback: t("auth.welcomePage6Desc"),
+    },
+  ];
 
   const handleStartBrowsing = () => {
+    // The onboarding token was only ever meant to authenticate the
+    // registration/OTP/profile-setup steps - it doesn't carry the person
+    // into a real session. Wipe it and require an explicit login.
+    dispatch(clearAuth());
     navigate("/sign-in");
   };
 
@@ -44,9 +53,7 @@ const STEPS = [
           {STEPS.map((step, index) => (
             <div
               key={step.number}
-              className={`flex items-start gap-4 py-3.5 ${
-                index !== STEPS.length - 1 ? "border-b border-input" : ""
-              }`}
+              className={`flex items-start gap-4 py-3.5 ${index !== STEPS.length - 1 ? "border-b border-input" : ""}`}
             >
               <span className="pt-0.5 font-serif text-lg font-bold text-primary">
                 {step.number}

@@ -1,11 +1,15 @@
+// src/routes/auth/MoreInfo.tsx
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useState } from "react";
 
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { toast } from "sonner";
 
 import { useI18n } from "../../lib/i18n";
 import { AuthLayout } from "../../components/authPage/AuthLayout";
+import { useUserUpdateFamilyProfileMutation } from "../../redux/api/authApi";
+import { setUserInfo } from "../../redux/slices/authSlice";
 
 const REFERRAL_OPTIONS = [
   { value: "google-search", labelFallback: "Google search" },
@@ -17,15 +21,14 @@ const REFERRAL_OPTIONS = [
 
 export function MoreInfo() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { t } = useI18n();
+  const [updateProfile, { isLoading }] = useUserUpdateFamilyProfileMutation();
 
   const [phone, setPhone] = useState("");
   const [referral, setReferral] = useState("");
-  const [submitting, setSubmitting] = useState(false);
 
-  const handleBack = () => {
-    navigate(-1);
-  };
+  const handleBack = () => navigate(-1);
 
   const handleContinue = async () => {
     if (!phone.trim()) {
@@ -33,32 +36,23 @@ export function MoreInfo() {
       return;
     }
 
-    const formData = {
-      phone,
-      referral,
-    };
-
-    console.log("More Info form data:", formData);
-
- navigate("/welcome-weligo");
-    return;
-
-    setSubmitting(true);
     const toastId = toast.loading("Please wait...");
     try {
-      // TODO: replace console.log above with actual persistence call
-      toast.success(t("auth.infoSaved") ?? "Info saved", {
+      const res = await updateProfile({
+        phone,
+        referralSource: referral,
+      }).unwrap();
+      dispatch(setUserInfo(res.data));
+      toast.success(res?.message || t("auth.infoSaved") || "Info saved", {
         id: toastId,
         duration: 2000,
       });
-      navigate("/");
+      navigate("/welcome-weligo");
     } catch (error: any) {
       toast.error(error?.data?.message || "Something went wrong", {
         id: toastId,
         duration: 3000,
       });
-    } finally {
-      setSubmitting(false);
     }
   };
 
@@ -118,6 +112,7 @@ export function MoreInfo() {
           <button
             type="button"
             onClick={handleBack}
+            disabled={isLoading}
             className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary/10 px-6 text-sm font-medium text-primary transition-colors hover:bg-primary/15"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -126,11 +121,11 @@ export function MoreInfo() {
           <button
             type="button"
             onClick={handleContinue}
-            disabled={submitting}
+            disabled={isLoading}
             className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-primary text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.01] disabled:opacity-70"
           >
-            {t("auth.continue")}
-            <ArrowRight className="h-4 w-4" />
+            {isLoading ? "Saving…" : t("auth.continue")}
+            {!isLoading && <ArrowRight className="h-4 w-4" />}
           </button>
         </div>
       </div>

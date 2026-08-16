@@ -1,3 +1,4 @@
+// src/pages/PurchasePage.tsx
 import {
   ArrowLeft,
   ArrowRight,
@@ -16,30 +17,45 @@ import {
   Star,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { toast } from "sonner";
-// import { Button } from "@/components/ui/button";
 import { UserAvatar } from "../components/common/UserAvatar";
 import { Button } from "../components/ui/button";
 import { Checkbox } from "../components/ui/checkbox";
 import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
-// import { LanguageSwitcher } from "@/components/dashboard/LanguageSwitcher";
+import { Skeleton } from "../components/ui/skeleton";
+import { PaymentRedirectScreen } from "../components/purchase/PaymentRedirectScreen";
 import {
-  getPurchaseProvider,
-  type PurchaseProvider,
-  type TimeSlot,
-} from "../assets/data/purchase-providers";
-import { formatCHF } from "../lib/format";
+  useProviderDetailsQuery,
+  useBookingMutation,
+} from "@/redux/api/websiteApi";
+// import { getImageUrl } from "@/redux/slices/getBaseUrl";
+import {
+  getSlotsForDate,
+  isDateBookable,
+  clampDuration,
+  slotHours,
+  type SlotWithStatus,
+} from "@/lib/purchaseAvailability";
 import { useI18n } from "../lib/i18n";
 import { cn } from "../lib/utils";
+import type { RootState } from "@/redux/store";
+import type {
+  Availability,
+  Booking,
+  ProviderDetailsUser,
+} from "@/types/providerDetails";
+import type { BookingRequestBody } from "@/types/booking";
+import { getImageUrl } from "@/redux/getBaseUrl";
 
 type Step = 1 | 2 | 3 | 4 | 5;
 
 type Draft = {
   step: Step;
   date: string | null; // "YYYY-MM-DD"
-  slot: TimeSlot | null;
+  slot: SlotWithStatus | null;
   duration: number;
   ageGroup: string;
   persons: number;
@@ -56,7 +72,7 @@ const DEFAULT_DRAFT: Draft = {
   step: 1,
   date: null,
   slot: null,
-  duration: 2,
+  duration: 1,
   ageGroup: "",
   persons: 1,
   expect: "",
@@ -77,7 +93,14 @@ function loadDraft(key: string): Draft {
   try {
     const raw = window.localStorage.getItem(key);
     if (!raw) return DEFAULT_DRAFT;
-    return { ...DEFAULT_DRAFT, ...JSON.parse(raw) };
+    const parsed = JSON.parse(raw);
+    // never resume mid-payment-redirect or a stale bookingId
+    return {
+      ...DEFAULT_DRAFT,
+      ...parsed,
+      step: Math.min(parsed.step ?? 1, 4),
+      bookingId: null,
+    };
   } catch {
     return DEFAULT_DRAFT;
   }
@@ -92,45 +115,103 @@ function saveDraft(key: string, draft: Draft) {
   }
 }
 
-function slotHours(s: TimeSlot) {
-  const [sh] = s.start.split(":").map(Number);
-  const [eh] = s.end.split(":").map(Number);
-  return eh - sh;
-}
-
 function pad(n: number) {
   return n.toString().padStart(2, "0");
 }
-
 function fmtKey(d: Date) {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
-
 function parseKey(k: string): Date {
   const [y, m, d] = k.split("-").map(Number);
   return new Date(y, m - 1, d);
 }
+function formatCHF(amount: number) {
+  return `CHF ${amount.toLocaleString("de-CH", { maximumFractionDigits: 2 })}`;
+}
 
 export function PurchasePage() {
-  const serviceId = "2739823981098";
-  const providerId = "2739823981098";
-  const { t } = useI18n();
-  const provider = useMemo(
-    () => getPurchaseProvider(serviceId, providerId),
-    [serviceId, providerId],
+  const { serviceId, providerId } = useParams<{
+    serviceId: string;
+    providerId: string;
+  }>();
+  const userInfo = useSelector((state: RootState) => state.auth.userInfo);
+  const { data, isLoading, isError, refetch } = useProviderDetailsQuery(
+    providerId ?? "",
+    {
+      skip: !providerId,
+    },
   );
+
+  if (isLoading) return <PurchaseSkeleton />;
+
+  if (isError || !data?.data) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-[#f6f8fe] px-6 text-center">
+        <p className="font-serif text-2xl font-medium">
+          We couldn&apos;t load this provider
+        </p>
+        <p className="text-sm text-muted-foreground">
+          Please go back and try again.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <PurchaseFlow
+      serviceId={serviceId ?? ""}
+      providerId={providerId ?? ""}
+      user={data.data.user}
+      availability={data.data.availability}
+      bookings={data.data.bookings}
+      userInfo={userInfo}
+      onRefetchProvider={refetch}
+    />
+  );
+}
+
+function PurchaseSkeleton() {
+  return (
+    <div className="min-h-screen bg-[#f6f8fe] px-4 py-10">
+      <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-[1fr_360px]">
+        <Skeleton className="h-[500px] rounded-3xl" />
+        <Skeleton className="h-[400px] rounded-3xl" />
+      </div>
+    </div>
+  );
+}
+
+/* ---------- Flow (real data) ---------- */
+
+function PurchaseFlow({
+  serviceId,
+  providerId,
+  user,
+  availability,
+  bookings,
+  userInfo,
+  onRefetchProvider,
+}: {
+  serviceId: string;
+  providerId: string;
+  user: ProviderDetailsUser;
+  availability: Availability;
+  bookings: Booking[];
+  userInfo: any;
+  onRefetchProvider: () => void;
+}) {
+  const { t } = useI18n();
   const key = storageKey(serviceId, providerId);
   const [draft, setDraft] = useState<Draft>(() => loadDraft(key));
+  const [redirectUrl, setRedirectUrl] = useState<string | null>(null);
+  const [createBooking, { isLoading: isBooking }] = useBookingMutation();
 
   useEffect(() => {
     saveDraft(key, draft);
   }, [key, draft]);
 
-  // derived totals
-  const hours = draft.duration;
-  const subtotal = provider.hourlyRate * hours;
-  const fee = Math.round(subtotal * (provider.serviceFeePct / 100));
-  const total = subtotal + fee;
+  // Price scales only with duration (hours), never with number of persons.
+  const total = user.hourlyRate * draft.duration;
 
   function setStep(s: Step) {
     setDraft((d) => ({ ...d, step: s }));
@@ -138,31 +219,92 @@ export function PurchasePage() {
       window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+  async function handleConfirm() {
+    if (!draft.agree) return toast.error(t("purchase.s4.mustAgree"));
+    if (!draft.date || !draft.slot)
+      return toast.error(t("purchase.s2.pickSlot"));
+    if (!userInfo?._id) {
+      toast.error("Please log in to complete this booking.");
+      return;
+    }
+
+    const address =
+      draft.location === "ourHome"
+        ? userInfo.address ||
+          `${userInfo.city ?? ""} ${userInfo.postalCode ?? ""}`.trim()
+        : user.address || `${user.city ?? ""} ${user.postalCode ?? ""}`.trim();
+
+    const location =
+      draft.location === "ourHome"
+        ? (userInfo.location ?? {
+            type: "Point" as const,
+            coordinates: [0, 0] as [number, number],
+          })
+        : user.location;
+
+    const body: BookingRequestBody = {
+      customer: userInfo._id,
+      serviceProvider: user._id,
+      bookingDate: draft.date,
+      timeSlotId: draft.slot._id,
+      durationInHours: draft.duration,
+      ageGroup: draft.ageGroup,
+      numberOfPersons: draft.persons,
+      whatToExpect: draft.expect,
+      address,
+      location,
+      paymentMethod: draft.payment,
+      amount: total,
+    };
+
+    try {
+      const res = await createBooking(body).unwrap();
+      setDraft((d) => ({
+        ...d,
+        bookingId: res.data.booking.bookingReference,
+        step: 5,
+      }));
+      setRedirectUrl(res.data.redirectUrl);
+      if (typeof window !== "undefined")
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch (err: any) {
+      const message =
+        err?.data?.message || "Something went wrong creating this booking.";
+      toast.error(message);
+      // Slot got taken in the meantime - refresh availability and send the
+      // user back to pick a different date/time.
+      if (err?.data?.err?.statusCode === 409 || err?.status === 409) {
+        onRefetchProvider();
+        setDraft((d) => ({ ...d, slot: null, step: 2 }));
+      }
+    }
+  }
+
+  const providerPath = `/services/${serviceId}/providers/${providerId}`;
+
   return (
     <div className="flex min-h-screen flex-col bg-[#f6f8fe]">
-      {/* <PublicHeader /> */}
       <Stepper current={draft.step} />
 
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 lg:px-8">
-        {draft.step === 5 ? (
-          <StepConfirmation
-            provider={provider}
-            draft={draft}
-            total={total}
-            onReset={() => {
-              window.localStorage.removeItem(key);
-              setDraft({ ...DEFAULT_DRAFT });
-            }}
+        {draft.step === 5 && redirectUrl ? (
+          <PaymentRedirectScreen
+            redirectUrl={redirectUrl}
+            bookingReference={draft.bookingId ?? ""}
+            totalLabel={formatCHF(total)}
+            providerPath={providerPath}
           />
         ) : (
           <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
             <section className="rounded-3xl bg-card p-6 shadow-sm lg:p-10">
               {draft.step === 1 && (
-                <Step1 provider={provider} onNext={() => setStep(2)} />
+                <Step1 user={user} onNext={() => setStep(2)} />
               )}
               {draft.step === 2 && (
                 <Step2
-                  provider={provider}
+                  user={user}
+                  availability={availability}
+                  bookings={bookings}
                   draft={draft}
                   setDraft={setDraft}
                   onBack={() => setStep(1)}
@@ -171,7 +313,7 @@ export function PurchasePage() {
               )}
               {draft.step === 3 && (
                 <Step3
-                  provider={provider}
+                  user={user}
                   draft={draft}
                   setDraft={setDraft}
                   onBack={() => setStep(2)}
@@ -180,31 +322,18 @@ export function PurchasePage() {
               )}
               {draft.step === 4 && (
                 <Step4
-                  provider={provider}
+                  user={user}
                   draft={draft}
                   setDraft={setDraft}
                   total={total}
-                  subtotal={subtotal}
-                  fee={fee}
+                  isBooking={isBooking}
                   onBack={() => setStep(3)}
-                  onConfirm={() => {
-                    const id = `WB-${Math.floor(1000 + Math.random() * 9000)}`;
-                    setDraft((d) => ({ ...d, bookingId: id, step: 5 }));
-                    toast.success(t("purchase.toast.bookingConfirmed"));
-                    if (typeof window !== "undefined")
-                      window.scrollTo({ top: 0, behavior: "smooth" });
-                  }}
+                  onConfirm={handleConfirm}
                 />
               )}
             </section>
             <aside>
-              <SummaryCard
-                provider={provider}
-                draft={draft}
-                subtotal={subtotal}
-                fee={fee}
-                total={total}
-              />
+              <SummaryCard user={user} draft={draft} total={total} />
             </aside>
           </div>
         )}
@@ -215,52 +344,7 @@ export function PurchasePage() {
   );
 }
 
-/* ---------- Header / Stepper / Footer ---------- */
-
-// function PublicHeader() {
-//   const { t } = useI18n();
-//   return (
-//     <header className="border-b border-border/60 bg-card">
-//       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 lg:px-8">
-//         <Link
-//           to="/"
-//           className="font-serif text-2xl font-semibold tracking-tight text-foreground"
-//         >
-//           <span className="text-primary">W</span>eligo
-//         </Link>
-//         <nav className="hidden items-center gap-8 text-sm text-muted-foreground lg:flex">
-//           <a href="#" className="hover:text-foreground">
-//             {t("purchase.nav.home")}
-//           </a>
-//           <a href="#" className="font-medium text-primary">
-//             {t("purchase.nav.services")}
-//           </a>
-//           <a href="#" className="hover:text-foreground">
-//             {t("purchase.nav.forFamilies")}
-//           </a>
-//           <a href="#" className="hover:text-foreground">
-//             {t("purchase.nav.forProviders")}
-//           </a>
-//           <a href="#" className="hover:text-foreground">
-//             {t("purchase.nav.howItWorks")}
-//           </a>
-//           <a href="#" className="hover:text-foreground">
-//             {t("purchase.nav.aboutUs")}
-//           </a>
-//         </nav>
-//         <div className="flex items-center gap-3">
-//           {/* <LanguageSwitcher /> */}
-//           <button className="hidden h-9 rounded-full border border-primary/40 px-4 text-sm font-medium text-primary hover:bg-primary/5 sm:inline-flex sm:items-center">
-//             {t("purchase.nav.login")}
-//           </button>
-//           <button className="inline-flex h-9 items-center rounded-full bg-primary px-4 text-sm font-medium text-primary-foreground hover:opacity-90">
-//             {t("purchase.nav.signup")}
-//           </button>
-//         </div>
-//       </div>
-//     </header>
-//   );
-// }
+/* ---------- Stepper / Footer ---------- */
 
 function Stepper({ current }: { current: Step }) {
   const { t } = useI18n();
@@ -386,16 +470,12 @@ function FooterCol({ title, links }: { title: string; links: string[] }) {
 /* ---------- Summary ---------- */
 
 function SummaryCard({
-  provider,
+  user,
   draft,
-  subtotal,
-  fee,
   total,
 }: {
-  provider: PurchaseProvider;
+  user: ProviderDetailsUser;
   draft: Draft;
-  subtotal: number;
-  fee: number;
   total: number;
 }) {
   const { t, lang } = useI18n();
@@ -410,21 +490,26 @@ function SummaryCard({
       )
     : t("purchase.summary.notSelected");
   const timeLabel = draft.slot
-    ? `${draft.slot.start}–${draft.slot.end}`
+    ? `${draft.slot.startTime}–${draft.slot.endTime}`
     : t("purchase.summary.notSelected");
+
   return (
     <div className="rounded-3xl bg-card p-6 shadow-sm">
       <p className="font-mono text-[11px] tracking-widest text-muted-foreground">
         {t("purchase.summary.title")}
       </p>
       <div className="mt-4 flex items-center gap-3">
-        <UserAvatar name={provider.name} size={44} />
+        <UserAvatar
+          name={user.fullName}
+          imageUrl={getImageUrl(user.profileImage) ?? undefined}
+          size={44}
+        />
         <div>
-          <div className="font-serif text-lg font-medium">{provider.name}</div>
+          <div className="font-serif text-lg font-medium">{user.fullName}</div>
           <div className="flex items-center gap-1 text-xs text-muted-foreground">
             <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />{" "}
-            {provider.rating}
-            <span className="ml-1">· {provider.city}</span>
+            {user.averageRating}
+            <span className="ml-1">&middot; {user.city}</span>
           </div>
         </div>
       </div>
@@ -452,21 +537,10 @@ function SummaryCard({
             draft.step >= 3
               ? draft.location === "ourHome"
                 ? t("purchase.s3.atOurHome")
-                : t("purchase.s3.atProviderPlace", { name: provider.firstName })
+                : t("purchase.s3.atProviderPlace", { name: user.firstName })
               : t("purchase.summary.notSelected")
           }
         />
-      </div>
-      <div className="my-5 h-px bg-border" />
-      <div className="space-y-2 text-sm">
-        <div className="flex justify-between">
-          <span>{t("purchase.summary.subtotal")}</span>
-          <span className="font-mono">{formatCHF(subtotal, true)}</span>
-        </div>
-        <div className="flex justify-between text-muted-foreground">
-          <span>{t("purchase.summary.serviceFee")}</span>
-          <span className="font-mono">{formatCHF(fee, true)}</span>
-        </div>
       </div>
       <div className="my-5 h-px bg-border" />
       <div className="flex items-center justify-between">
@@ -474,12 +548,15 @@ function SummaryCard({
           {t("purchase.summary.total")}
         </span>
         <span className="font-mono text-xl font-semibold text-primary">
-          {formatCHF(total, true)}
+          {formatCHF(total)}
         </span>
       </div>
+      <p className="mt-1 text-right text-xs text-muted-foreground">
+        {user.hourlyRate}/hr &times; {draft.duration}h
+      </p>
       <div className="mt-5 flex items-center gap-2 text-xs text-muted-foreground">
         <ShieldCheck className="h-4 w-4 text-emerald-600" />
-        {t("purchase.summary.paymentHeld", { name: provider.firstName })}
+        {t("purchase.summary.paymentHeld", { name: user.firstName })}
       </div>
     </div>
   );
@@ -508,10 +585,10 @@ function SumRow({
 /* ---------- Step 1 ---------- */
 
 function Step1({
-  provider,
+  user,
   onNext,
 }: {
-  provider: PurchaseProvider;
+  user: ProviderDetailsUser;
   onNext: () => void;
 }) {
   const { t } = useI18n();
@@ -521,56 +598,52 @@ function Step1({
         {t("purchase.s1.tag")}
       </p>
       <h1 className="mt-3 font-serif text-4xl font-medium leading-tight lg:text-5xl">
-        {t("purchase.s1.heading", { name: provider.firstName })}
+        {t("purchase.s1.heading", { name: user.firstName })}
       </h1>
 
       <div className="mt-8 rounded-2xl bg-secondary/60 p-5">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
-            <UserAvatar name={provider.name} size={72} />
+            <UserAvatar
+              name={user.fullName}
+              imageUrl={getImageUrl(user.profileImage) ?? undefined}
+              size={72}
+            />
             <div>
               <div className="font-serif text-xl font-medium">
-                {provider.name}
+                {user.fullName}
               </div>
               <div className="mt-1 flex items-center gap-1 text-sm">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star
                     key={i}
-                    className="h-4 w-4 fill-amber-400 text-amber-400"
+                    className={cn(
+                      "h-4 w-4",
+                      i < Math.round(user.averageRating)
+                        ? "fill-amber-400 text-amber-400"
+                        : "fill-none text-muted-foreground/30",
+                    )}
                   />
                 ))}
-                <span className="ml-1 font-medium">{provider.rating}</span>
+                <span className="ml-1 font-medium">{user.averageRating}</span>
                 <span className="ml-1 text-muted-foreground">
-                  ({provider.reviewCount} {t("purchase.s1.reviews")})
+                  ({user.totalReview} {t("purchase.s1.reviews")})
                 </span>
               </div>
               <div className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
-                <MapPin className="h-3.5 w-3.5" /> {provider.city},{" "}
-                {provider.postal} · {provider.distanceKm}{" "}
-                {t("purchase.s1.kmAway")}
-              </div>
-              <div className="mt-2 inline-flex rounded-full bg-card px-3 py-1 text-xs font-medium text-foreground">
-                {provider.serviceTag}
+                <MapPin className="h-3.5 w-3.5" /> {user.city}
+                {user.postalCode ? `, ${user.postalCode}` : ""}
               </div>
             </div>
           </div>
           <div className="text-right">
             <div className="font-serif text-3xl font-semibold text-primary">
-              {formatCHF(provider.hourlyRate)}
+              {formatCHF(user.hourlyRate)}
             </div>
             <div className="text-xs text-muted-foreground">
               {t("purchase.s1.perHour")}
             </div>
-            <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />{" "}
-              {t("purchase.s1.availableToday")}
-            </div>
           </div>
-        </div>
-        <div className="mt-4">
-          <button className="text-sm font-medium text-primary hover:underline">
-            {t("purchase.s1.viewFullProfile")} →
-          </button>
         </div>
       </div>
 
@@ -584,16 +657,20 @@ function Step1({
   );
 }
 
-/* ---------- Step 2 ---------- */
+/* ---------- Step 2 (real calendar + red-marked booked slots) ---------- */
 
 function Step2({
-  provider,
+  user,
+  availability,
+  bookings,
   draft,
   setDraft,
   onBack,
   onNext,
 }: {
-  provider: PurchaseProvider;
+  user: ProviderDetailsUser;
+  availability: Availability;
+  bookings: Booking[];
   draft: Draft;
   setDraft: React.Dispatch<React.SetStateAction<Draft>>;
   onBack: () => void;
@@ -601,25 +678,11 @@ function Step2({
 }) {
   const { t, lang } = useI18n();
   const todayKey = fmtKey(new Date(new Date().setHours(0, 0, 0, 0)));
-  const availableSet = useMemo(
-    () => new Set(provider.availability.map((a) => a.date)),
-    [provider],
-  );
-  const slotsByDate = useMemo(() => {
-    const m = new Map<string, TimeSlot[]>();
-    for (const a of provider.availability) m.set(a.date, a.slots);
-    return m;
-  }, [provider]);
 
-  // viewMonth based on selected date or first available
-  const initialMonth = draft.date
-    ? parseKey(draft.date)
-    : provider.availability[0]
-      ? parseKey(provider.availability[0].date)
-      : new Date();
-  const [viewMonth, setViewMonth] = useState<Date>(
-    new Date(initialMonth.getFullYear(), initialMonth.getMonth(), 1),
-  );
+  const [viewMonth, setViewMonth] = useState<Date>(() => {
+    const base = draft.date ? parseKey(draft.date) : new Date();
+    return new Date(base.getFullYear(), base.getMonth(), 1);
+  });
 
   const monthLabel = viewMonth.toLocaleString(
     lang === "de" ? "de-CH" : "en-GB",
@@ -627,18 +690,26 @@ function Step2({
   );
   const monthDays = useMemo(() => buildMonthGrid(viewMonth), [viewMonth]);
 
-  const selectedSlots = draft.date ? (slotsByDate.get(draft.date) ?? []) : [];
+  const selectedDate = draft.date ? parseKey(draft.date) : null;
+  const selectedSlots = selectedDate
+    ? getSlotsForDate(selectedDate, availability, bookings)
+    : [];
 
-  function selectDate(dateKey: string) {
+  function selectDate(date: Date) {
+    const dateKey = fmtKey(date);
     if (dateKey < todayKey) return;
-    if (!availableSet.has(dateKey)) return;
+    if (!isDateBookable(date, availability)) return;
     setDraft((d) => ({ ...d, date: dateKey, slot: null }));
   }
 
-  function selectSlot(s: TimeSlot) {
-    const max = slotHours(s);
-    const dur = Math.min(draft.duration, max);
-    setDraft((d) => ({ ...d, slot: s, duration: Math.max(1, dur) }));
+  function selectSlot(slot: SlotWithStatus) {
+    if (slot.booked) return; // already taken - shown red, not selectable
+    const duration = clampDuration(
+      slot,
+      availability.bookingRules.minimumBookingHours,
+      draft.duration,
+    );
+    setDraft((d) => ({ ...d, slot, duration }));
   }
 
   function changeDuration(delta: number) {
@@ -647,12 +718,17 @@ function Step2({
       return;
     }
     const max = slotHours(draft.slot);
+    const min = Math.min(
+      availability.bookingRules.minimumBookingHours || 1,
+      max,
+    );
     const next = draft.duration + delta;
-    if (next < 1) {
+    if (next < min) {
       toast.error(t("purchase.s2.minDuration"));
       return;
     }
     if (next > max) {
+      // No one can book more hours than the slot actually offers.
       toast.warning(t("purchase.s2.maxDuration", { n: max }));
       return;
     }
@@ -681,7 +757,7 @@ function Step2({
         {t("purchase.s2.tag")}
       </p>
       <h1 className="mt-3 font-serif text-3xl font-medium leading-tight lg:text-4xl">
-        {t("purchase.s2.heading", { name: provider.firstName })}
+        {t("purchase.s2.heading", { name: user.firstName })}
       </h1>
 
       <div className="mt-8">
@@ -724,21 +800,28 @@ function Step2({
             if (!d) return <div key={`e-${idx}`} className="aspect-square" />;
             const dateKey = fmtKey(d);
             const past = dateKey < todayKey;
-            const available = availableSet.has(dateKey) && !past;
+            const bookable = !past && isDateBookable(d, availability);
+            const fullyBooked =
+              bookable &&
+              getSlotsForDate(d, availability, bookings).every((s) => s.booked);
             const selected = draft.date === dateKey;
             return (
               <button
                 key={dateKey}
                 type="button"
-                disabled={!available}
-                onClick={() => selectDate(dateKey)}
+                disabled={!bookable || fullyBooked}
+                onClick={() => selectDate(d)}
                 className={cn(
                   "aspect-square rounded-2xl border text-sm transition",
                   past && "border-transparent text-muted-foreground/40",
                   !past &&
-                    !available &&
+                    !bookable &&
                     "border-border bg-card text-muted-foreground/60",
-                  available &&
+                  bookable &&
+                    fullyBooked &&
+                    "border-red-200 bg-red-50 text-red-400",
+                  bookable &&
+                    !fullyBooked &&
                     !selected &&
                     "border-emerald-300 bg-emerald-50 text-foreground hover:bg-emerald-100",
                   selected &&
@@ -753,7 +836,7 @@ function Step2({
 
         {draft.date && (
           <div className="mt-4 text-sm text-emerald-600">
-            ✓ {t("purchase.s2.availableOn", { name: provider.firstName })}{" "}
+            &#10003; {t("purchase.s2.availableOn", { name: user.firstName })}{" "}
             {parseKey(draft.date).toLocaleDateString(
               lang === "de" ? "de-CH" : "en-GB",
               {
@@ -773,23 +856,30 @@ function Step2({
           </div>
           <div className="mt-3 grid gap-3 sm:grid-cols-3">
             {selectedSlots.map((s) => {
-              const sel =
-                draft.slot &&
-                draft.slot.start === s.start &&
-                draft.slot.end === s.end;
+              const sel = draft.slot && draft.slot._id === s._id;
               return (
                 <button
-                  key={s.start}
+                  key={s._id}
                   type="button"
+                  disabled={s.booked}
                   onClick={() => selectSlot(s)}
+                  title={s.booked ? "Already booked" : undefined}
                   className={cn(
                     "rounded-full border px-4 py-3 text-sm font-medium transition",
-                    sel
-                      ? "border-primary bg-primary text-primary-foreground"
-                      : "border-border bg-card text-foreground hover:border-primary/50",
+                    s.booked &&
+                      "cursor-not-allowed border-red-200 bg-red-50 text-red-400 line-through",
+                    !s.booked &&
+                      (sel
+                        ? "border-primary bg-primary text-primary-foreground"
+                        : "border-border bg-card text-foreground hover:border-primary/50"),
                   )}
                 >
-                  {s.start} – {s.end}
+                  {s.startTime} – {s.endTime}
+                  {s.booked && (
+                    <span className="ml-1 text-[10px] normal-case no-underline">
+                      (booked)
+                    </span>
+                  )}
                 </button>
               );
             })}
@@ -819,7 +909,8 @@ function Step2({
               <Plus className="h-4 w-4" />
             </button>
             <span className="text-sm text-muted-foreground">
-              {t("purchase.s2.hours")}
+              {t("purchase.s2.hours")} &middot; max {slotHours(draft.slot)}h for
+              this slot
             </span>
           </div>
         </div>
@@ -851,8 +942,7 @@ function buildMonthGrid(month: Date): (Date | null)[] {
     month.getMonth() + 1,
     0,
   ).getDate();
-  // Monday-first
-  const firstDayIdx = (first.getDay() + 6) % 7;
+  const firstDayIdx = (first.getDay() + 6) % 7; // Monday-first
   const cells: (Date | null)[] = [];
   for (let i = 0; i < firstDayIdx; i++) cells.push(null);
   for (let d = 1; d <= daysInMonth; d++)
@@ -864,13 +954,13 @@ function buildMonthGrid(month: Date): (Date | null)[] {
 /* ---------- Step 3 ---------- */
 
 function Step3({
-  provider,
+  user,
   draft,
   setDraft,
   onBack,
   onNext,
 }: {
-  provider: PurchaseProvider;
+  user: ProviderDetailsUser;
   draft: Draft;
   setDraft: React.Dispatch<React.SetStateAction<Draft>>;
   onBack: () => void;
@@ -890,7 +980,7 @@ function Step3({
         {t("purchase.s3.tag")}
       </p>
       <h1 className="mt-3 font-serif text-3xl font-medium leading-tight lg:text-4xl">
-        {t("purchase.s3.heading", { name: provider.firstName })}
+        {t("purchase.s3.heading", { name: user.firstName })}
       </h1>
 
       <div className="mt-8 space-y-6">
@@ -933,11 +1023,14 @@ function Step3({
             >
               <Plus className="h-4 w-4" />
             </button>
+            <span className="text-xs text-muted-foreground">
+              Doesn&apos;t change the price - only hours do.
+            </span>
           </div>
         </div>
         <div>
           <label className="text-sm font-medium">
-            {t("purchase.s3.tellWhat", { name: provider.firstName })}
+            {t("purchase.s3.tellWhat", { name: user.firstName })}
           </label>
           <Textarea
             value={draft.expect}
@@ -968,9 +1061,7 @@ function Step3({
                 setDraft((d) => ({ ...d, location: "providerPlace" }))
               }
               icon={<Smile className="h-6 w-6" />}
-              label={t("purchase.s3.atProviderPlace", {
-                name: provider.firstName,
-              })}
+              label={t("purchase.s3.atProviderPlace", { name: user.firstName })}
             />
           </div>
         </div>
@@ -1044,21 +1135,19 @@ function LocationOption({
 /* ---------- Step 4 ---------- */
 
 function Step4({
-  provider,
+  user,
   draft,
   setDraft,
   total,
-  subtotal,
-  fee,
+  isBooking,
   onBack,
   onConfirm,
 }: {
-  provider: PurchaseProvider;
+  user: ProviderDetailsUser;
   draft: Draft;
   setDraft: React.Dispatch<React.SetStateAction<Draft>>;
   total: number;
-  subtotal: number;
-  fee: number;
+  isBooking: boolean;
   onBack: () => void;
   onConfirm: () => void;
 }) {
@@ -1074,7 +1163,6 @@ function Step4({
         },
       )
     : "";
-  const providerNet = Math.round(subtotal * (1 - provider.commissionPct / 100));
 
   function handleConfirm() {
     if (!draft.agree) return toast.error(t("purchase.s4.mustAgree"));
@@ -1092,20 +1180,28 @@ function Step4({
 
       <div className="mt-6 rounded-2xl bg-secondary/60 p-5">
         <div className="flex items-center gap-3">
-          <UserAvatar name={provider.name} size={48} />
+          <UserAvatar
+            name={user.fullName}
+            imageUrl={getImageUrl(user.profileImage) ?? undefined}
+            size={48}
+          />
           <div>
             <div className="flex items-center gap-2 font-serif text-lg font-medium">
-              {provider.name}{" "}
+              {user.fullName}{" "}
               <ShieldCheck className="h-4 w-4 text-emerald-600" />
             </div>
-            <div className="text-xs text-muted-foreground">{provider.city}</div>
+            <div className="text-xs text-muted-foreground">{user.city}</div>
           </div>
         </div>
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
           <Field label={t("purchase.s5.date")} value={dateLabel} />
           <Field
             label={t("purchase.s5.time")}
-            value={draft.slot ? `${draft.slot.start} – ${draft.slot.end}` : ""}
+            value={
+              draft.slot
+                ? `${draft.slot.startTime} – ${draft.slot.endTime}`
+                : ""
+            }
           />
           <Field
             label={t("purchase.summary.duration")}
@@ -1116,7 +1212,7 @@ function Step4({
             value={
               draft.location === "ourHome"
                 ? t("purchase.s3.atOurHome")
-                : t("purchase.s3.atProviderPlace", { name: provider.firstName })
+                : t("purchase.s3.atProviderPlace", { name: user.firstName })
             }
           />
           <Field
@@ -1133,14 +1229,10 @@ function Step4({
         <div className="mt-4 space-y-3 font-mono text-sm">
           <div className="flex justify-between">
             <span>
-              {provider.firstName}'s service — {draft.duration} hrs ×{" "}
-              {formatCHF(provider.hourlyRate)}/hr
+              {user.firstName}&apos;s service — {draft.duration} hrs &times;{" "}
+              {formatCHF(user.hourlyRate)}/hr
             </span>
-            <span>{formatCHF(subtotal, true)}</span>
-          </div>
-          <div className="flex justify-between text-muted-foreground">
-            <span>{t("purchase.s4.serviceFee")}</span>
-            <span>{formatCHF(fee, true)}</span>
+            <span>{formatCHF(total)}</span>
           </div>
         </div>
         <div className="my-4 h-px bg-border" />
@@ -1149,15 +1241,9 @@ function Step4({
             {t("purchase.s4.total")}
           </span>
           <span className="font-mono text-2xl font-semibold text-primary">
-            {formatCHF(total, true)}
+            {formatCHF(total)}
           </span>
         </div>
-        <p className="mt-2 font-mono text-xs text-muted-foreground">
-          {t("purchase.s4.receivesAfter", {
-            name: provider.firstName,
-            amount: formatCHF(providerNet, true),
-          })}
-        </p>
       </div>
 
       <div className="mt-6">
@@ -1181,9 +1267,11 @@ function Step4({
       </div>
 
       <div className="mt-6 flex flex-wrap gap-x-8 gap-y-2 rounded-xl bg-emerald-50 px-5 py-3 text-sm text-emerald-700">
-        <span>✓ {t("purchase.s4.payOnly", { name: provider.firstName })}</span>
-        <span>✓ {t("purchase.s4.cancel24")}</span>
-        <span>✓ {t("purchase.s4.encrypted")}</span>
+        <span>
+          &#10003; {t("purchase.s4.payOnly", { name: user.firstName })}
+        </span>
+        <span>&#10003; {t("purchase.s4.cancel24")}</span>
+        <span>&#10003; {t("purchase.s4.encrypted")}</span>
       </div>
 
       <label className="mt-6 flex items-start gap-3 text-sm">
@@ -1209,15 +1297,19 @@ function Step4({
           variant="outline"
           onClick={onBack}
           className="h-12 rounded-full px-6"
+          disabled={isBooking}
         >
           <ArrowLeft className="mr-1 h-4 w-4" /> {t("purchase.s4.back")}
         </Button>
         <Button
           onClick={handleConfirm}
+          disabled={isBooking}
           className="h-12 flex-1 rounded-full text-base"
         >
-          {t("purchase.s4.confirm")} · {formatCHF(total, true)}{" "}
-          <ArrowRight className="ml-1 h-4 w-4" />
+          {isBooking
+            ? "Booking…"
+            : `${t("purchase.s4.confirm")} · ${formatCHF(total)}`}
+          {!isBooking && <ArrowRight className="ml-1 h-4 w-4" />}
         </Button>
       </div>
     </div>
@@ -1261,152 +1353,4 @@ function PayOption({
   );
 }
 
-/* ---------- Step 5 ---------- */
-
-function StepConfirmation({
-  provider,
-  draft,
-  total,
-  onReset,
-}: {
-  provider: PurchaseProvider;
-  draft: Draft;
-  total: number;
-  onReset: () => void;
-}) {
-  const { t, lang } = useI18n();
-  const navigate = useNavigate();
-  const dayName = draft.date
-    ? parseKey(draft.date).toLocaleDateString(
-        lang === "de" ? "de-CH" : "en-GB",
-        { weekday: "long" },
-      )
-    : "";
-  const dateLabel = draft.date
-    ? parseKey(draft.date).toLocaleDateString(
-        lang === "de" ? "de-CH" : "en-GB",
-        {
-          weekday: "long",
-          day: "numeric",
-          month: "long",
-          year: "numeric",
-        },
-      )
-    : "";
-
-  return (
-    <div className="mx-auto max-w-3xl text-center">
-      <h1 className="font-serif text-5xl font-medium text-foreground lg:text-6xl">
-        {t("purchase.s5.allBooked")}
-      </h1>
-      <h2 className="mt-2 font-serif text-4xl font-medium italic text-primary lg:text-5xl">
-        {t("purchase.s5.seeYou", { day: dayName })}
-      </h2>
-      <p className="mx-auto mt-6 max-w-xl text-sm text-muted-foreground">
-        {t("purchase.s5.notified", { name: provider.firstName })}
-        <br />
-        {t("purchase.s5.paymentHeld")}
-      </p>
-
-      <div className="mt-8 rounded-3xl bg-secondary/60 p-6 text-left">
-        <div className="flex items-center gap-3">
-          <UserAvatar name={provider.name} size={48} />
-          <div>
-            <div className="flex items-center gap-2 font-serif text-lg font-medium">
-              {provider.name}{" "}
-              <ShieldCheck className="h-4 w-4 text-emerald-600" />
-            </div>
-            <div className="text-xs text-muted-foreground">{provider.city}</div>
-          </div>
-        </div>
-        <div className="my-5 h-px bg-border" />
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Field label={t("purchase.s5.date")} value={dateLabel} />
-          <Field
-            label={t("purchase.s5.time")}
-            value={draft.slot ? `${draft.slot.start} – ${draft.slot.end}` : ""}
-          />
-          <Field
-            label={t("purchase.s5.location")}
-            value={
-              draft.location === "ourHome"
-                ? t("purchase.s3.atOurHome")
-                : t("purchase.s3.atProviderPlace", { name: provider.firstName })
-            }
-          />
-          <div>
-            <div className="text-xs text-muted-foreground">
-              {t("purchase.s5.totalPaid")}
-            </div>
-            <div className="mt-1 font-mono text-xl font-semibold text-primary">
-              {formatCHF(total, true)}
-            </div>
-          </div>
-        </div>
-        <div className="mt-5 font-mono text-xs text-muted-foreground">
-          {t("purchase.s5.bookingId")}: {draft.bookingId}
-        </div>
-      </div>
-
-      <h3 className="mt-12 font-serif text-2xl font-medium">
-        {t("purchase.s5.whatHappens")}
-      </h3>
-      <div className="mt-6 grid gap-4 text-left sm:grid-cols-3">
-        <NextStep
-          n="01"
-          title={t("purchase.s5.step1Title", { name: provider.firstName })}
-          desc={t("purchase.s5.step1Desc")}
-        />
-        <NextStep
-          n="02"
-          title={t("purchase.s5.step2Title")}
-          desc={t("purchase.s5.step2Desc")}
-        />
-        <NextStep
-          n="03"
-          title={t("purchase.s5.step3Title")}
-          desc={t("purchase.s5.step3Desc")}
-        />
-      </div>
-
-      <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-        <Button
-          onClick={() => {
-            onReset();
-            navigate("/dashboard/family/overview");
-          }}
-          className="h-12 rounded-full px-6"
-        >
-          {t("purchase.s5.browseMore")} <ArrowRight className="ml-1 h-4 w-4" />
-        </Button>
-        <button
-          onClick={() => {
-            onReset();
-            navigate("/dashboard/family/overview");
-          }}
-          className="text-sm font-medium text-primary hover:underline"
-        >
-          {t("purchase.s5.backHome")}
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function NextStep({
-  n,
-  title,
-  desc,
-}: {
-  n: string;
-  title: string;
-  desc: string;
-}) {
-  return (
-    <div className="rounded-2xl bg-secondary/60 p-5">
-      <div className="font-serif text-3xl font-medium text-primary">{n}</div>
-      <div className="mt-3 font-serif text-lg font-medium">{title}</div>
-      <div className="mt-1 text-sm text-muted-foreground">{desc}</div>
-    </div>
-  );
-}
+export default PurchasePage;

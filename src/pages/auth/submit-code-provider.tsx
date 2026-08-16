@@ -1,30 +1,53 @@
+// src/routes/auth/SubmitCodeProvider.tsx
 import { Clock } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { toast } from "sonner";
-
-import {  useI18n } from "../../lib/i18n";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
+import { useI18n } from "../../lib/i18n";
+import {
+  useUserVerifyOTPMutation,
+  useUserVerifyOTPResendMutation,
+} from "../../redux/api/authApi";
+import { setAccessToken, clearAuth } from "../../redux/slices/authSlice";
+// import { getSignupEmail, clearSignupEmail } from "../../lib/signupSession";
+import type { RootState } from "@/redux/store";
+import { clearSignupEmail, getSignupEmail } from "@/redux/lib/signupSession";
 
 const CODE_LENGTH = 6;
 const RESEND_SECONDS = 45;
 
-export function SubmitCodeProvider({
-  email = "user......@gmail.com",
-}: {
-  email?: string;
-}) {
+export function SubmitCodeProvider() {
   const { t } = useI18n();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  // Set by sign-up-provider.tsx right after registration.
+  const token = useSelector((state: RootState) => state.auth.accessToken);
+  const email = getSignupEmail();
+
+  const [verifyOtp, { isLoading: isVerifying }] = useUserVerifyOTPMutation();
+  const [resendOtp, { isLoading: isResending }] =
+    useUserVerifyOTPResendMutation();
+
   const [digits, setDigits] = useState<string[]>(Array(CODE_LENGTH).fill(""));
   const [secondsLeft, setSecondsLeft] = useState(RESEND_SECONDS);
-  const [submitting, setSubmitting] = useState(false);
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
-  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!token) {
+      navigate("/sign-up-provider", { replace: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
+
   useEffect(() => {
     if (secondsLeft <= 0) return;
-    const timer = setInterval(() => {
-      setSecondsLeft((s) => Math.max(0, s - 1));
-    }, 1000);
+    const timer = setInterval(
+      () => setSecondsLeft((s) => Math.max(0, s - 1)),
+      1000,
+    );
     return () => clearInterval(timer);
   }, [secondsLeft]);
 
@@ -38,7 +61,6 @@ export function SubmitCodeProvider({
       });
       return;
     }
-
     const chars = clean.split("");
     setDigits((prev) => {
       const next = [...prev];
@@ -50,7 +72,6 @@ export function SubmitCodeProvider({
       }
       return next;
     });
-
     const nextIndex = Math.min(index + chars.length, CODE_LENGTH - 1);
     inputRefs.current[nextIndex]?.focus();
   };
@@ -80,12 +101,17 @@ export function SubmitCodeProvider({
     inputRefs.current[nextIndex]?.focus();
   };
 
-  const handleResend = () => {
-    if (secondsLeft > 0) return;
-    setSecondsLeft(RESEND_SECONDS);
-    setDigits(Array(CODE_LENGTH).fill(""));
-    inputRefs.current[0]?.focus();
-    toast.success(t("auth.codeResent") ?? "Code resent");
+  const handleResend = async () => {
+    if (secondsLeft > 0 || !token) return;
+    try {
+      const res = await resendOtp({ purpose: "email-verification" }).unwrap();
+      setSecondsLeft(RESEND_SECONDS);
+      setDigits(Array(CODE_LENGTH).fill(""));
+      inputRefs.current[0]?.focus();
+      toast.success(res?.message || t("auth.codeResent") || "Code resent");
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Couldn't resend the code.");
+    }
   };
 
   const handleVerify = async () => {
@@ -94,25 +120,37 @@ export function SubmitCodeProvider({
       toast.error(t("auth.enterFullCode") ?? "Please enter the full code.");
       return;
     }
-
-    setSubmitting(true);
+    if (!token) {
+      toast.error("Your registration session expired. Please sign up again.");
+      navigate("/sign-up-provider");
+      return;
+    }
 
     const toastId = toast.loading("Please wait...");
-    navigate("/serice-selection");
-    return;
     try {
-      // TODO: call verify-code mutation with { email, code }
-      toast.success(t("auth.codeVerified") ?? "Code verified", {
+      const res = await verifyOtp({ otp: code }).unwrap();
+
+      // Overwrite the temporary createUserToken with the real access token
+      // for the now-created account. userInfo itself isn't set here - the
+      // verify response is just a bare token, not a user record. It gets
+      // set later, once the provider profile is actually saved.
+      dispatch(setAccessToken(res.data));
+      clearSignupEmail();
+
+      toast.success(res?.message || t("auth.codeVerified") || "Code verified", {
         id: toastId,
         duration: 2000,
       });
+      navigate("/service-selection");
     } catch (error: any) {
       toast.error(error?.data?.message || "Verification failed", {
         id: toastId,
         duration: 3000,
       });
-    } finally {
-      setSubmitting(false);
+      if (error?.status === 401 || error?.status === 403) {
+        dispatch(clearAuth());
+        navigate("/sign-up-provider");
+      }
     }
   };
 
@@ -155,14 +193,14 @@ export function SubmitCodeProvider({
             <button
               type="button"
               onClick={handleResend}
-              disabled={secondsLeft > 0}
+              disabled={secondsLeft > 0 || isResending}
               className={`font-semibold ${
-                secondsLeft > 0
+                secondsLeft > 0 || isResending
                   ? "cursor-not-allowed text-primary/40"
                   : "text-primary hover:underline"
               }`}
             >
-              {t("auth.resend")}
+              {isResending ? "Sending…" : t("auth.resend")}
             </button>
           </p>
 
@@ -175,10 +213,10 @@ export function SubmitCodeProvider({
         <button
           type="button"
           onClick={handleVerify}
-          disabled={submitting}
+          disabled={isVerifying}
           className="mt-6 inline-flex h-12 w-full items-center justify-center rounded-xl bg-primary text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.01] disabled:opacity-70"
         >
-          {t("auth.verifyCode")}
+          {isVerifying ? "Verifying…" : t("auth.verifyCode")}
         </button>
       </div>
 

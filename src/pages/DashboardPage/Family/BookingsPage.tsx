@@ -36,11 +36,11 @@ const PAGE_SIZE = 10;
 
 const filters: Filter[] = [
   "all",
-  "upcoming",
-  "awaitingConfirmation",
-  "inProgress",
+  "pending",
+  "confirmed",
+  "in-progress",
+  "provider-completed",
   "completed",
-  "requested",
   "cancelled",
 ];
 
@@ -53,13 +53,12 @@ export function BookingsPage() {
   const counts = useMemo(() => {
     const c: Record<Filter, number> = {
       all: bookings.length,
-      upcoming: 0,
-      awaitingConfirmation: 0,
-      awaitingPayment: 0,
-      inProgress: 0,
-      completed: 0,
-      requested: 0,
       pending: 0,
+      confirmed: 0,
+      inProgress: 0,
+      providerCompleted: 0,
+      awaitingPayment: 0,
+      completed: 0,
       cancelled: 0,
     };
 

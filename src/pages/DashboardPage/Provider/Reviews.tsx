@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
-import { Pencil, Star } from "lucide-react";
+// src/pages/dashboard/provider/ProviderReviewsPage.tsx
+import { useState } from "react";
+import { MessageSquareReply, Star } from "lucide-react";
 import { Input } from "../../../components/ui/input";
 import {
   Table,
@@ -20,36 +21,58 @@ import {
 import { Button } from "../../../components/ui/button";
 import { Textarea } from "../../../components/ui/textarea";
 import { Label } from "../../../components/ui/label";
+import { Skeleton } from "../../../components/ui/skeleton";
 import { UserAvatar } from "../../../components/common/UserAvatar";
-import { reviews as initial, type Review } from "../../../assets/data/reviews";
 import { toast } from "sonner";
+import { useDebounce } from "@/hooks/useDebounce";
+import {
+  useGetMyReviewsQuery,
+  useReplyReviewMutation,
+} from "@/redux/api/websiteApi";
+
+import { isPopulatedPerson, type ReviewListItem } from "@/types/reviews";
+import { getImageUrl } from "@/redux/getBaseUrl";
+
+const PAGE_SIZE = 10;
 
 export function ProviderReviewsPage() {
-  const [items, setItems] = useState<Review[]>(initial);
   const [query, setQuery] = useState("");
-  const [editing, setEditing] = useState<Review | null>(null);
-  const [comment, setComment] = useState("");
-  const [rating, setRating] = useState(5);
+  const [page, setPage] = useState(1);
+  const [replying, setReplying] = useState<ReviewListItem | null>(null);
+  const [replyComment, setReplyComment] = useState("");
 
-  const filtered = useMemo(
-    () =>
-      items.filter((r) => r.providerName.toLowerCase().includes(query.toLowerCase())),
-    [items, query],
-  );
+  const searchTerm = useDebounce(query, 400);
+  const { data, isLoading, isFetching, isError } = useGetMyReviewsQuery({
+    page,
+    limit: PAGE_SIZE,
+    searchTerm: searchTerm || undefined,
+  });
+  const [replyReview, { isLoading: isReplying }] = useReplyReviewMutation();
 
-  const openEdit = (r: Review) => {
-    setEditing(r);
-    setComment(r.comment);
-    setRating(r.rating);
+  const reviews = data?.data ?? [];
+  const meta = data?.meta;
+
+  const openReply = (r: ReviewListItem) => {
+    setReplying(r);
+    setReplyComment(r.reply?.comment ?? "");
   };
 
-  const save = () => {
-    if (!editing) return;
-    setItems((prev) =>
-      prev.map((r) => (r.id === editing.id ? { ...r, comment, rating } : r)),
-    );
-    toast.success("Review updated");
-    setEditing(null);
+  const saveReply = async () => {
+    if (!replying) return;
+    if (!replyComment.trim()) {
+      toast.error("Please write a reply first.");
+      return;
+    }
+    try {
+      const res = await replyReview({
+        id: replying._id,
+        data: { comment: replyComment },
+      }).unwrap();
+      toast.success(res?.message || "Reply added");
+      setReplying(null);
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Couldn't save your reply.");
+    }
   };
 
   return (
@@ -58,9 +81,13 @@ export function ProviderReviewsPage() {
       <Input
         placeholder="Search..."
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={(e) => {
+          setQuery(e.target.value);
+          setPage(1);
+        }}
         className="max-w-sm bg-card"
       />
+
       <div className="overflow-hidden rounded-2xl border border-border bg-card">
         <Table>
           <TableHeader>
@@ -73,95 +100,157 @@ export function ProviderReviewsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filtered.map((r) => (
-              <TableRow key={r.id}>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <UserAvatar name={r.providerName} size={28} />
-                    {r.providerName}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-0.5">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star
-                        key={i}
-                        className={
-                          i < r.rating
-                            ? "h-4 w-4 fill-amber-400 text-amber-400"
-                            : "h-4 w-4 text-muted-foreground"
-                        }
-                      />
-                    ))}
-                  </div>
-                </TableCell>
-                <TableCell className="max-w-xs truncate text-muted-foreground">
-                  {r.comment}
-                </TableCell>
-                <TableCell className="max-w-xs truncate text-muted-foreground">
-                  {r.providerReply ?? "-"}
-                </TableCell>
-                <TableCell className="text-right">
-                  <button
-                    type="button"
-                    aria-label="Edit review"
-                    onClick={() => openEdit(r)}
-                    className="rounded-md p-1.5 text-muted-foreground transition hover:bg-secondary hover:text-secondary-foreground"
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </button>
+            {(isLoading || isFetching) &&
+              Array.from({ length: 4 }).map((_, i) => (
+                <TableRow key={i}>
+                  <TableCell colSpan={5}>
+                    <Skeleton className="h-8 w-full" />
+                  </TableCell>
+                </TableRow>
+              ))}
+
+            {!isLoading && !isFetching && isError && (
+              <TableRow>
+                <TableCell
+                  colSpan={5}
+                  className="py-8 text-center text-muted-foreground"
+                >
+                  Couldn&apos;t load your reviews.
                 </TableCell>
               </TableRow>
-            ))}
+            )}
+
+            {!isLoading && !isFetching && !isError && reviews.length === 0 && (
+              <TableRow>
+                <TableCell
+                  colSpan={5}
+                  className="py-8 text-center text-muted-foreground"
+                >
+                  No reviews yet.
+                </TableCell>
+              </TableRow>
+            )}
+
+            {!isLoading &&
+              !isFetching &&
+              reviews.map((r) => {
+                const reviewer = isPopulatedPerson(r.reviewerId)
+                  ? r.reviewerId
+                  : null;
+                return (
+                  <TableRow key={r._id}>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <UserAvatar
+                          name={reviewer?.fullName ?? "Client"}
+                          imageUrl={
+                            reviewer?.profileImage
+                              ? (getImageUrl(reviewer.profileImage) ??
+                                undefined)
+                              : undefined
+                          }
+                          size={28}
+                        />
+                        {reviewer?.fullName ?? "Client"}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-0.5">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Star
+                            key={i}
+                            className={
+                              i < r.rating
+                                ? "h-4 w-4 fill-amber-400 text-amber-400"
+                                : "h-4 w-4 text-muted-foreground"
+                            }
+                          />
+                        ))}
+                      </div>
+                    </TableCell>
+                    <TableCell className="max-w-xs truncate text-muted-foreground">
+                      {r.comment}
+                    </TableCell>
+                    <TableCell className="max-w-xs truncate text-muted-foreground">
+                      {r.reply?.comment ?? "-"}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <button
+                        type="button"
+                        aria-label={r.reply ? "Edit reply" : "Reply"}
+                        onClick={() => openReply(r)}
+                        className="rounded-md p-1.5 text-muted-foreground transition hover:bg-secondary hover:text-secondary-foreground"
+                      >
+                        <MessageSquareReply className="h-4 w-4" />
+                      </button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
           </TableBody>
         </Table>
       </div>
 
-      <Dialog open={!!editing} onOpenChange={(o) => !o && setEditing(null)}>
+      {meta && meta.totalPage > 1 && (
+        <div className="flex items-center justify-center gap-3">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={page <= 1}
+            onClick={() => setPage((p) => p - 1)}
+          >
+            Previous
+          </Button>
+          <span className="text-sm text-muted-foreground">
+            Page {meta.page} of {meta.totalPage}
+          </span>
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={page >= meta.totalPage}
+            onClick={() => setPage((p) => p + 1)}
+          >
+            Next
+          </Button>
+        </div>
+      )}
+
+      <Dialog open={!!replying} onOpenChange={(o) => !o && setReplying(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit Review</DialogTitle>
-            <DialogDescription>{editing?.providerName}</DialogDescription>
+            <DialogTitle>
+              {replying?.reply ? "Edit your reply" : "Reply to review"}
+            </DialogTitle>
+            <DialogDescription>
+              {isPopulatedPerson(replying?.reviewerId ?? "")
+                ? (replying?.reviewerId as any).fullName
+                : "Client"}
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
-            <div>
-              <Label className="mb-2 block">Rating</Label>
-              <div className="flex gap-1">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    onClick={() => setRating(i + 1)}
-                    aria-label={`${i + 1} stars`}
-                  >
-                    <Star
-                      className={
-                        i < rating
-                          ? "h-6 w-6 fill-amber-400 text-amber-400"
-                          : "h-6 w-6 text-muted-foreground"
-                      }
-                    />
-                  </button>
-                ))}
-              </div>
+            <div className="rounded-xl bg-muted/40 p-3 text-sm text-muted-foreground">
+              {replying?.comment}
             </div>
             <div>
-              <Label htmlFor="comment" className="mb-2 block">
-                Comment
+              <Label htmlFor="reply" className="mb-2 block">
+                Your reply
               </Label>
               <Textarea
-                id="comment"
+                id="reply"
                 rows={4}
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
+                value={replyComment}
+                onChange={(e) => setReplyComment(e.target.value)}
+                placeholder="Thank the client, or address anything they raised…"
               />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="ghost" onClick={() => setEditing(null)}>
+            <Button variant="ghost" onClick={() => setReplying(null)}>
               Cancel
             </Button>
-            <Button onClick={save}>Save Changes</Button>
+            <Button onClick={saveReply} disabled={isReplying}>
+              {isReplying ? "Saving…" : "Save Reply"}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
