@@ -1,30 +1,51 @@
+// src/pages/dashboard/provider/ProviderBookings.tsx
 import { useMemo, useState } from "react";
-
 import { Eye, ChevronLeft, ChevronRight, Search } from "lucide-react";
-import { bookings as familyBookings, type BookingStatus } from "../../../assets/data/bookings";
 import { useI18n } from "../../../lib/i18n";
-import { providerBookings } from "../../../assets/data/provider-bookings";
 import { Tabs, TabsList, TabsTrigger } from "../../../components/ui/tabs";
 import { Input } from "../../../components/ui/input";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../components/ui/table";
+import { Skeleton } from "../../../components/ui/skeleton";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../../../components/ui/table";
 import { UserAvatar } from "../../../components/common/UserAvatar";
 import { formatCHF } from "../../../lib/format";
 import { StatusBadge } from "../../../components/common/StatusBadge";
 import { Link } from "react-router-dom";
 import { cn } from "../../../lib/utils";
-// import { useI18n } from "@/lib/i18n";
-// import { formatCHF } from "@/lib/format";
-// import { cn } from "@/lib/utils";
+import { formatBookingDate, formatTimeRange } from "@/lib/bookingHelpers";
+import {
+  useGetAllBookingsQuery,
+  useGetCategoriesQuery,
+} from "@/redux/api/websiteApi";
+import { useUserProfileQuery } from "@/redux/api/authApi";
+import { getImageUrl } from "@/redux/getBaseUrl";
+import type { BookingCustomerRef, BookingStatus } from "@/types/bookings";
 
-type Filter = "all" | BookingStatus;
+type Filter =
+  | "all"
+  | Extract<
+      BookingStatus,
+      | "pending"
+      | "confirmed"
+      | "in_progress"
+      | "provider_completed"
+      | "completed"
+      | "cancelled"
+    >;
 const PAGE_SIZE = 15;
 
 const filters: Filter[] = [
   "all",
   "pending",
   "confirmed",
-  "in-progress",
-  "provider-completed",
+  "in_progress",
+  "provider_completed",
   "completed",
   "cancelled",
 ];
@@ -35,27 +56,49 @@ export function ProviderBookings() {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
 
-  const counts = useMemo(() => {
-    const c: Record<string, number> = { all: providerBookings.length };
-    filters.forEach((f) => {
-      if (f !== "all")
-        c[f] = providerBookings.filter((b) => b.status === f).length;
-    });
-    return c;
-  }, []);
+  const { data, isLoading, isError } = useGetAllBookingsQuery({ limit: 200 });
+  const bookings = data?.data ?? [];
+
+  // A provider only ever offers one service category, so the "Service"
+  // column is the same for every row - fetched once instead of per booking.
+  const { data: profileData } = useUserProfileQuery({});
+  const { data: categoryData } = useGetCategoriesQuery();
+  const serviceName = categoryData?.data.find(
+    (c) => c._id === profileData?.data.categoryId,
+  )?.name;
+
+  // const counts = useMemo(() => {
+  //   const c: Record<Filter, number> = {
+  //     all: bookings.length,
+  //     pending: 0,
+  //     confirmed: 0,
+  //     in_progress: 0,
+  //     provider_completed: 0,
+  //     completed: 0,
+  //     cancelled: 0,
+  //   };
+  //   filters.forEach((f) => {
+  //     if (f !== "all") c[f] = bookings.filter((b) => b.status === f).length;
+  //   });
+  //   return c;
+  // }, [bookings]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return providerBookings.filter((b) => {
+    return bookings.filter((b) => {
       if (filter !== "all" && b.status !== filter) return false;
       if (!q) return true;
+      const customer =
+        typeof b.customer === "object"
+          ? (b.customer as BookingCustomerRef)
+          : null;
       return (
-        b.code.toLowerCase().includes(q) ||
-        b.clientName.toLowerCase().includes(q) ||
-        b.service.toLowerCase().includes(q)
+        b.bookingReference.toLowerCase().includes(q) ||
+        (customer?.fullName.toLowerCase().includes(q) ?? false) ||
+        (serviceName?.toLowerCase().includes(q) ?? false)
       );
     });
-  }, [filter, query]);
+  }, [bookings, filter, query, serviceName]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const safePage = Math.min(page, totalPages);
@@ -65,12 +108,12 @@ export function ProviderBookings() {
   );
 
   return (
-    <div className=" flex flex-col gap-5">
+    <div className="flex flex-col gap-5">
       <h2 className="font-serif text-3xl font-medium tracking-tight">
         {t("nav.bookings")}
       </h2>
 
-     <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+      <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
         <Tabs
           value={filter}
           onValueChange={(v) => {
@@ -88,10 +131,10 @@ export function ProviderBookings() {
               <TabsTrigger
                 key={f}
                 value={f}
-                className="flex-shrink-0  whitespace-nowrap rounded-full px-3 py-1.5 text-sm data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:font-bold data-[state=active]:border data-[state=active]:border-[#2B2B2B]/10 data-[state=active]:shadow"
+                className="flex-shrink-0 whitespace-nowrap rounded-full px-3 py-1.5 text-sm data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:font-bold data-[state=active]:border data-[state=active]:border-[#2B2B2B]/10 data-[state=active]:shadow"
               >
-                {f === "all" ? t("bookings.all") : t(`bookingStatus.${f}`)} (
-                {counts[f]})
+                {f === "all" ? t("bookings.all") : t(`bookingStatus.${f}`)} 
+
               </TabsTrigger>
             ))}
           </TabsList>
@@ -136,49 +179,84 @@ export function ProviderBookings() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {pageItems.map((b, idx) => {
-              const detailId = familyBookings[idx % familyBookings.length].id;
-              return (
-                <TableRow key={b.id} className="hover:bg-muted-bg">
-                  <TableCell className="px-4 py-3 font-medium text-foreground">
-                    {b.code}
-                  </TableCell>
-                  <TableCell className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <UserAvatar name={b.clientName} size={32} />
-                      <span className="text-sm font-medium text-foreground">
-                        {b.clientName}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-sm text-foreground">
-                    {b.service}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-sm text-foreground">
-                    {b.date}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-sm text-foreground">
-                    {b.time}
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-sm font-medium text-foreground">
-                    {formatCHF(b.amount, true)}
-                  </TableCell>
-                  <TableCell className="px-4 py-3">
-                    <StatusBadge status={b.status} />
-                  </TableCell>
-                  <TableCell className="px-4 py-3 text-right">
-                    <Link
-                      to={`/dashboard/provider/bookings/${detailId}`}
-                      className="inline-flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition hover:bg-secondary hover:text-secondary-foreground"
-                      aria-label="View booking"
-                    >
-                      <Eye className="h-4 w-4" />
-                    </Link>
+            {isLoading &&
+              Array.from({ length: 5 }).map((_, i) => (
+                <TableRow key={i}>
+                  <TableCell colSpan={8} className="px-4 py-3">
+                    <Skeleton className="h-6 w-full" />
                   </TableCell>
                 </TableRow>
-              );
-            })}
-            {pageItems.length === 0 && (
+              ))}
+
+            {!isLoading && isError && (
+              <TableRow>
+                <TableCell
+                  colSpan={8}
+                  className="px-4 py-10 text-center text-sm text-muted-foreground"
+                >
+                  Couldn&apos;t load your bookings.
+                </TableCell>
+              </TableRow>
+            )}
+
+            {!isLoading &&
+              !isError &&
+              pageItems.map((b) => {
+                const customer =
+                  typeof b.customer === "object"
+                    ? (b.customer as BookingCustomerRef)
+                    : null;
+                return (
+                  <TableRow key={b._id} className="hover:bg-muted-bg">
+                    <TableCell className="px-4 py-3 font-medium text-foreground">
+                      {b.bookingReference}
+                    </TableCell>
+                    <TableCell className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <UserAvatar
+                          name={customer?.fullName ?? "Client"}
+                          imageUrl={
+                            customer?.profileImage
+                              ? (getImageUrl(customer.profileImage) ??
+                                undefined)
+                              : undefined
+                          }
+                          size={32}
+                        />
+                        <span className="text-sm font-medium text-foreground">
+                          {customer?.fullName ?? "Client"}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-sm text-foreground">
+                      {serviceName ?? "—"}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-sm text-foreground">
+                      {formatBookingDate(b.bookingDate)}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-sm text-foreground">
+                      {formatTimeRange(b.timeSlot)}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-sm font-medium text-foreground">
+                      {formatCHF(b.providerEarning, true)}
+                    </TableCell>
+                    <TableCell className="px-4 py-3">
+                      <StatusBadge status={b.status} />
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-right">
+                      <Link
+                        to={`/dashboard/provider/bookings/${b._id}`}
+                        className="inline-flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition hover:bg-secondary hover:text-secondary-foreground"
+                        aria-label="View booking"
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Link>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+
+            {!isLoading && !isError && pageItems.length === 0 && (
               <TableRow>
                 <TableCell
                   colSpan={8}
@@ -234,7 +312,9 @@ function Pagination({
           {p}
         </button>
       ))}
-      {totalPages > 5 && <span className="px-2 text-sm text-muted-foreground">...</span>}
+      {totalPages > 5 && (
+        <span className="px-2 text-sm text-muted-foreground">...</span>
+      )}
       <button
         type="button"
         disabled={page === totalPages}

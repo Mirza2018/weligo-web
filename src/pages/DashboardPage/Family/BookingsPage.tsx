@@ -1,95 +1,89 @@
-import { useMemo, useState } from "react";
-// import { Link } from "@tanstack/react-router";
+// src/pages/dashboard/family/BookingsPage.tsx
+import { useEffect, useMemo, useState } from "react";
 import { Eye, ChevronLeft, ChevronRight, Search } from "lucide-react";
-import { bookings, type BookingStatus } from "../../../assets/data/bookings";
 import { useI18n } from "../../../lib/i18n";
 import { Tabs, TabsList, TabsTrigger } from "../../../components/ui/tabs";
 import { Input } from "../../../components/ui/input";
+import { Skeleton } from "../../../components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../components/ui/table";
 import { UserAvatar } from "../../../components/common/UserAvatar";
 import { formatCHF } from "../../../lib/format";
 import { StatusBadge } from "../../../components/common/StatusBadge";
 import { Link } from "react-router-dom";
 import { cn } from "../../../lib/utils";
+import { formatBookingDate, formatTimeRange } from "@/lib/bookingHelpers";
+import { useGetAllBookingsQuery, useGetCategoriesQuery, useProviderDetailsQuery } from "@/redux/api/websiteApi";
+import { getImageUrl } from "@/redux/getBaseUrl";
+import type { BookingRecordFull, BookingStatus } from "@/types/bookings";
 
-
-
-// import { Input } from "@/components/ui/input";
-// import {
-//   Table,
-//   TableBody,
-//   TableCell,
-//   TableHead,
-//   TableHeader,
-//   TableRow,
-// } from "@/components/ui/table";
-
-// import { UserAvatar } from "@/components/common/UserAvatar";
-// import { StatusBadge } from "@/components/common/StatusBadge";
-// import { bookings, type BookingStatus } from "@/assets/data/bookings";
-// import { useI18n } from "@/lib/i18n";
-// import { formatCHF } from "@/lib/format";
-// import { cn } from "@/lib/utils";
-
-type Filter = "all" | BookingStatus;
+type Filter = "all" | Extract<BookingStatus, "pending" | "confirmed" | "in_progress" | "provider_completed" | "completed" | "cancelled">;
 const PAGE_SIZE = 10;
 
-const filters: Filter[] = [
-  "all",
-  "pending",
-  "confirmed",
-  "in-progress",
-  "provider-completed",
-  "completed",
-  "cancelled",
-];
+const filters: Filter[] = ["all", "pending", "confirmed", "in_progress", "provider_completed", "completed", "cancelled"];
+
+interface ProviderInfo {
+  fullName: string;
+  profileImage: string;
+  categoryName: string;
+}
 
 export function BookingsPage() {
   const { t } = useI18n();
   const [filter, setFilter] = useState<Filter>("all");
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
+  // Populated as each row's provider details resolve, so search can match
+  // on provider name too (the bookings list itself only has a raw provider
+  // id, not a populated name - unlike `customer`, which does come populated).
+  const [providerInfo, setProviderInfo] = useState<Record<string, ProviderInfo>>({});
 
-  const counts = useMemo(() => {
-    const c: Record<Filter, number> = {
-      all: bookings.length,
-      pending: 0,
-      confirmed: 0,
-      inProgress: 0,
-      providerCompleted: 0,
-      awaitingPayment: 0,
-      completed: 0,
-      cancelled: 0,
-    };
+  const { data, isLoading, isError } = useGetAllBookingsQuery({ limit: 200 });
+  const { data: categoryData } = useGetCategoriesQuery({});
+  const categories = categoryData?.data ?? [];
+  const bookings = data?.data ?? [];
 
-    bookings.forEach((b) => {
-      c[b.status]++;
-    });
-    return c;
-  }, []);
+  const handleProviderResolved = (id: string, info: ProviderInfo) => {
+    setProviderInfo((prev) => (prev[id]?.fullName === info.fullName ? prev : { ...prev, [id]: info }));
+  };
+
+  // const counts = useMemo(() => {
+  //   const c: Record<Filter, number> = {
+  //     all: bookings.length,
+  //     pending: 0,
+  //     confirmed: 0,
+  //     in_progress: 0,
+  //     provider_completed: 0,
+  //     completed: 0,
+  //     cancelled: 0,
+  //   };
+  //   bookings.forEach((b) => {
+  //     if (b.status in c) c[b.status as Filter]++;
+  //   });
+  //   return c;
+  // }, [bookings]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return bookings.filter((b) => {
       if (filter !== "all" && b.status !== filter) return false;
       if (!q) return true;
+      const info = providerInfo[b.serviceProvider];
       return (
-        b.code.toLowerCase().includes(q) ||
-        b.providerName.toLowerCase().includes(q) ||
-        b.service.toLowerCase().includes(q)
+        b.bookingReference.toLowerCase().includes(q) ||
+        b.whatToExpect?.toLowerCase().includes(q) ||
+        info?.fullName.toLowerCase().includes(q) ||
+        info?.categoryName.toLowerCase().includes(q)
       );
     });
-  }, [filter, query]);
+  }, [bookings, filter, query, providerInfo]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const safePage = Math.min(page, totalPages);
   const pageItems = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
 
   return (
-    <div className=" flex  flex-col gap-5">
-      <h2 className="font-serif text-3xl font-medium tracking-tight">
-        {t("bookings.title")}
-      </h2>
+    <div className="flex flex-col gap-5">
+      <h2 className="font-serif text-3xl font-medium tracking-tight">{t("bookings.title")}</h2>
 
       <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
         <Tabs
@@ -109,10 +103,9 @@ export function BookingsPage() {
               <TabsTrigger
                 key={f}
                 value={f}
-                className="flex-shrink-0  whitespace-nowrap rounded-full px-3 py-1.5 text-sm data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:font-bold data-[state=active]:border data-[state=active]:border-[#2B2B2B]/10 data-[state=active]:shadow"
+                className="flex-shrink-0 whitespace-nowrap rounded-full px-3 py-1.5 text-sm data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:font-bold data-[state=active]:border data-[state=active]:border-[#2B2B2B]/10 data-[state=active]:shadow"
               >
-                {f === "all" ? t("bookings.all") : t(`bookingStatus.${f}`)} (
-                {counts[f]})
+                {f === "all" ? t("bookings.all") : t(`bookingStatus.${f}`)} 
               </TabsTrigger>
             ))}
           </TabsList>
@@ -137,71 +130,47 @@ export function BookingsPage() {
           <TableHeader>
             <TableRow className="bg-secondary/50 hover:bg-secondary/50">
               <TableHead className="px-4 py-3">{t("bookings.id")}</TableHead>
-              <TableHead className="px-4 py-3">
-                {t("bookings.provider")}
-              </TableHead>
-              <TableHead className="px-4 py-3">
-                {t("bookings.service")}
-              </TableHead>
+              <TableHead className="px-4 py-3">{t("bookings.provider")}</TableHead>
+              <TableHead className="px-4 py-3">{t("bookings.service")}</TableHead>
               <TableHead className="px-4 py-3">{t("bookings.date")}</TableHead>
               <TableHead className="px-4 py-3">{t("bookings.time")}</TableHead>
-              <TableHead className="px-4 py-3">
-                {t("bookings.amount")}
-              </TableHead>
-              <TableHead className="px-4 py-3">
-                {t("bookings.status")}
-              </TableHead>
-              <TableHead className="px-4 py-3 text-right">
-                {t("bookings.action")}
-              </TableHead>
+              <TableHead className="px-4 py-3">{t("bookings.amount")}</TableHead>
+              <TableHead className="px-4 py-3">{t("bookings.status")}</TableHead>
+              <TableHead className="px-4 py-3 text-right">{t("bookings.action")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {pageItems.map((b) => (
-              <TableRow key={b.id} className="hover:bg-muted-bg">
-                <TableCell className="px-4 py-3 font-medium text-foreground">
-                  {b.code}
-                </TableCell>
-                <TableCell className="px-4 py-3">
-                  <div className="flex items-center gap-2">
-                    <UserAvatar name={b.providerName} size={32} />
-                    <span className="text-sm font-medium text-foreground">
-                      {b.providerName}
-                    </span>
-                  </div>
-                </TableCell>
-                <TableCell className="px-4 py-3 text-sm text-foreground">
-                  {b.service}
-                </TableCell>
-                <TableCell className="px-4 py-3 text-sm text-foreground">
-                  {b.date}
-                </TableCell>
-                <TableCell className="px-4 py-3 text-sm text-foreground">
-                  {b.time}
-                </TableCell>
-                <TableCell className="px-4 py-3 text-sm font-medium text-foreground">
-                  {formatCHF(b.total, true)}
-                </TableCell>
-                <TableCell className="px-4 py-3">
-                  <StatusBadge status={b.status} />
-                </TableCell>
-                <TableCell className="px-4 py-3 text-right">
-                  <Link
-                    to={`/dashboard/family/bookings/${b.id}`}
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition hover:bg-secondary hover:text-secondary-foreground"
-                    aria-label="View booking"
-                  >
-                    <Eye className="h-4 w-4" />
-                  </Link>
+            {isLoading &&
+              Array.from({ length: 5 }).map((_, i) => (
+                <TableRow key={i}>
+                  <TableCell colSpan={8} className="px-4 py-3">
+                    <Skeleton className="h-6 w-full" />
+                  </TableCell>
+                </TableRow>
+              ))}
+
+            {!isLoading && isError && (
+              <TableRow>
+                <TableCell colSpan={8} className="px-4 py-10 text-center text-sm text-muted-foreground">
+                  Couldn&apos;t load your bookings.
                 </TableCell>
               </TableRow>
-            ))}
-            {pageItems.length === 0 && (
+            )}
+
+            {!isLoading &&
+              !isError &&
+              pageItems.map((b) => (
+                <BookingRow
+                  key={b._id}
+                  booking={b}
+                  categories={categories}
+                  onResolved={handleProviderResolved}
+                />
+              ))}
+
+            {!isLoading && !isError && pageItems.length === 0 && (
               <TableRow>
-                <TableCell
-                  colSpan={8}
-                  className="px-4 py-10 text-center text-sm text-muted-foreground"
-                >
+                <TableCell colSpan={8} className="px-4 py-10 text-center text-sm text-muted-foreground">
                   No bookings found
                 </TableCell>
               </TableRow>
@@ -215,15 +184,84 @@ export function BookingsPage() {
   );
 }
 
-function Pagination({
-  page,
-  totalPages,
-  onPage,
+function BookingRow({
+  booking,
+  categories,
+  onResolved,
 }: {
-  page: number;
-  totalPages: number;
-  onPage: (p: number) => void;
+  booking: BookingRecordFull;
+  categories: { _id: string; name: string }[];
+  onResolved: (id: string, info: ProviderInfo) => void;
 }) {
+  // const { data } = useProviderDetailsQuery(booking.serviceProvider);
+  // const provider = data?.data.user;
+  // const categoryName = provider ? categories.find((c) => c._id === provider.categoryId)?.name ?? "—" : undefined;
+
+  // useEffect(() => {
+  //   if (provider && categoryName !== undefined) {
+  //     onResolved(booking.serviceProvider, {
+  //       fullName: provider.fullName,
+  //       profileImage: provider.profileImage,
+  //       categoryName,
+  //     });
+  //   }
+
+  // }, [provider?._id, categoryName]);
+
+  return (
+    <TableRow className="hover:bg-muted-bg">
+      <TableCell className="px-4 py-3 font-medium text-foreground">
+        {booking.bookingReference}
+      </TableCell>
+      <TableCell className="px-4 py-3">
+        {booking.serviceProvider ? (
+          <div className="flex items-center gap-2">
+            <UserAvatar
+              name={booking.serviceProvider?.fullName}
+              imageUrl={
+                getImageUrl(booking.serviceProvider?.profileImage) ?? undefined
+              }
+              size={32}
+            />
+            <span className="text-sm font-medium text-foreground">
+              {booking.serviceProvider?.fullName}
+            </span>
+          </div>
+        ) : (
+          <Skeleton className="h-6 w-32" />
+        )}
+      </TableCell>
+      <TableCell className="px-4 py-3 text-sm text-foreground">
+        {booking.serviceProvider?.categoryId?.name ?? (
+          <Skeleton className="h-4 w-20" />
+        )}
+      </TableCell>
+      <TableCell className="px-4 py-3 text-sm text-foreground">
+        {formatBookingDate(booking.bookingDate)}
+      </TableCell>
+      <TableCell className="px-4 py-3 text-sm text-foreground">
+        {formatTimeRange(booking.timeSlot)}
+      </TableCell>
+      <TableCell className="px-4 py-3 text-sm font-medium text-foreground">
+        {formatCHF(booking.paymentAmount, true)}
+      </TableCell>
+      <TableCell className="px-4 py-3">
+        <StatusBadge status={booking.status} />
+      </TableCell>
+      <TableCell className="px-4 py-3 text-right">
+        <Link
+          to={`/dashboard/family/bookings/${booking._id}`}
+          className="inline-flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition hover:bg-secondary hover:text-secondary-foreground"
+          aria-label="View booking"
+        >
+          <Eye className="h-4 w-4" />
+        </Link>
+      </TableCell>
+    </TableRow>
+  );
+}
+
+function Pagination({ page, totalPages, onPage }: { page: number; totalPages: number; onPage: (p: number) => void }) {
   const { t } = useI18n();
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1).slice(0, 5);
   return (
@@ -244,9 +282,7 @@ function Pagination({
           onClick={() => onPage(p)}
           className={cn(
             "min-w-8 rounded-md px-2.5 py-1.5 text-sm transition",
-            p === page
-              ? "bg-secondary text-secondary-foreground font-medium"
-              : "text-muted-foreground hover:bg-secondary",
+            p === page ? "bg-secondary text-secondary-foreground font-medium" : "text-muted-foreground hover:bg-secondary"
           )}
         >
           {p}

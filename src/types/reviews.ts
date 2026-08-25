@@ -42,6 +42,13 @@ export interface MyReviewsResponse {
   data: ReviewListItem[];
 }
 
+export interface GetSingleReviewsResponse {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: ReviewListItem[];
+}
+
 export interface UpdateReviewData {
   rating?: number;
   comment?: string;
@@ -56,9 +63,23 @@ export interface ReplyReviewData {
   comment: string;
 }
 
+// `id` here is the BOOKING id, not the review's own _id - the backend
+// resolves "the review for this booking that's directed at me" and replies
+// to that.
 export interface ReplyReviewPayload {
   id: string;
   data: ReplyReviewData;
+}
+
+export interface CreateReviewPayload {
+  bookingId: string;
+  // Not shown in the minimal API sample (which only sends bookingId,
+  // rating, comment - the backend infers the receiver from the booking),
+  // but harmless to include and useful when the caller already knows who
+  // the other party is.
+  receiverId?: string;
+  rating: number;
+  comment: string;
 }
 
 export interface ReviewMutationResponse {

@@ -14,6 +14,7 @@ import { Button } from "../../ui/button";
 import { useI18n } from "../../../lib/i18n";
 import { cn } from "../../../lib/utils";
 import { Flag } from "lucide-react";
+import { useCreateReportMutation } from "../../../redux/api/websiteApi"; // adjust import path to wherever websiteApi lives
 
 const REASON_KEYS = [
   "noShow",
@@ -26,13 +27,23 @@ const REASON_KEYS = [
 
 type ReasonKey = (typeof REASON_KEYS)[number];
 
-const makeSchema = (requiredMsg: string) =>
-  z.object({
-    reason: z.enum(REASON_KEYS as unknown as [string, ...string[]], {
-      required_error: requiredMsg,
-    }),
-    details: z.string().optional(),
-  });
+const makeSchema = (requiredMsg: string, detailsRequiredMsg: string) =>
+  z
+    .object({
+      reason: z.enum(REASON_KEYS as unknown as [string, ...string[]], {
+        required_error: requiredMsg,
+      }),
+      details: z.string().optional(),
+    })
+    .refine(
+      (data) =>
+        data.reason !== "other" ||
+        (data.details && data.details.trim().length > 0),
+      {
+        message: detailsRequiredMsg,
+        path: ["details"],
+      },
+    );
 
 type FormValues = { reason: ReasonKey | ""; details: string };
 
@@ -46,29 +57,47 @@ export function ReportIssueDialog({
   bookingId?: string;
 }) {
   const { t } = useI18n();
-  const schema = makeSchema(t("reportIssue.reasonRequired"));
+  const schema = makeSchema(
+    t("reportIssue.reasonRequired"),
+    t("reportIssue.detailsRequired"),
+  );
+
+  const [createReport] = useCreateReportMutation();
 
   const {
     control,
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: { reason: "", details: "" },
   });
 
+  const selectedReason = watch("reason");
+
   const onSubmit = async (values: FormValues) => {
+    if (!bookingId) {
+      toast.error(t("reportIssue.reasonRequired"));
+      return;
+    }
+
     try {
-      await new Promise((r) => setTimeout(r, 400));
-      // TODO: replace with real submit call, e.g.
-      // await api.reportBooking({ bookingId, reason: values.reason, details: values.details });
-      toast.success(t("reportIssue.submit"));
+      const reasonLabel = t(`reportIssue.reasons.${values.reason}`);
+
+      const res = await createReport({
+        bookingId,
+        reason: reasonLabel,
+        description: values.details?.trim() || reasonLabel,
+      }).unwrap();
+
+      toast.success(res?.message || t("reportIssue.submit"));
       reset();
       onOpenChange(false);
-    } catch {
-      toast.error(t("reportIssue.reasonRequired"));
+    } catch (err: any) {
+      toast.error(err?.data?.message || t("reportIssue.reasonRequired"));
     }
   };
 
@@ -141,12 +170,26 @@ export function ReportIssueDialog({
             )}
           />
 
-          <Textarea
-            rows={4}
-            placeholder={t("reportIssue.detailsPlaceholder")}
-            className="rounded-xl"
-            {...register("details")}
-          />
+          <div className="space-y-1.5">
+            <label htmlFor="report-description" className="text-sm font-medium">
+              {t("reportIssue.descriptionLabel")}
+              {selectedReason === "other" && (
+                <span className="text-destructive"> *</span>
+              )}
+            </label>
+            <Textarea
+              id="report-description"
+              rows={4}
+              placeholder={t("reportIssue.detailsPlaceholder")}
+              className="rounded-xl"
+              {...register("details")}
+            />
+            {errors.details && (
+              <p className="text-sm text-destructive">
+                {errors.details.message}
+              </p>
+            )}
+          </div>
 
           <DialogFooter className="gap-2 sm:gap-3">
             <Button

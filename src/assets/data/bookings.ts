@@ -1,8 +1,8 @@
 export type BookingStatus =
   | "pending"
   | "confirmed"
-  | "in-progress"
-  | "provider-completed"
+  | "in_progress"
+  | "provider_completed"
   | "completed"
   | "cancelled";
 

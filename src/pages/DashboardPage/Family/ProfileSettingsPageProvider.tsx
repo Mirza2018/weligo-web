@@ -23,7 +23,7 @@ import {
 } from "@/redux/api/authApi";
 import { useGetCategoriesQuery } from "@/redux/api/websiteApi";
 import { setUserInfo } from "@/redux/slices/authSlice";
-// import { getImageUrl } from "@/redux/slices/getBaseUrl";
+
 import type { RootState } from "@/redux/store";
 import { getImageUrl } from "@/redux/getBaseUrl";
 
@@ -148,17 +148,21 @@ function ProfileForm() {
   }
 
   const onSubmit = async (values: ProfileValues) => {
+    const formData = new FormData();
+    if (avatarFile) formData.append("image", avatarFile);
+    formData.append(
+      "data",
+      JSON.stringify({
+        phone: values.phone,
+        categoryId: categoryId ?? undefined,
+        hourlyRate,
+        experience,
+        lenguages: Array.from(languages),
+      }),
+    );
+
     try {
-      const res = await updateProfile({
-        image: avatarFile,
-        data: {
-          phone: values.phone,
-          categoryId: categoryId ?? undefined,
-          hourlyRate,
-          experience,
-          lenguages: Array.from(languages),
-        },
-      }).unwrap();
+      const res = await updateProfile(formData).unwrap();
 
       dispatch(setUserInfo(res.data));
       setAvatarFile(null);

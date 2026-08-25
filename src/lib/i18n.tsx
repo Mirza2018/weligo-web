@@ -620,8 +620,8 @@ export const dict = {
         en: "Maximum duration for this slot is {n} hours",
       },
       minDuration: {
-        de: "Dauer muss mindestens 1 Stunde betragen",
-        en: "Duration must be at least 1 hour",
+        de: "Sie müssen eine Mindestdauer auswählen.",
+        en: "You have to select a minimum duration.",
       },
       weekday: {
         mon: { de: "Mo", en: "Mon" },
@@ -952,6 +952,9 @@ export const dict = {
     awaitingPayment: { de: "Zahlung ausstehend", en: "Awaiting Payment" },
     inProgress: { de: "In Bearbeitung", en: "In Progress" },
     completed: { de: "Abgeschlossen", en: "Completed" },
+    confirmed: { de: "Bestatigt", en: "Confirmed" },
+    in_progress: { de: "In Bearbeitung", en: "In Progress" },
+    provider_completed: { de: "Bestatigt", en: "Confirmed" },
     requested: { de: "Angefragt", en: "Requested" },
     pending: { de: "Ausstehend", en: "Pending" },
     cancelled: { de: "Storniert", en: "Cancelled" },
@@ -1054,6 +1057,7 @@ export const dict = {
     markComplete: { de: "Als abgeschlossen markieren", en: "Mark As Complete" },
     rescheduleBooking: { de: "Buchung verschieben", en: "Reschedule Booking" },
     cancelBooking: { de: "Buchung stornieren", en: "Cancel booking" },
+    doneBooking: { de: "Buchung abgeschlossen", en: "Done booking" },
     learnMore: { de: "Mehr erfahren", en: "Learn more" },
     leaveReview: { de: "Bewertung abgeben", en: "Leave Review" },
     rebook: { de: "Erneut buchen", en: "Rebook" },
@@ -1135,6 +1139,7 @@ export const dict = {
       en: "Failed to send message",
     },
     bookingCancelled: { de: "Buchung storniert", en: "Booking cancelled" },
+    bookingDone: { de: "Buchung abgeschlossen", en: "Booking Done" },
     requestWithdrawn: { de: "Anfrage zurückgezogen", en: "Request withdrawn" },
     markedComplete: {
       de: "Als abgeschlossen markiert",

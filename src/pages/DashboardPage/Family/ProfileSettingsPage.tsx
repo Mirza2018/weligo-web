@@ -12,6 +12,7 @@ import {
   TabsContent,
 } from "../../../components/ui/tabs";
 import { UserAvatar } from "../../../components/common/UserAvatar";
+import { AddressAutocompleteField } from "../../../components/auth/AddressAutocompleteField";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -25,6 +26,7 @@ import { setUserInfo } from "@/redux/slices/authSlice";
 
 import type { RootState } from "@/redux/store";
 import { getImageUrl } from "@/redux/getBaseUrl";
+import type { GeoPoint } from "@/types/website";
 
 const profileSchema = z.object({
   firstName: z.string().min(1, "Required"),
@@ -83,10 +85,18 @@ function ProfileForm() {
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  // Google's autocomplete drives this - it's what actually gets sent as
+  // `location` in the update payload. Seeded from the user's existing
+  // location so saving other fields (name, phone...) without touching the
+  // address doesn't wipe it out.
+  const [location, setLocation] = useState<GeoPoint | null>(null);
+  const [addressValue, setAddressValue] = useState("");
+
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<ProfileValues>({
     resolver: zodResolver(profileSchema),
@@ -113,6 +123,8 @@ function ProfileForm() {
       postalCode: user.postalCode ?? "",
       address: user.address ?? "",
     });
+    setAddressValue(user.address ?? "");
+    setLocation(user.location ?? null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?._id]);
 
@@ -128,8 +140,18 @@ function ProfileForm() {
   }
 
   const onSubmit = async (values: ProfileValues) => {
-    try {
-      const res = await updateProfile({
+    if (!location) {
+      toast.error(
+        "Please pick your address from the suggestions so we can save your location.",
+      );
+      return;
+    }
+
+    const formData = new FormData();
+    if (avatarFile) formData.append("image", avatarFile);
+    formData.append(
+      "data",
+      JSON.stringify({
         firstName: values.firstName,
         lastName: values.lastName,
         fullName: `${values.firstName} ${values.lastName}`.trim(),
@@ -137,8 +159,12 @@ function ProfileForm() {
         city: values.city,
         postalCode: values.postalCode,
         address: values.address,
-        image: avatarFile,
-      }).unwrap();
+        location,
+      }),
+    );
+
+    try {
+      const res = await updateProfile(formData).unwrap();
 
       dispatch(setUserInfo(res.data));
       setAvatarFile(null);
@@ -153,7 +179,9 @@ function ProfileForm() {
     (user?.profileImage
       ? (getImageUrl(user.profileImage) ?? undefined)
       : undefined);
-
+  console.log("====================================");
+  console.log(avatarSrc);
+  console.log("====================================");
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-5">
       <div className="relative w-fit">
@@ -195,6 +223,49 @@ function ProfileForm() {
       <Field id="phone" label="Phone Number" error={errors.phone?.message}>
         <Input id="phone" {...register("phone")} />
       </Field>
+
+      <Field
+        id="address"
+        label="Address"
+        error={errors.address?.message}
+        hint="Start typing and pick your address from the list - it fills in city, postal code, and your saved location."
+      >
+        <AddressAutocompleteField
+          value={addressValue}
+          placeholder="Start typing your address..."
+          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs outline-none focus:border-primary"
+          onChange={(v) => {
+            setAddressValue(v);
+            setValue("address", v, { shouldValidate: true, shouldDirty: true });
+          }}
+          onPlaceSelected={(place) => {
+            setAddressValue(place.formattedAddress);
+            setValue("address", place.formattedAddress, {
+              shouldValidate: true,
+              shouldDirty: true,
+            });
+            setLocation({ type: "Point", coordinates: [place.lng, place.lat] });
+
+            // Google doesn't always return these (rural addresses, some
+            // countries, etc). When it does, auto-fill; when it doesn't,
+            // leave whatever the person already typed so the "Required"
+            // validation forces them to fill it in by hand before saving.
+            if (place.city) {
+              setValue("city", place.city, {
+                shouldValidate: true,
+                shouldDirty: true,
+              });
+            }
+            if (place.postalCode) {
+              setValue("postalCode", place.postalCode, {
+                shouldValidate: true,
+                shouldDirty: true,
+              });
+            }
+          }}
+        />
+      </Field>
+
       <Field id="city" label="City" error={errors.city?.message}>
         <Input id="city" {...register("city")} />
       </Field>
@@ -204,9 +275,6 @@ function ProfileForm() {
         error={errors.postalCode?.message}
       >
         <Input id="postalCode" {...register("postalCode")} />
-      </Field>
-      <Field id="address" label="Address" error={errors.address?.message}>
-        <Input id="address" {...register("address")} />
       </Field>
 
       <div className="flex justify-end">
@@ -291,11 +359,13 @@ function PasswordForm() {
 function Field({
   id,
   label,
+  hint,
   error,
   children,
 }: {
   id: string;
   label: string;
+  hint?: string;
   error?: string;
   children: React.ReactNode;
 }) {
@@ -303,6 +373,9 @@ function Field({
     <div className="space-y-1.5">
       <Label htmlFor={id}>{label}</Label>
       {children}
+      {hint && !error && (
+        <p className="text-xs text-muted-foreground">{hint}</p>
+      )}
       {error && <p className="text-sm text-destructive">{error}</p>}
     </div>
   );

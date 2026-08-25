@@ -23,7 +23,7 @@ import { ProviderHelpAndSupportPage } from "../pages/DashboardPage/Provider/Help
 import { ProviderBookings } from "../pages/DashboardPage/Provider/ProviderBookings";
 import { ProviderOverviewPage } from "../pages/DashboardPage/Provider/ProviderOverviewPage";
 import { ProvidersBookingDetailsPage } from "../pages/DashboardPage/Provider/ProvidersBookingDetailsPage";
-import { ProviderReviewsPage } from "../pages/DashboardPage/Provider/Reviews";
+
 import { ForFamiliesPage } from "../pages/ForFamiliesPage";
 import { ForProvidersPage } from "../pages/ForProvidersPage";
 import { Home } from "../pages/Home";
@@ -43,6 +43,7 @@ import { SubmitCodeProvider } from "@/pages/auth/submit-code-provider";
 import { MoreInfoProvider } from "@/pages/auth/more-info-provider";
 import { WelcomeToWeligoProvider } from "@/pages/auth/welcome-weligo-provider";
 import { ProfileSettingsPageProvider } from "@/pages/DashboardPage/Family/ProfileSettingsPageProvider";
+import { ProviderReviewsPage } from "@/pages/DashboardPage/Provider/ProviderReviewsPage";
 
 const router = createBrowserRouter([
   {
@@ -145,6 +146,7 @@ const router = createBrowserRouter([
       {
         path: "bookings",
         element: <ProviderBookings />,
+        // element: <BookingsPage />,
       },
       {
         path: "bookings/:id",
@@ -168,7 +170,7 @@ const router = createBrowserRouter([
       },
       {
         path: "reviews",
-        element: <ProviderReviewsPage />,
+        element: <ProviderReviewsPage/>,
       },
       {
         path: "settings",
