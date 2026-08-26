@@ -1,11 +1,5 @@
 import { useState } from "react";
 import { Phone, Video, Paperclip, Send, Search, Check, CheckCheck, FileText } from "lucide-react";
-// import { Input } from "@/components/ui/input";
-// import { Button } from "@/components/ui/button";
-// import { Textarea } from "@/components/ui/textarea";
-// import { UserAvatar } from "@/components/common/UserAvatar";
-// import { chatThreads, type ChatThread } from "@/assets/data/chats";
-// import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { chatThreads, type ChatThread } from "../../../assets/data/chats";
 import { Input } from "../../../components/ui/input";
@@ -13,6 +7,10 @@ import { UserAvatar } from "../../../components/common/UserAvatar";
 import { cn } from "../../../lib/utils";
 import { Textarea } from "../../../components/ui/textarea";
 import { Button } from "../../../components/ui/button";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/redux/store";
+import { jwtDecode } from "jwt-decode"; 
+import { getSocketUrl,getImageUrl } from "@/redux/getBaseUrl";
 
 export function MessagePage() {
   const [activeId, setActiveId] = useState(chatThreads[4].id);
@@ -22,6 +20,9 @@ export function MessagePage() {
   const filtered = chatThreads.filter((c) =>
     c.name.toLowerCase().includes(query.toLowerCase()),
   );
+
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+  const decodeToken = jwtDecode(accessToken);
 
   const send = () => {
     if (!draft.trim()) return;
