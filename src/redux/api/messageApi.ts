@@ -36,7 +36,7 @@ export const messageApi = baseApi.injectEndpoints({
     getSingleChat: build.query({
       query: (id) => {
         return {
-          url: `/message/${id}?sort=-created`,
+          url: `/message/${id}`,
           method: "GET",
         };
       },

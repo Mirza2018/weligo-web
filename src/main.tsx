@@ -34,19 +34,25 @@ import Providers from "./redux/lib/Providers";
 import { I18nProvider } from "./lib/i18n";
 import { TooltipProvider } from "./components/ui/tooltip";
 import { GoogleMapsProvider } from "./lib/googleMaps";
+import { SocketProvider } from "./providers/SocketProvider";
+import { CallProvider } from "./components/providers/CallProvider";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Providers>
-      <TooltipProvider>
-        <Toaster richColors position="top-center" />
-        <I18nProvider>
-          {/* <ScrollToTop /> */}
-          <GoogleMapsProvider>
-            <RouterProvider router={router} />
-          </GoogleMapsProvider>
-        </I18nProvider>
-      </TooltipProvider>
+      <SocketProvider>
+        <CallProvider>
+          <TooltipProvider>
+            <Toaster richColors position="top-center" />
+            <I18nProvider>
+              {/* <ScrollToTop /> */}
+              <GoogleMapsProvider>
+                <RouterProvider router={router} />
+              </GoogleMapsProvider>
+            </I18nProvider>
+          </TooltipProvider>
+        </CallProvider>
+      </SocketProvider>
     </Providers>
   </StrictMode>,
 );

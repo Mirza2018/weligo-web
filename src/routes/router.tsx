@@ -12,18 +12,28 @@ import { BookingDetailsPage } from "../pages/DashboardPage/Family/BookingDetails
 import { BookingsPage } from "../pages/DashboardPage/Family/BookingsPage";
 import { FavoritesPage } from "../pages/DashboardPage/Family/FavoritesPage";
 import { HelpAndSupportPage } from "../pages/DashboardPage/Family/HelpAndSupportPage";
-import { MessagePage } from "../pages/DashboardPage/Family/MessagePage";
 import { OverviewPage } from "../pages/DashboardPage/Family/OverviewPage";
 import { ProfileSettingsPage } from "../pages/DashboardPage/Family/ProfileSettingsPage";
 import { ReviewsPage } from "../pages/DashboardPage/Family/ReviewsPage";
 import { TransactionsPage } from "../pages/DashboardPage/Family/TransactionsPage";
 import { ProviderCalendarPage } from "../pages/DashboardPage/Provider/Calendar";
 import { ProviderEarningsPage } from "../pages/DashboardPage/Provider/Earnings";
-import { ProviderHelpAndSupportPage } from "../pages/DashboardPage/Provider/HelpAndSupport";
 import { ProviderBookings } from "../pages/DashboardPage/Provider/ProviderBookings";
 import { ProviderOverviewPage } from "../pages/DashboardPage/Provider/ProviderOverviewPage";
 import { ProvidersBookingDetailsPage } from "../pages/DashboardPage/Provider/ProvidersBookingDetailsPage";
 
+import { AboutYou } from "@/pages/auth/about-you";
+import { AddCertificates } from "@/pages/auth/add-certificates";
+import { MoreInfo } from "@/pages/auth/more-info";
+import { MoreInfoProvider } from "@/pages/auth/more-info-provider";
+import { ServiceSelection } from "@/pages/auth/service-selection";
+import { SignUpProvider } from "@/pages/auth/sign-up-provider";
+import { SubmitCode } from "@/pages/auth/submit-code";
+import { SubmitCodeProvider } from "@/pages/auth/submit-code-provider";
+import { WelcomeToWeligo } from "@/pages/auth/welcome-weligo";
+import { WelcomeToWeligoProvider } from "@/pages/auth/welcome-weligo-provider";
+import { ProfileSettingsPageProvider } from "@/pages/DashboardPage/Family/ProfileSettingsPageProvider";
+import { ProviderReviewsPage } from "@/pages/DashboardPage/Provider/ProviderReviewsPage";
 import { ForFamiliesPage } from "../pages/ForFamiliesPage";
 import { ForProvidersPage } from "../pages/ForProvidersPage";
 import { Home } from "../pages/Home";
@@ -32,18 +42,7 @@ import { PurchasePage } from "../pages/PurchasePage";
 import { Services } from "../pages/Services";
 import ProvidersDetails from "../pages/Services/ProvidersDetails";
 import ServiceProvider from "../pages/Services/ServiceProvider";
-import { SubmitCode } from "@/pages/auth/submit-code";
-import { ServiceSelection } from "@/pages/auth/service-selection";
-import { AddCertificates } from "@/pages/auth/add-certificates";
-import { AboutYou } from "@/pages/auth/about-you";
-import { MoreInfo } from "@/pages/auth/more-info";
-import { WelcomeToWeligo } from "@/pages/auth/welcome-weligo";
-import { SignUpProvider } from "@/pages/auth/sign-up-provider";
-import { SubmitCodeProvider } from "@/pages/auth/submit-code-provider";
-import { MoreInfoProvider } from "@/pages/auth/more-info-provider";
-import { WelcomeToWeligoProvider } from "@/pages/auth/welcome-weligo-provider";
-import { ProfileSettingsPageProvider } from "@/pages/DashboardPage/Family/ProfileSettingsPageProvider";
-import { ProviderReviewsPage } from "@/pages/DashboardPage/Provider/ProviderReviewsPage";
+import MessagePage from "@/components/messages/MessagePage";
 
 const router = createBrowserRouter([
   {
