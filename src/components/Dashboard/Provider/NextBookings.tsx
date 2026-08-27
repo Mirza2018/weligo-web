@@ -1,19 +1,19 @@
 import { useState } from "react";
-import { ArrowRight, Calendar, Clock, MapPin, MessageCircle } from "lucide-react";
+import { ArrowRight, Calendar, Clock, MessageCircle, Tag } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
 import { useI18n } from "../../../lib/i18n";
-import { providerNextBooking } from "../../../assets/data/provider-bookings";
 import { SectionCard } from "../../common/SectionCard";
 import { UserAvatar } from "../../common/UserAvatar";
 import { StatusBadge } from "../../common/StatusBadge";
 import { Button } from "../../ui/button";
 import { SendMessageDialog } from "../Family/SendMessageDialog";
-// import { SectionCard } from "@/components/common/SectionCard";
-// import { UserAvatar } from "@/components/common/UserAvatar";
-// import { StatusBadge } from "@/components/common/StatusBadge";
-// import { Button } from "@/components/ui/button";
-// import { providerNextBooking } from "@/assets/data/provider-bookings";
-// import { useI18n } from "@/lib/i18n";
-// import { SendMessageDialog } from "@/components/Dashboard/Family/SendMessageDialog";
+import {
+  formatBookingDate,
+  formatTimeRange,
+  resolveImageUrl,
+} from "../../../lib/overview-helpers";
+import type { NextBooking } from "../../../types/overview";
 
 function InfoPill({
   icon: Icon,
@@ -30,33 +30,70 @@ function InfoPill({
         <Icon className="h-3.5 w-3.5" />
         <span>{label}</span>
       </div>
-      <p className="mt-1 text-sm font-medium text-foreground">{value}</p>
+      <p className="mt-1 truncate text-sm font-medium text-foreground">
+        {value}
+      </p>
     </div>
   );
 }
 
-export function NextBookings() {
+export function NextBookings({ booking }: { booking: NextBooking | null }) {
   const { t } = useI18n();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const nb = providerNextBooking;
+
+  if (!booking) {
+    return (
+      <SectionCard title={t("overview.nextBooking")}>
+        <p className="py-8 text-center text-sm text-muted-foreground">
+          No upcoming bookings yet.
+        </p>
+      </SectionCard>
+    );
+  }
+
+  const { otherParty } = booking;
 
   return (
     <SectionCard title={t("overview.nextBooking")}>
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <UserAvatar name={nb.clientName} size={44} />
+          <UserAvatar
+            name={otherParty.fullName}
+            imageUrl={resolveImageUrl(otherParty.profileImage)}
+            size={44}
+          />
           <div>
-            <p className="font-medium text-foreground">{nb.clientName}</p>
-            <p className="text-sm text-muted-foreground">{nb.location}</p>
+            <p className="font-medium text-foreground">{otherParty.fullName}</p>
+            {otherParty.categoryId?.name && (
+              <p className="text-sm text-muted-foreground">
+                {otherParty.categoryId.name}
+              </p>
+            )}
           </div>
         </div>
-        <StatusBadge status="completed" className="bg-emerald-500 text-white border-emerald-500" />
+        <StatusBadge status={booking.status} />
       </div>
 
       <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-        <InfoPill icon={Calendar} label={t("overview.date")} value={nb.date} />
-        <InfoPill icon={Clock} label={t("overview.time")} value={nb.time} />
-        <InfoPill icon={MapPin} label={t("overview.location")} value={nb.address} />
+        <InfoPill
+          icon={Calendar}
+          label={t("overview.date")}
+          value={formatBookingDate(booking.bookingDate)}
+        />
+        <InfoPill
+          icon={Clock}
+          label={t("overview.time")}
+          value={formatTimeRange(
+            booking.timeSlot.startTime,
+            booking.timeSlot.endTime,
+          )}
+        />
+        <InfoPill
+          icon={Tag}
+          label={t("overview.reference")}
+          value={booking.bookingReference}
+        />
       </div>
 
       <div className="mt-4 flex flex-col gap-2 sm:flex-row">
@@ -68,13 +105,22 @@ export function NextBookings() {
           <MessageCircle className="h-4 w-4" />
           {t("overview.sendMessage")}
         </Button>
-        <Button className="flex-1 gap-2">
+        <Button
+          className="flex-1 gap-2"
+          onClick={() =>
+            navigate(`/dashboard/provider/bookings/${booking._id}`)
+          }
+        >
           {t("overview.viewDetails")}
           <ArrowRight className="h-4 w-4" />
         </Button>
       </div>
 
-      <SendMessageDialog open={open} onOpenChange={setOpen} recipientName={nb.clientName} />
+      <SendMessageDialog
+        open={open}
+        onOpenChange={setOpen}
+        recipientName={otherParty.fullName}
+      />
     </SectionCard>
   );
 }

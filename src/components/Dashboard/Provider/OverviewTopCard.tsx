@@ -17,7 +17,9 @@ export function OverviewTopCard({
           <Icon className="h-3.5 w-3.5" />
         </span>
       </div>
-      <p className="mt-3 font-serif text-3xl font-medium text-foreground">{value}</p>
+      <p className="mt-3 font-serif text-3xl font-medium text-foreground">
+        {value}
+      </p>
     </div>
   );
 }

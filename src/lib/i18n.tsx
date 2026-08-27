@@ -933,6 +933,7 @@ export const dict = {
   },
   navbar: {
     overview: { de: "Überblick", en: "Overview" },
+    availability: { de: "Verfügbarkeit", en: "Availability" },
     bookings: { de: "Buchungen", en: "Bookings" },
     calendar: { de: "Kalender", en: "Calendar" },
     message: { de: "Nachrichten", en: "Message" },

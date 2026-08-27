@@ -290,6 +290,77 @@ export const websiteApi = baseApi.injectEndpoints({
       invalidatesTags: [tagTypes.report],
     }),
 
+    ////Availability
+    myAvailability: build.query({
+      query: (params) => {
+        return {
+          url: `/availability/my-availability`,
+          method: "GET",
+          params,
+        };
+      },
+      providesTags: [tagTypes.availability],
+    }),
+
+    updateAvailabilityRules: build.mutation({
+      query: (body) => {
+        return {
+          url: `/availability/booking-rules`,
+          method: "PATCH",
+          body,
+        };
+      },
+      invalidatesTags: [tagTypes.availability],
+    }),
+    addDayAvailability: build.mutation({
+      query: (body) => {
+        return {
+          url: `/availability/day/${body.day}/slots`,
+          method: "POST",
+          body: body.data,
+        };
+      },
+      invalidatesTags: [tagTypes.availability],
+    }),
+    isDayAvailability: build.mutation({
+      query: (body) => {
+        return {
+          url: `/availability/day/${body.day}`,
+          method: "PATCH",
+          body: body.data,
+        };
+      },
+      invalidatesTags: [tagTypes.availability],
+    }),
+    updateTimeAvailability: build.mutation({
+      query: (body) => {
+        return {
+          url: `/availability/day/${body.day}/slots/${body.id}`,
+          method: "PATCH",
+          body: body.data,
+        };
+      },
+      invalidatesTags: [tagTypes.availability],
+    }),
+    deleteTimeAvailability: build.mutation({
+      query: (body) => {
+        return {
+          url: `/availability/day/${body.day}/slots/${body.id}`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: [tagTypes.availability],
+    }),
+    /// Overview
+    myOverview: build.query({
+      query: () => {
+        return {
+          url: `/overview/my`,
+          method: "GET",
+        };
+      },
+    }),
+
     ///END
   }),
 });
@@ -329,4 +400,13 @@ export const {
   useGetTransactionsQuery,
   ///reports
   useCreateReportMutation,
+  ///availability
+  useMyAvailabilityQuery,
+  useUpdateAvailabilityRulesMutation,
+  useAddDayAvailabilityMutation,
+  useIsDayAvailabilityMutation,
+  useUpdateTimeAvailabilityMutation,
+  useDeleteTimeAvailabilityMutation,
+  //
+  useMyOverviewQuery,
 } = websiteApi;

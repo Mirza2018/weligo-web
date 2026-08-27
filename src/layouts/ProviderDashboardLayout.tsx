@@ -10,6 +10,8 @@ function titleKeyForPath(path: string): string {
   if (path.startsWith("/dashboard/provider/bookings")) return "navbar.bookings";
   if (path.startsWith("/dashboard/provider/calendar")) return "navbar.calendar";
   if (path.startsWith("/dashboard/provider/message")) return "navbar.message";
+  if (path.startsWith("/dashboard/provider/availability"))
+    return "navbar.availability";
   if (path.startsWith("/dashboard/provider/earnings")) return "navbar.earnings";
   if (path.startsWith("/dashboard/provider/reviews")) return "navbar.reviews";
   if (path.startsWith("/dashboard/provider/help")) return "navbar.helpSupport";

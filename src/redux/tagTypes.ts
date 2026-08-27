@@ -8,6 +8,7 @@ export const tagTypes = {
   favorite: "Favorite",
   report: "Report",
   chat: "Chat",
+  availability: "Availability",
 };
 
 export const tagTypesList = [

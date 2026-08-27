@@ -43,6 +43,7 @@ import { Services } from "../pages/Services";
 import ProvidersDetails from "../pages/Services/ProvidersDetails";
 import ServiceProvider from "../pages/Services/ServiceProvider";
 import MessagePage from "@/components/messages/MessagePage";
+import Availability from "@/pages/DashboardPage/Provider/Availability";
 
 const router = createBrowserRouter([
   {
@@ -156,6 +157,10 @@ const router = createBrowserRouter([
         element: <ProviderCalendarPage />,
       },
       {
+        path: "availability",
+        element: <Availability />,
+      },
+      {
         path: "earnings",
         element: <ProviderEarningsPage />,
       },
@@ -169,7 +174,7 @@ const router = createBrowserRouter([
       },
       {
         path: "reviews",
-        element: <ProviderReviewsPage/>,
+        element: <ProviderReviewsPage />,
       },
       {
         path: "settings",

@@ -1,4 +1,6 @@
 import { CalendarCheck, CheckCircle2, Star, Wallet } from "lucide-react";
+import { useSelector } from "react-redux";
+
 import { OverviewTopCard } from "../../../components/Dashboard/Family/OverviewTopCard";
 import { NextBookings } from "../../../components/Dashboard/Family/NextBookings";
 import { RecentMessages } from "../../../components/Dashboard/Family/RecentMessages";
@@ -6,51 +8,81 @@ import { YourBookings } from "../../../components/Dashboard/Family/YourBookings"
 import { YourFavorites } from "../../../components/Dashboard/Family/YourFavorites";
 import { SpendingOverview } from "../../../components/Dashboard/Family/SpendingOverview";
 
-
 import { useI18n } from "../../../lib/i18n";
-import { currentUser } from "../../..//assets/data/user";
-import { formatCHF } from "../../..//lib/format";
-import { bookings } from "../../..//assets/data/bookings";
-import { totalSpending } from "../../..//assets/data/spending";
+import { formatCHF } from "../../../lib/format";
+import { decodeAccessToken, firstNameOf } from "../../../lib/overview-helpers";
+import { useMyOverviewQuery } from "@/redux/api/websiteApi"; // TODO: adjust to your actual RTK Query api slice path
+import type { RootState } from "@/redux/store";
 
 export function OverviewPage() {
   const { t } = useI18n();
-  const upcomingCount = bookings.filter((b) => b.status === "upcoming").length;
-  const completedCount = bookings.filter((b) => b.status === "completed").length;
+  const { data, isLoading } = useMyOverviewQuery();
+
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+  const decoded = decodeAccessToken(accessToken);
+
+  const overview = data?.data;
+  const stats = overview?.stats;
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-5">
+        <div className="h-8 w-56 animate-pulse rounded bg-muted-bg" />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div
+              key={i}
+              className="h-24 animate-pulse rounded-2xl border border-border bg-card"
+            />
+          ))}
+        </div>
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <div className="h-56 animate-pulse rounded-2xl border border-border bg-card" />
+          <div className="h-56 animate-pulse rounded-2xl border border-border bg-card" />
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className=" flex flex-col gap-5">
-      <h2 className="font-serif-italic  text-3xl ">
-        {t("overview.hello")} {currentUser.firstName}
-        <span className="ml-1">👋</span>
-      </h2>
+    <div className="flex flex-col gap-5">
+      <div>
+        <h2 className="font-serif-italic text-3xl">
+          {t("overview.hello")} {firstNameOf(decoded?.fullName)}
+          <span className="ml-1">👋</span>
+        </h2>
+        <p className="text-sm text-muted-foreground">Welcome back.</p>
+      </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <OverviewTopCard
           label={t("overview.upcomingBookings")}
-          value={String(upcomingCount)}
+          value={String(stats?.upcomingBookings ?? 0)}
           icon={CalendarCheck}
         />
         <OverviewTopCard
           label={t("overview.completedBookings")}
-          value={String(completedCount + 10)}
+          value={String(stats?.completedBookings ?? 0)}
           icon={CheckCircle2}
         />
         <OverviewTopCard
           label={t("overview.averageRating")}
-          value="4.9"
+          value={stats?.averageRating ? stats.averageRating.toFixed(1) : "—"}
           icon={Star}
         />
         <OverviewTopCard
           label={t("overview.totalSpent")}
-          value={formatCHF(totalSpending + 0)}
+          value={formatCHF(stats?.totalSpent ?? 0)}
           icon={Wallet}
         />
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <NextBookings />
-        <RecentMessages />
+        <NextBookings booking={overview?.nextBooking ?? null} />
+        <RecentMessages
+          messages={overview?.recentMessages ?? []}
+          currentUserId={decoded?.userId}
+        />
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
@@ -58,8 +90,11 @@ export function OverviewPage() {
           <YourBookings />
         </div>
         <div className="flex flex-col gap-4">
-          <YourFavorites />
-          <SpendingOverview />
+          <YourFavorites favorites={overview?.latestFavorites ?? []} />
+          <SpendingOverview
+            totalSpent={stats?.totalSpent ?? 0}
+            breakdown={overview?.spendingByCategory ?? []}
+          />
         </div>
       </div>
     </div>

@@ -32,6 +32,11 @@ const items: NavItem[] = [
   { key: "bookings", to: "/dashboard/provider/bookings", icon: CalendarCheck },
   { key: "calendar", to: "/dashboard/provider/calendar", icon: CalendarDays },
   { key: "message", to: "/dashboard/provider/message", icon: MessageSquare },
+  {
+    key: "availability",
+    to: "/dashboard/provider/availability",
+    icon: MessageSquare,
+  },
   { key: "earnings", to: "/dashboard/provider/earnings", icon: Wallet },
   { key: "reviews", to: "/dashboard/provider/reviews", icon: Star },
   { key: "helpSupport", to: "/dashboard/provider/help", icon: LifeBuoy },

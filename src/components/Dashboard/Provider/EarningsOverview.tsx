@@ -1,21 +1,38 @@
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+} from "recharts";
+
 import { useI18n } from "../../../lib/i18n";
 import { SectionCard } from "../../common/SectionCard";
 import { formatCHF } from "../../../lib/format";
-import { totalEarned } from "../../../assets/data/earnings";
-// import { SectionCard } from "@/components/common/SectionCard";
-// import { useI18n } from "@/lib/i18n";
-// import { formatCHF } from "@/lib/format";
-// import { totalEarned } from "@/assets/data/earnings";
+import type { EarningOverview as EarningOverviewData } from "../../../types/provider-overview";
 
-const breakdown = [
-  { category: "Tutoring", amount: 820, color: "#7c3aed" },
-  { category: "Childcare", amount: 320, color: "#f472b6" },
-  { category: "Other", amount: 108, color: "#fbbf24" },
-];
+// Only show every other month label on the x-axis, matching the mock
+// (Jan, Mar, May, Jul, Sep, Nov).
+const SHOWN_MONTHS = new Set([1, 3, 5, 7, 9, 11]);
 
-export function EarningsOverview() {
+export function EarningsOverview({
+  totalEarnings,
+  overview,
+}: {
+  totalEarnings: number;
+  overview: EarningOverviewData | undefined;
+}) {
   const { t } = useI18n();
+  const monthly = overview?.monthlyStats ?? [];
+
+  const chartData = monthly.map((m) => ({
+    month: m.month,
+    label: m.monthName.slice(0, 3),
+    earnings: m.totalProviderEarning,
+  }));
+
   return (
     <SectionCard
       title={t("provider.earningsOverview")}
@@ -26,43 +43,55 @@ export function EarningsOverview() {
       }
     >
       <p className="font-serif text-3xl font-medium text-foreground">
-        {formatCHF(totalEarned, true)}
+        {formatCHF(totalEarnings, true)}
       </p>
-      <div className="mt-4 flex items-center gap-4">
-        <div className="h-32 w-32 shrink-0">
+
+      {chartData.length === 0 ? (
+        <p className="mt-4 text-sm text-muted-foreground">
+          No earnings recorded yet.
+        </p>
+      ) : (
+        <div className="mt-4 h-40 w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={breakdown}
-                dataKey="amount"
-                nameKey="category"
-                innerRadius={36}
-                outerRadius={60}
-                paddingAngle={2}
-                stroke="none"
-              >
-                {breakdown.map((s, i) => (
-                  <Cell key={i} fill={s.color} />
-                ))}
-              </Pie>
-            </PieChart>
+            <LineChart
+              data={chartData}
+              margin={{ top: 4, right: 4, bottom: 0, left: -20 }}
+            >
+              <CartesianGrid vertical={false} stroke="var(--border)" />
+              <XAxis
+                dataKey="label"
+                tickLine={false}
+                axisLine={false}
+                interval={0}
+                tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
+                tickFormatter={(_, i) =>
+                  SHOWN_MONTHS.has(chartData[i]?.month)
+                    ? chartData[i].label
+                    : ""
+                }
+              />
+              <YAxis
+                tickLine={false}
+                axisLine={false}
+                width={36}
+                tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
+              />
+              <Tooltip
+                formatter={(value: number) => formatCHF(value)}
+                labelFormatter={(label) => label}
+              />
+              <Line
+                type="monotone"
+                dataKey="earnings"
+                stroke="var(--primary)"
+                strokeWidth={2}
+                dot={false}
+                activeDot={{ r: 4 }}
+              />
+            </LineChart>
           </ResponsiveContainer>
         </div>
-        <ul className="flex-1 space-y-1.5 text-sm">
-          {breakdown.map((s, i) => (
-            <li key={i} className="flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2">
-                <span
-                  className="h-2.5 w-2.5 rounded-full"
-                  style={{ backgroundColor: s.color }}
-                />
-                <span className="text-muted-foreground">{s.category}</span>
-              </div>
-              <span className="font-medium text-foreground">{formatCHF(s.amount)}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
+      )}
     </SectionCard>
   );
 }
