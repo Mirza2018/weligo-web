@@ -46,7 +46,7 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <Link to="/dashboard/family/overview" className="h-16">
+        <Link to="/" className="h-16">
           <img src={AllImages.logo} alt="" className="h-12.5" />
         </Link>
       </SidebarHeader>

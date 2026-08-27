@@ -12,6 +12,7 @@ import { useI18n } from "../../../lib/i18n";
 import { SectionCard } from "../../common/SectionCard";
 import { formatCHF } from "../../../lib/format";
 import type { EarningOverview as EarningOverviewData } from "../../../types/provider-overview";
+import { Link } from "react-router-dom";
 
 // Only show every other month label on the x-axis, matching the mock
 // (Jan, Mar, May, Jul, Sep, Nov).
@@ -37,9 +38,12 @@ export function EarningsOverview({
     <SectionCard
       title={t("provider.earningsOverview")}
       action={
-        <button className="text-sm font-medium text-primary hover:underline">
+        <Link
+          to="/dashboard/provider/earnings"
+          className="text-sm font-medium text-primary hover:underline"
+        >
           {t("overview.viewAll")}
-        </button>
+        </Link>
       }
     >
       <p className="font-serif text-3xl font-medium text-foreground">

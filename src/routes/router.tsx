@@ -22,6 +22,11 @@ import { ProviderBookings } from "../pages/DashboardPage/Provider/ProviderBookin
 import { ProviderOverviewPage } from "../pages/DashboardPage/Provider/ProviderOverviewPage";
 import { ProvidersBookingDetailsPage } from "../pages/DashboardPage/Provider/ProvidersBookingDetailsPage";
 
+import CreatorProgram from "@/components/legal/CreatorProgram";
+import Legal from "@/components/legal/Legal";
+import Privacy from "@/components/legal/privacy";
+import Terms from "@/components/legal/Terms";
+import MessagePage from "@/components/messages/MessagePage";
 import { AboutYou } from "@/pages/auth/about-you";
 import { AddCertificates } from "@/pages/auth/add-certificates";
 import { MoreInfo } from "@/pages/auth/more-info";
@@ -33,6 +38,7 @@ import { SubmitCodeProvider } from "@/pages/auth/submit-code-provider";
 import { WelcomeToWeligo } from "@/pages/auth/welcome-weligo";
 import { WelcomeToWeligoProvider } from "@/pages/auth/welcome-weligo-provider";
 import { ProfileSettingsPageProvider } from "@/pages/DashboardPage/Family/ProfileSettingsPageProvider";
+import Availability from "@/pages/DashboardPage/Provider/Availability";
 import { ProviderReviewsPage } from "@/pages/DashboardPage/Provider/ProviderReviewsPage";
 import { ForFamiliesPage } from "../pages/ForFamiliesPage";
 import { ForProvidersPage } from "../pages/ForProvidersPage";
@@ -42,8 +48,6 @@ import { PurchasePage } from "../pages/PurchasePage";
 import { Services } from "../pages/Services";
 import ProvidersDetails from "../pages/Services/ProvidersDetails";
 import ServiceProvider from "../pages/Services/ServiceProvider";
-import MessagePage from "@/components/messages/MessagePage";
-import Availability from "@/pages/DashboardPage/Provider/Availability";
 
 const router = createBrowserRouter([
   {
@@ -90,6 +94,22 @@ const router = createBrowserRouter([
       {
         path: "waitlist",
         element: <ComingSoon />,
+      },
+      {
+        path: "terms",
+        element: <Terms />,
+      },
+      {
+        path: "policy",
+        element: <Privacy />,
+      },
+      {
+        path: "legal",
+        element: <Legal />,
+      },
+      {
+        path: "creator-program",
+        element: <CreatorProgram />,
       },
     ],
   },

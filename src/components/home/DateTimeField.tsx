@@ -43,7 +43,7 @@ export function DateTimeField({
           type="button"
           className="flex flex-1 min-w-0 items-center gap-3 rounded-xl px-4 py-2.5 text-left transition-colors hover:bg-muted/60"
         >
-          <CalendarDays className="h-5 w-5 shrink-0 text-muted-foreground" />
+          <CalendarDays className="h-5 w-5 shrink-0 text-primary" />
           <span className="min-w-0 flex-1">
             <span className="block text-xs font-medium text-muted-foreground">
               {label}

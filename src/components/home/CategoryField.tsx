@@ -47,7 +47,7 @@ export function CategoryField({
             hasError && "ring-1 ring-destructive",
           )}
         >
-          <Baby className="h-5 w-5 shrink-0 text-muted-foreground" />
+          <Baby className="h-5 w-5 shrink-0 text-primary" />
           <span className="min-w-0 flex-1">
             <span className="block text-xs font-medium text-muted-foreground">
               {label}

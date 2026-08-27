@@ -100,6 +100,7 @@ function ProvidersDetailsContent({
 }) {
   const { user, profile, reviews, ratingSummary, availability, bookings } =
     data;
+  console.log(user);
 
   return (
     <main className="min-h-screen bg-[#F8F9FC] text-[#202126]">
@@ -172,8 +173,8 @@ function HeroSection({
             tags={tags}
           />
           <HeroImage
-            src={getImageUrl(user.profileImage) || AllImages.s2}
-            alt={user.fullName}
+            src={getImageUrl(user?.categoryId?.image) || AllImages.s2}
+            alt={user.categoryId?.name || ""}
           />
         </div>
       </div>
@@ -474,9 +475,10 @@ function BookingRequestCard({
       </a>
 
       <button
-        onClick={() =>
-          navigate(`/services/${serviceId}/providers/${providerId}/purchase`)
-        }
+        onClick={() => {
+          navigate(`/services/${serviceId}/providers/${providerId}/purchase`);
+          localStorage.removeItem(`weligo:purchase:${serviceId}:${providerId}`);
+        }}
         className="mt-7 flex h-11 w-full items-center justify-center gap-2 rounded-full bg-primary font-sans text-sm font-bold text-primary-foreground"
       >
         Send booking request
@@ -686,9 +688,9 @@ function ReviewStatsCard({
         orientation="horizontal"
         className="mt-7 text-amber-500 bg-amber-400"
       />
-      <button className="mt-7 h-10 w-full rounded-full bg-primary font-sans text-xs font-bold text-primary-foreground">
+      {/* <button className="mt-7 h-10 w-full rounded-full bg-primary font-sans text-xs font-bold text-primary-foreground">
         Give Review
-      </button>
+      </button> */}
     </InfoCard>
   );
 }

@@ -13,13 +13,13 @@ export function AppHeader({ title }: { title: string }) {
       <h1 className="font-sans text-sm font-medium text-foreground">{title}</h1>
       <div className="ml-auto flex items-center gap-3">
         <LanguageSwitcher />
-        <button
+        {/* <button
           type="button"
           aria-label="Notifications"
           className="relative flex h-9 w-9 items-center justify-center rounded-full bg-card text-foreground transition hover:bg-muted"
         >
           <Bell className="h-4 w-4" />
-        </button>
+        </button> */}
         <UserAvatar name={`${currentUser.firstName} ${currentUser.lastName}`} size={36} />
       </div>
     </header>

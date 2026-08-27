@@ -56,7 +56,7 @@ export function ProviderSidebar() {
     <Sidebar collapsible="icon">
       <SidebarHeader>
         <Link
-          to="/dashboard/provider/overview"
+          to="/"
           className="h-16"
         >
           {/* <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground">

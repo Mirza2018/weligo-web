@@ -6,10 +6,12 @@ import type { RootState } from "../../redux/store";
 import AllImages from "../../assets/AllImages";
 import { useI18n } from "../../lib/i18n";
 import { LangSwitch } from "./LangSwitch";
+import { jwtDecode } from "jwt-decode";
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+const decodedToken = accessToken ? jwtDecode(accessToken) : null;
   const isLogin = !!accessToken;
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -83,40 +85,65 @@ export function Header() {
               </Link>
             </>
           ) : (
-            <button
-              onClick={handleLogout}
-              className="h-10 px-5 font-bold text-primary hover:bg-primary/5 rounded-lg border border-primary/30 transition-colors"
-            >
-              {t("nav.logout")}
-            </button>
+            <>
+              {(decodedToken?.role == "family" ||
+                decodedToken?.role == "provider") && (
+                <Link
+                  to={`/dashboard/${decodedToken?.role}/overview`}
+                  className="inline-flex h-10 items-center justify-center rounded-lg bg-primary px-5 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.02]"
+                >
+                  {t("nav.dashboard")}
+                </Link>
+              )}
+
+              <button
+                onClick={handleLogout}
+                className="h-10 px-5 font-bold text-primary hover:bg-primary/5 rounded-lg border border-primary/30 transition-colors"
+              >
+                {t("nav.logout")}
+              </button>
+            </>
           )}
         </div>
 
         {/* Mobile Menu Button */}
-        <button
-          onClick={toggleMobileMenu}
-          className="xl:hidden p-2 rounded-md hover:bg-accent"
-          aria-label="Toggle menu"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+        <div className="flex items-center gap-3 xl:hidden ">
+          {isLogin &&
+            (decodedToken?.role === "family" ||
+              decodedToken?.role === "provider") && (
+              <Link
+                to={`/dashboard/${decodedToken.role}/overview`}
+                className="inline-flex h-7 items-center justify-center rounded-lg bg-primary px-4 text-xs font-medium text-primary-foreground transition-transform hover:scale-[1.02]"
+              >
+                {t("nav.dashboard")}
+              </Link>
+            )}
+
+          <button
+            onClick={toggleMobileMenu}
+            className="xl:hidden p-2 rounded-md hover:bg-accent"
+            aria-label="Toggle menu"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d={
-                isMobileMenuOpen
-                  ? "M6 18L18 6M6 6h12v12"
-                  : "M4 6h16M4 12h16M4 18h16"
-              }
-            />
-          </svg>
-        </button>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d={
+                  isMobileMenuOpen
+                    ? "M6 18L18 6M6 6h12v12"
+                    : "M4 6h16M4 12h16M4 18h16"
+                }
+              />
+            </svg>
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
@@ -141,6 +168,7 @@ export function Header() {
 
             <div className="pt-4 border-t flex flex-col gap-3">
               <LangSwitch />
+
               {!isLogin ? (
                 <>
                   <Link

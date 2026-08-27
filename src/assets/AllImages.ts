@@ -39,11 +39,13 @@ import w6 from "./Images/work/h6.avif";
 import p1 from "./Images/providers/p1.avif";
 import a1 from "./Images/about/a1.avif";
 import a2 from "./Images/about/a2.avif";
+import popup from "./Images/popup.jpeg";
 
 
 import map from "./Images/providers/map.png";
 
 const AllImages = {
+  popup,
   logo,
   footerLogo,
   tiktok,

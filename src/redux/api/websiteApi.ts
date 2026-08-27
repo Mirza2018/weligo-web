@@ -189,10 +189,11 @@ export const websiteApi = baseApi.injectEndpoints({
     }),
     //
     getAllBookings: build.query({
-      query: () => {
+      query: (params) => {
         return {
           url: `/bookings/my`,
           method: "GET",
+          params,
         };
       },
       providesTags: [tagTypes.bookings],
@@ -361,6 +362,28 @@ export const websiteApi = baseApi.injectEndpoints({
       },
     }),
 
+    ////
+    allFeedback: build.query({
+      query: () => {
+        return {
+          url: `/feedback`,
+          method: "GET",
+        };
+      },
+      providesTags: [tagTypes.feedback],
+    }),
+
+    createFeedback: build.mutation({
+      query: (body) => {
+        return {
+          url: `/feedback/add`,
+          method: "POST",
+          body,
+        };
+      },
+      invalidatesTags: [tagTypes.feedback],
+    }),
+
     ///END
   }),
 });
@@ -409,4 +432,7 @@ export const {
   useDeleteTimeAvailabilityMutation,
   //
   useMyOverviewQuery,
+  ///
+  useAllFeedbackQuery,
+  useCreateFeedbackMutation,
 } = websiteApi;

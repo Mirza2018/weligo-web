@@ -12,7 +12,7 @@ export interface BookingRequestBody {
   whatToExpect: string;
   address: string;
   location: GeoPoint;
-  paymentMethod: "card" | "twint";
+  paymentMethod: "card" | "apple_pay";
   amount: number;
 }
 
@@ -32,7 +32,7 @@ export interface BookingRecord {
   whatToExpect: string;
   address: string;
   location: GeoPoint;
-  paymentMethod: "card" | "twint";
+  paymentMethod: "card" | "apple_pay";
   status: string;
   _id: string;
   bookingReference: string;
@@ -47,7 +47,7 @@ export interface PaymentRecord {
   commissionAmount: number;
   providerEarning: number;
   currency: string;
-  paymentMethod: "card" | "twint";
+  paymentMethod: "card" | "apple_pay";
   paymentStatus: string;
   gatewayReference: string;
   refundedAmount: number;

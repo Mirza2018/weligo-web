@@ -363,6 +363,7 @@ export const dict = {
     login: { de: "Anmelden", en: "Log In" },
     signup: { de: "Registrieren", en: "Sign Up" },
     logout: { de: "abmelden", en: "Log out" },
+    dashboard: { de: "Dashboard", en: "Dashboard" },
   },
   common: {
     joinWaitlist: { de: "Warteliste beitreten", en: "Join the waitlist" },
@@ -688,8 +689,11 @@ export const dict = {
         en: "{name} receives {amount} after platform commission",
       },
       paymentMethod: { de: "Zahlungsmethode", en: "Payment method" },
-      twint: { de: "TWINT", en: "TWINT" },
-      twintSub: { de: "Schweizer Mobile-Zahlung", en: "Swiss mobile payment" },
+      twint: { de: "Apple Pay", en: "Apple Pay" },
+      twintSub: {
+        de: "Digitaler Zahlungsdienst von Apple",
+        en: "Digital wallet service by Apple",
+      },
       card: { de: "Karte", en: "Card" },
       cardSub: { de: "Visa, Mastercard, Amex", en: "Visa, Mastercard, Amex" },
       payOnly: {
@@ -790,12 +794,24 @@ export const dict = {
       forProviders: { de: "Für Anbieter", en: "For Providers" },
       becomeCaregiver: { de: "Betreuer werden", en: "Become a Caregiver" },
       helpCenter: { de: "Hilfezentrum", en: "Help Center" },
-      terms: { de: "AGB", en: "Terms" },
-      privacy: { de: "Datenschutz", en: "Privacy" },
+      terms: {
+        de: "Allgemeine Geschäftsbedingungen (AGB)",
+        en: "Terms & Conditions",
+      },
+      privacy: { de: "Datenschutzerklärung", en: "Privacy Policy" },
       cookies: { de: "Cookies", en: "Cookies" },
+      imprint: { de: "Impressum", en: "Legal Notice" },
+      creator: {
+        de: "Teilnahmebedingungen - Weligo Creator Programm",
+        en: "Weligo Creator Program Terms & Conditions",
+      },
       copyright: {
         de: "© 2026 Weligo. Alle Rechte vorbehalten.",
         en: "© 2026 Weligo. All rights reserved.",
+      },
+      feedback: {
+        de: "Feedback.",
+        en: "Feedback",
       },
     },
     toast: {
@@ -922,10 +938,27 @@ export const dict = {
     forProviders: { de: "Für Dienstleister", en: "For Providers" },
     become: { de: "Betreuer:in werden", en: "Become a Caregiver" },
     help: { de: "Hilfe-Center", en: "Help Center" },
-    terms: { de: "AGB", en: "Terms" },
-    privacy: { de: "Datenschutz", en: "Privacy" },
-    cookies: { de: "Cookies", en: "Cookies" },
+
     rights: { de: "Alle Rechte vorbehalten.", en: "All rights reserved." },
+    terms: {
+      de: "Allgemeine Geschäftsbedingungen (AGB)",
+      en: "Terms & Conditions",
+    },
+    privacy: { de: "Datenschutzerklärung", en: "Privacy Policy" },
+    cookies: { de: "Cookies", en: "Cookies" },
+    imprint: { de: "Impressum", en: "Legal Notice" },
+    creator: {
+      de: "Teilnahmebedingungen - Weligo Creator Programm",
+      en: "Weligo Creator Program Terms & Conditions",
+    },
+    copyright: {
+      de: "© 2026 Weligo. Alle Rechte vorbehalten.",
+      en: "© 2026 Weligo. All rights reserved.",
+    },
+    feedback: {
+      de: "Rückmeldung.",
+      en: "Feedback",
+    },
   },
 
   app: {

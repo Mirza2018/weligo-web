@@ -9,6 +9,7 @@ export const tagTypes = {
   report: "Report",
   chat: "Chat",
   availability: "Availability",
+  feedback: "Feedback",
 };
 
 export const tagTypesList = [
@@ -21,4 +22,6 @@ export const tagTypesList = [
   tagTypes.favorite,
   tagTypes.report,
   tagTypes.chat,
+  tagTypes.availability,
+  tagTypes.feedback,
 ];

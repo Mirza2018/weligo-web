@@ -63,7 +63,7 @@ type Draft = {
   location: "ourHome" | "providerPlace";
   meal: boolean;
   pets: boolean;
-  payment: "twint" | "card";
+  payment: "apple_pay" | "card";
   agree: boolean;
   bookingId: string | null;
 };
@@ -79,7 +79,7 @@ const DEFAULT_DRAFT: Draft = {
   location: "ourHome",
   meal: false,
   pets: false,
-  payment: "twint",
+  payment: "apple_pay",
   agree: false,
   bookingId: null,
 };
@@ -265,6 +265,7 @@ function PurchaseFlow({
         step: 5,
       }));
       setRedirectUrl(res.data.redirectUrl);
+      localStorage.removeItem(`weligo:purchase:${serviceId}:${providerId}`);
       if (typeof window !== "undefined")
         window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err: any) {
@@ -1252,8 +1253,8 @@ function Step4({
         </div>
         <div className="mt-3 grid gap-3 sm:grid-cols-2">
           <PayOption
-            active={draft.payment === "twint"}
-            onClick={() => setDraft((d) => ({ ...d, payment: "twint" }))}
+            active={draft.payment === "apple_pay"}
+            onClick={() => setDraft((d) => ({ ...d, payment: "apple_pay" }))}
             title={t("purchase.s4.twint")}
             sub={t("purchase.s4.twintSub")}
           />

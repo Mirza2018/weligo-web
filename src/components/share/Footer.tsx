@@ -1,9 +1,14 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import AllImages from "../../assets/AllImages";
 import { useI18n } from "../../lib/i18n";
+import { FeedbackModal } from "./FeedbackModal";
+
 
 export function Footer() {
   const { t } = useI18n();
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+
   return (
     <footer className="bg-primary text-primary-foreground">
       <div className="mx-auto max-w-430 px-4 py-16 sm:px-6 lg:px-8">
@@ -14,15 +19,44 @@ export function Footer() {
               {t("footer.tagline")}
             </p>
           </div>
-          <FooterCol
-            title={t("footer.platform")}
-            links={[
-              { label: t("footer.howItWorks"), to: "/how-it-works" },
-              { label: t("footer.aboutUs"), to: "/about-us" },
-              { label: t("footer.trust"), to: "/waitlist" },
-              { label: t("footer.contact"), to: "/waitlist" },
-            ]}
-          />
+          <div>
+            <h4 className="text-sm font-semibold">{t("footer.platform")}</h4>
+            <ul className="mt-4 space-y-3">
+              <li>
+                <Link
+                  to="/how-it-works"
+                  className="text-base transition-colors hover:text-primary-foreground"
+                >
+                  {t("footer.howItWorks")}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/about-us"
+                  className="text-base transition-colors hover:text-primary-foreground"
+                >
+                  {t("footer.aboutUs")}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/waitlist"
+                  className="text-base transition-colors hover:text-primary-foreground"
+                >
+                  {t("footer.trust")}
+                </Link>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => setIsFeedbackOpen(true)}
+                  className="text-base transition-colors hover:text-primary-foreground"
+                >
+                  {t("footer.feedback")}
+                </button>
+              </li>
+            </ul>
+          </div>
           <FooterCol
             title={t("footer.families")}
             links={[
@@ -42,13 +76,14 @@ export function Footer() {
           <FooterCol
             title={t("footer.legal")}
             links={[
-              { label: t("footer.terms"), to: "/waitlist" },
-              { label: t("footer.privacy"), to: "/waitlist" },
-              { label: t("footer.cookies"), to: "/waitlist" },
+              { label: t("footer.terms"), to: "/terms" },
+              { label: t("footer.privacy"), to: "/policy" },
+              { label: t("footer.imprint"), to: "/legal" },
+              { label: t("footer.creator"), to: "/creator-program" },
             ]}
           />
         </div>
-        <div className="mt-12 flex flex-col items-start justify-between gap-4  pt-6 text-xs text-primary-foreground/70 sm:flex-row sm:items-center">
+        <div className="mt-12 flex flex-col items-start justify-between gap-4 pt-6 text-xs text-primary-foreground/70 sm:flex-row sm:items-center">
           <p>© 2026 Weligo. {t("footer.rights")}</p>
           <div className="flex items-center gap-4">
             <img src={AllImages.tiktok} alt="" className="w-5" />
@@ -56,6 +91,11 @@ export function Footer() {
           </div>
         </div>
       </div>
+
+      <FeedbackModal
+        isOpen={isFeedbackOpen}
+        onClose={() => setIsFeedbackOpen(false)}
+      />
     </footer>
   );
 }
@@ -69,7 +109,7 @@ function FooterCol({
 }) {
   return (
     <div>
-      <h4 className=" text-sm font-semibold">{title}</h4>
+      <h4 className="text-sm font-semibold">{title}</h4>
       <ul className="mt-4 space-y-3">
         {links.map((l) => (
           <li key={l.label}>
