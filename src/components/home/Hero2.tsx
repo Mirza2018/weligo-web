@@ -1,39 +1,36 @@
 // src/pages/Home.tsx
-import { useI18n } from "@/lib/i18n";
 import { SearchBar } from "@/components/home/SearchBar";
-import {
-  useSearchProvidersQuery,
-  useGetCategoriesQuery,
-} from "@/redux/api/websiteApi";
-import { Skeleton } from "@/components/ui/skeleton";
+import { useI18n } from "@/lib/i18n";
+// import {
+//   useGetCategoriesQuery,
+//   useSearchProvidersQuery,
+// } from "@/redux/api/websiteApi";
 import { MasonryRail } from "../homePage/MasonryRail";
 
 function Hero2() {
   const { t } = useI18n();
-  const { data: categoryData, isLoading: categoriesLoading } =
-    useGetCategoriesQuery({});
+  // const { data: categoryData, isLoading: categoriesLoading } =
+  //   useGetCategoriesQuery({});
 
   // Featured / masonry rail: show providers from the first active category,
   // once categories have loaded.
-  const firstActiveCategory = categoryData?.data.find(
-    (c) => c.status === "active",
-  );
-  const {
-    data: featuredData,
-    isLoading: featuredLoading,
-    isFetching: featuredFetching,
-  } = useSearchProvidersQuery(
-    {
-      categoryId: firstActiveCategory?._id ?? "",
-      limit: 12,
-      sortBy: "top_rated",
-    },
-    { skip: !firstActiveCategory },
-  );
+  // const firstActiveCategory = categoryData?.data.find(
+  //   (c) => c.status === "active",
+  // );
+  // const {
+  //   data: featuredData,
+  //   isLoading: featuredLoading,
+  //   isFetching: featuredFetching,
+  // } = useSearchProvidersQuery(
+  //   {
+  //     categoryId: firstActiveCategory?._id ?? "",
+  //     limit: 12,
+  //     sortBy: "top_rated",
+  //   },
+  //   { skip: !firstActiveCategory },
+  // );
 
-  const isMasonryLoading =
-    categoriesLoading || featuredLoading || featuredFetching;
-  const featuredProviders = featuredData?.data ?? [];
+
 
   return (
     <section className="bg-background">

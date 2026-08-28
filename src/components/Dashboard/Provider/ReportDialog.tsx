@@ -25,14 +25,12 @@ const REASON_KEYS = [
   "other",
 ] as const;
 
-type ReasonKey = (typeof REASON_KEYS)[number];
+
 
 const makeSchema = (requiredMsg: string, detailsRequiredMsg: string) =>
   z
     .object({
-      reason: z.enum(REASON_KEYS as unknown as [string, ...string[]], {
-        required_error: requiredMsg,
-      }),
+      reason: z.enum(REASON_KEYS, { error: requiredMsg }),
       details: z.string().optional(),
     })
     .refine(
@@ -45,7 +43,9 @@ const makeSchema = (requiredMsg: string, detailsRequiredMsg: string) =>
       },
     );
 
-type FormValues = { reason: ReasonKey | ""; details: string };
+  
+
+type FormValues = z.infer<ReturnType<typeof makeSchema>>;
 
 export function ReportIssueDialog({
   open,
@@ -73,7 +73,7 @@ export function ReportIssueDialog({
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: { reason: "", details: "" },
+    defaultValues: { reason: undefined, details: "" },
   });
 
   const selectedReason = watch("reason");

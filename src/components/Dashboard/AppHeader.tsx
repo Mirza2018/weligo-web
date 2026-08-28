@@ -1,9 +1,8 @@
-import { Bell } from "lucide-react";
-import { SidebarTrigger } from "../ui/sidebar";
-import { Separator } from "../ui/separator";
-import { LanguageSwitcher } from "./LanguageSwitcher";
-import { UserAvatar } from "../common/UserAvatar";
 import { currentUser } from "../../assets/data/user";
+import { UserAvatar } from "../common/UserAvatar";
+import { Separator } from "../ui/separator";
+import { SidebarTrigger } from "../ui/sidebar";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 export function AppHeader({ title }: { title: string }) {
   return (

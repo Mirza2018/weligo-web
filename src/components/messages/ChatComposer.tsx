@@ -20,8 +20,7 @@ export const ChatComposer = ({
   const [pendingImages, setPendingImages] = useState<string[]>([]);
   const [uploadFile, { isLoading: isUploading }] = useUploadFileMutation();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const typingTimeout = useRef<ReturnType<typeof setTimeout>>();
-
+const typingTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const handleTextChange = (e: ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
     onTyping();

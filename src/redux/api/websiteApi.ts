@@ -1,11 +1,7 @@
 import { tagTypes } from "../tagTypes";
 import { baseApi } from "./baseApi";
 
-interface Filter {
-  page?: number;
-  limit?: number;
-  search?: string;
-}
+
 interface Response {
   data: any | void;
 }

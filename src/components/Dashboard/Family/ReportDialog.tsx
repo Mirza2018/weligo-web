@@ -1,7 +1,11 @@
-import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { Flag } from "lucide-react";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
+import { useI18n } from "../../../lib/i18n";
+import { cn } from "../../../lib/utils";
+import { Button } from "../../ui/button";
 import {
   Dialog,
   DialogContent,
@@ -10,10 +14,6 @@ import {
   DialogTitle,
 } from "../../ui/dialog";
 import { Textarea } from "../../ui/textarea";
-import { Button } from "../../ui/button";
-import { useI18n } from "../../../lib/i18n";
-import { cn } from "../../../lib/utils";
-import { Flag } from "lucide-react";
 
 const REASON_KEYS = [
   "noShow",
@@ -24,18 +24,14 @@ const REASON_KEYS = [
   "other",
 ] as const;
 
-type ReasonKey = (typeof REASON_KEYS)[number];
+
 
 const makeSchema = (requiredMsg: string) =>
   z.object({
-    reason: z.enum(REASON_KEYS as unknown as [string, ...string[]], {
-      required_error: requiredMsg,
-    }),
+    reason: z.enum(REASON_KEYS, { error: requiredMsg }),
     details: z.string().optional(),
   });
-
-type FormValues = { reason: ReasonKey | ""; details: string };
-
+type FormValues = z.infer<ReturnType<typeof makeSchema>>;
 export function ReportIssueDialog({
   open,
   onOpenChange,
@@ -48,29 +44,34 @@ export function ReportIssueDialog({
   const { t } = useI18n();
   const schema = makeSchema(t("reportIssue.reasonRequired"));
 
-  const {
-    control,
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<FormValues>({
-    resolver: zodResolver(schema),
-    defaultValues: { reason: "", details: "" },
-  });
+const {
+  control,
+  register,
+  handleSubmit,
+  reset,
+  formState: { errors, isSubmitting },
+} = useForm<FormValues>({
+  resolver: zodResolver(schema),
+  defaultValues: { reason: undefined, details: "" },
+});
 
-  const onSubmit = async (values: FormValues) => {
-    try {
-      await new Promise((r) => setTimeout(r, 400));
-      // TODO: replace with real submit call, e.g.
-      // await api.reportBooking({ bookingId, reason: values.reason, details: values.details });
-      toast.success(t("reportIssue.submit"));
-      reset();
-      onOpenChange(false);
-    } catch {
-      toast.error(t("reportIssue.reasonRequired"));
-    }
-  };
+const onSubmit = async (values: FormValues) => {
+  try {
+    await new Promise((r) => setTimeout(r, 400));
+    // TODO: replace with real submit call
+    // await api.reportBooking({ bookingId, reason: values.reason, details: values.details });
+    console.log("Report submitted", {
+      bookingId,
+      reason: values.reason,
+      details: values.details,
+    });
+    toast.success(t("reportIssue.submit"));
+    reset();
+    onOpenChange(false);
+  } catch {
+    toast.error(t("reportIssue.reasonRequired"));
+  }
+};
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

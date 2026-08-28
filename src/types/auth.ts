@@ -2,7 +2,13 @@
 import type { GeoPoint } from "./website";
 
 export type UserRole = "family" | "provider" | "admin";
-
+export interface ProviderPreferencesPayload {
+  nonSmoker: boolean;
+  driverLicense: boolean;
+  ownVehicle: boolean;
+  comfortableWithPets: boolean;
+  hasChildren: boolean;
+}
 export interface AppUser {
   _id: string;
   firstName: string;

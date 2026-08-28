@@ -8,7 +8,7 @@ import { getImageUrl } from "@/redux/getBaseUrl";
 export function resolveImageUrl(path?: string | null): string | undefined {
   if (!path) return undefined;
   if (path.startsWith("http://") || path.startsWith("https://")) return path;
-  return `${getImageUrl()}${path}`;
+  return `${getImageUrl(path)}`;
 }
 
 /** "2026-08-29T00:00:00.000Z" -> "Sat, 29 Aug" */

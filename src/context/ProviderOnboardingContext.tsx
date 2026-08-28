@@ -1,7 +1,7 @@
 
 // src/context/ProviderOnboardingContext.tsx
-import { createContext, useContext, useMemo, useState } from "react";
 import type { ProviderPreferencesPayload } from "@/types/auth";
+import { createContext, useContext, useMemo, useState } from "react";
 
 export interface OnboardingCertificate {
   id: string;

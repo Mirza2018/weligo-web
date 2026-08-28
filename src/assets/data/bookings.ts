@@ -80,14 +80,14 @@ function make(
 }
 
 export const bookings: Booking[] = [
-  make(1, "awaitingConfirmation"),
-  make(2, "awaitingConfirmation"),
-  make(3, "upcoming"),
-  make(4, "upcoming"),
-  make(5, "inProgress"),
-  make(6, "inProgress"),
-  make(7, "inProgress"),
-  make(8, "inProgress"),
+  make(1, "provider_completed"),
+  make(2, "provider_completed"),
+  make(3, "confirmed"),
+  make(4, "confirmed"),
+  make(5, "in_progress"),
+  make(6, "in_progress"),
+  make(7, "in_progress"),
+  make(8, "in_progress"),
   make(9, "completed", {
     reviews: [
       {
@@ -105,8 +105,8 @@ export const bookings: Booking[] = [
   }),
   make(10, "completed"),
   make(11, "completed"),
-  make(12, "requested"),
-  make(13, "requested"),
+  make(12, "pending"),
+  make(13, "pending"),
   make(14, "cancelled"),
   make(15, "cancelled"),
 ];

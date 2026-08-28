@@ -79,7 +79,7 @@ export function DateTimeField({
           selected={date ?? undefined}
           onSelect={(d) => onChange(d ?? null, time)}
           disabled={{ before: new Date(new Date().setHours(0, 0, 0, 0)) }}
-          initialFocus
+          
         />
         <div className="mt-3 flex items-center justify-between gap-2 border-t border-border pt-3">
           <label className="text-sm font-medium text-muted-foreground">

@@ -2,6 +2,7 @@ import { useEffect, useCallback, useState } from "react";
 import { useSocket } from "./useSocket";
 
 export interface IncomingMessage {
+  messageId?: string;
   success: boolean;
   chatId: string;
   sender: {

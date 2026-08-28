@@ -6,12 +6,15 @@ import type { RootState } from "../../redux/store";
 import AllImages from "../../assets/AllImages";
 import { useI18n } from "../../lib/i18n";
 import { LangSwitch } from "./LangSwitch";
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode, type JwtPayload } from "jwt-decode";
 
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  interface AppJwtPayload extends JwtPayload {
+    role: "family" | "provider";
+  }
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
-const decodedToken = accessToken ? jwtDecode(accessToken) : null;
+const decodedToken = accessToken ? jwtDecode<AppJwtPayload>(accessToken) : null;
   const isLogin = !!accessToken;
   const navigate = useNavigate();
   const dispatch = useDispatch();

@@ -20,7 +20,7 @@ const EMPTY_STATE: HomeSearchState = {
 
 export function SearchBar() {
   const router = useNavigate();
-  const { t, locale } = useI18n();
+  const { t, lang } = useI18n();
   const [state, setState] = useState<HomeSearchState>(EMPTY_STATE);
   const [showCategoryError, setShowCategoryError] = useState(false);
 
@@ -105,7 +105,7 @@ export function SearchBar() {
         date={state.date}
         time={state.time}
         onChange={handleDateTimeChange}
-        locale={locale === "de" ? "de-DE" : "en-US"}
+        locale={lang === "de" ? "de-DE" : "en-US"}
       />
 
       <div className="shrink-0 px-1">

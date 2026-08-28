@@ -97,7 +97,7 @@ function BookingRow({ b }: { b: ProviderBooking }) {
 
 export function YourBookings() {
   const { t } = useI18n();
-  const { data, isLoading } = useGetAllBookingsQuery();
+  const { data, isLoading } = useGetAllBookingsQuery({});
   const bookings: ProviderBooking[] = data?.data ?? [];
 
   const byTab: Record<Tab, ProviderBooking[]> = {

@@ -24,7 +24,7 @@ import { ProvidersBookingDetailsPage } from "../pages/DashboardPage/Provider/Pro
 
 import CreatorProgram from "@/components/legal/CreatorProgram";
 import Legal from "@/components/legal/Legal";
-import Privacy from "@/components/legal/privacy";
+import Privacy from "@/components/legal/Privacy";
 import Terms from "@/components/legal/Terms";
 import MessagePage from "@/components/messages/MessagePage";
 import { AboutYou } from "@/pages/auth/about-you";

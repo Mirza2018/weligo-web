@@ -1,18 +1,18 @@
 import {
-  LineChart,
+  CartesianGrid,
   Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
 } from "recharts";
 
-import { useI18n } from "../../../lib/i18n";
-import { SectionCard } from "../../common/SectionCard";
-import { formatCHF } from "../../../lib/format";
-import type { EarningOverview as EarningOverviewData } from "../../../types/provider-overview";
 import { Link } from "react-router-dom";
+import { formatCHF } from "../../../lib/format";
+import { useI18n } from "../../../lib/i18n";
+import type { EarningOverview as EarningOverviewData } from "../../../types/provider-overview";
+import { SectionCard } from "../../common/SectionCard";
 
 // Only show every other month label on the x-axis, matching the mock
 // (Jan, Mar, May, Jul, Sep, Nov).
@@ -81,7 +81,12 @@ export function EarningsOverview({
                 tick={{ fontSize: 11, fill: "var(--muted-foreground)" }}
               />
               <Tooltip
-                formatter={(value: number) => formatCHF(value)}
+                formatter={(value) => {
+                  const num = Array.isArray(value)
+                    ? Number(value[0])
+                    : Number(value);
+                  return formatCHF(num);
+                }}
                 labelFormatter={(label) => label}
               />
               <Line

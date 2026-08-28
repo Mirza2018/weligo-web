@@ -64,7 +64,7 @@ export function AboutYou() {
   };
 
   const handleToggle = (key: ToggleKey, value: boolean) => {
-    setPreferences((prev) => ({ ...prev, [key]: value }));
+    setPreferences((prev:any) => ({ ...prev, [key]: value }));
   };
 
   const handleBack = () => navigate(-1);
@@ -82,10 +82,7 @@ export function AboutYou() {
   };
 
   return (
-    <AuthLayout
-      title={<>{t("auth.aboutA")}</>}
-      description={t("auth.aboutDesc")}
-    >
+    <AuthLayout title={t("auth.aboutA")} description={t("auth.aboutDesc")}>
       <div className="space-y-5">
         <input
           ref={fileInputRef}

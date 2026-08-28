@@ -86,7 +86,7 @@ export function CategoryField({
         )}
 
         <ul className="max-h-72 overflow-y-auto">
-          {categories.map((category) => {
+          {categories.map((category:any) => {
             const disabled = category.status !== "active";
             return (
               <li key={category._id}>

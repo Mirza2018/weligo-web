@@ -6,9 +6,7 @@ import { baseApi } from "./baseApi";
 //   limit?: number;
 //   search?: string;
 // }
-interface Response {
-  data: any | void;
-}
+
 
 export const messageApi = baseApi.injectEndpoints({
   endpoints: (build) => ({

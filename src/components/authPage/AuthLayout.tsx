@@ -1,9 +1,8 @@
 import type { ReactNode } from "react";
 
-import authSide from "../../assets/auth.mp4";
+import AllImages from "@/assets/AllImages";
 import { Link } from "react-router-dom";
 import { Logo } from "./Logo";
-import AllImages from "@/assets/AllImages";
 
 /**
  * Two-column auth layout. The right column is a soft "video-like" looping
@@ -16,12 +15,11 @@ export function AuthLayout({
   children,
 }: {
   title: string;
-  italic: string;
-  description: string;
+  italic?: string;
+  description?: string;
   children: ReactNode;
-  }) {
-  
-  const date=new Date();
+}) {
+  const date = new Date();
   return (
     <div className="grid min-h-screen grid-cols-1 bg-background lg:grid-cols-2">
       <div className="flex flex-col px-6 py-10 sm:px-12 lg:px-20 w-full">
@@ -39,7 +37,7 @@ export function AuthLayout({
           </p>
           <div className="mt-8 max-w-md">{children}</div>
         </div>
-        <p className=" text-primary">© Weligo { date.getFullYear()}</p>
+        <p className=" text-primary">© Weligo {date.getFullYear()}</p>
       </div>
       <div className="relative hidden overflow-hidden lg:block">
         {/* <video
