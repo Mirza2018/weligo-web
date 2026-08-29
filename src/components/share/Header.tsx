@@ -81,7 +81,7 @@ const decodedToken = accessToken ? jwtDecode<AppJwtPayload>(accessToken) : null;
                 {t("nav.login")}
               </Link>
               <Link
-                to="/sign-up"
+                to="/choose-account"
                 className="inline-flex h-10 items-center justify-center rounded-lg bg-primary px-5 text-sm font-medium text-primary-foreground transition-transform hover:scale-[1.02]"
               >
                 {t("nav.signup")}
@@ -182,7 +182,7 @@ const decodedToken = accessToken ? jwtDecode<AppJwtPayload>(accessToken) : null;
                     {t("nav.login")}
                   </Link>
                   <Link
-                    to="/sign-up"
+                    to="/choose-account"
                     onClick={closeMobileMenu}
                     className="h-12 flex items-center justify-center rounded-lg bg-primary text-primary-foreground font-medium"
                   >

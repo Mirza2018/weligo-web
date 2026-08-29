@@ -34,14 +34,14 @@ import Providers from "./redux/lib/Providers";
 import { I18nProvider } from "./lib/i18n";
 import { TooltipProvider } from "./components/ui/tooltip";
 import { GoogleMapsProvider } from "./lib/googleMaps";
-import { SocketProvider } from "./socket/SocketProvider";
+// import { SocketProvider } from "./socket/SocketProvider";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Providers>
       {/* <SocketProvider>
         <CallProvider> */}
-      <SocketProvider>
+      {/* <SocketProvider> */}
         <TooltipProvider>
           <Toaster richColors position="top-center" />
           <I18nProvider>
@@ -51,7 +51,7 @@ createRoot(document.getElementById("root")!).render(
             </GoogleMapsProvider>
           </I18nProvider>
         </TooltipProvider>
-      </SocketProvider>
+      {/* </SocketProvider> */}
       {/* </CallProvider>
       </SocketProvider> */}
     </Providers>

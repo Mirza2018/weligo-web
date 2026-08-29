@@ -53,6 +53,7 @@ import { MessagePage } from "@/pages/DashboardPage/message_page/MessagePage";
 
 import { ProtectedRoute } from "./ProtectedRoute";
 import { ProviderOnboardingProvider } from "@/context/ProviderOnboardingContext";
+import { SocketProvider } from "@/socket/SocketProvider";
 
 const router = createBrowserRouter([
   {
@@ -126,7 +127,11 @@ const router = createBrowserRouter([
   },
   {
     // Everything under /dashboard/family requires role === "family"
-    element: <ProtectedRoute allowedRoles={["family"]} />,
+    element: (
+      <SocketProvider>
+        <ProtectedRoute allowedRoles={["family"]} />
+      </SocketProvider>
+    ),
     children: [
       {
         path: "/dashboard/family",
@@ -174,7 +179,11 @@ const router = createBrowserRouter([
   },
   {
     // Everything under /dashboard/provider requires role === "provider"
-    element: <ProtectedRoute allowedRoles={["provider"]} />,
+    element: (
+      <SocketProvider>
+        <ProtectedRoute allowedRoles={["provider"]} />{" "}
+      </SocketProvider>
+    ),
     children: [
       {
         path: "/dashboard/provider",

@@ -54,6 +54,7 @@ export function MoreInfoProvider() {
       toast.error(t("auth.phoneRequired") ?? "Please enter your phone number.");
       return;
     }
+
     if (!state.categoryId) {
       toast.error("Please go back and select the service you provide.");
       navigate("/service-selection");
@@ -61,33 +62,46 @@ export function MoreInfoProvider() {
     }
 
     const toastId = toast.loading("Please wait...");
-    try {
-      const res = await updateProfile({
-        image: state.avatarFile,
-        certificateFiles: state.certificates.map((c) => c.file),
-        data: {
-          phone,
-          referralSource: referral,
-          dateOfBirth: state.dob || undefined,
-          categoryId: state.categoryId,
-          hourlyRate: state.hourlyRate,
-          experience: state.experience,
-          lenguages: state.languages,
-          shortBioTitle,
-          shortBio,
-          longBioTitle,
-          longBio,
-          preferences: state.preferences,
-          certificates: state.certificates.map((c) => ({
-            type: c.type,
-            description: c.description,
-          })),
-        },
-      }).unwrap();
 
-      // The token itself was already set (via setAccessToken) right after
-      // OTP verification - the only thing this step adds is the real user
-      // record, once the provider profile has actually been saved.
+    try {
+      const formData = new FormData();
+
+      // Avatar image
+      if (state.avatarFile) {
+        formData.append("image", state.avatarFile);
+      }
+
+      // Certificate files
+      state.certificates.forEach((certificate) => {
+        if (certificate.file) {
+          formData.append("certificateFiles", certificate.file);
+        }
+      });
+
+      // All other data goes inside "data"
+      const data = {
+        phone,
+        referralSource: referral,
+        dateOfBirth: state.dob || undefined,
+        categoryId: state.categoryId,
+        hourlyRate: state.hourlyRate,
+        experience: state.experience,
+        lenguages: state.languages,
+        shortBioTitle,
+        shortBio,
+        longBioTitle,
+        longBio,
+        preferences: state.preferences,
+        certificates: state.certificates.map((c) => ({
+          type: c.type,
+          description: c.description,
+        })),
+      };
+
+      formData.append("data", JSON.stringify(data));
+
+      const res = await updateProfile(formData).unwrap();
+
       dispatch(setUserInfo(res.data));
       reset();
 
@@ -95,6 +109,7 @@ export function MoreInfoProvider() {
         id: toastId,
         duration: 2000,
       });
+
       navigate("/welcome-weligo-provider");
     } catch (error: any) {
       toast.error(error?.data?.message || "Something went wrong", {
@@ -103,7 +118,6 @@ export function MoreInfoProvider() {
       });
     }
   };
-
   return (
     <AuthLayout title={t("auth.moreInfoA")} italic={t("auth.moreInfoB")}>
       <div className="space-y-5">
