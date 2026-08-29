@@ -1283,12 +1283,12 @@ function Step4({
         />
         <span>
           {t("purchase.s4.iAgree")}{" "}
-          <a className="text-primary underline" href="#">
-            {t("purchase.s4.terms")}
+          <a className="text-primary underline" href="/terms">
+            {t("footer.terms")}
           </a>{" "}
           {t("purchase.s4.and")}{" "}
-          <a className="text-primary underline" href="#">
-            {t("purchase.s4.cancellation")}
+          <a className="text-primary underline" href="/policy">
+            {t("footer.privacy")}
           </a>
         </span>
       </label>

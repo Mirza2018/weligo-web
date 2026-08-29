@@ -63,10 +63,9 @@ export const authApi = baseApi.injectEndpoints({
     }),
 
     userProfile: build.query<Response, any>({
-      query: (params) => ({
+      query: () => ({
         url: `/users/my-profile`,
         method: "GET",
-        params,
       }),
       providesTags: [tagTypes.user],
     }),

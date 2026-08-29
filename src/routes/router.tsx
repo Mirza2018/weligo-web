@@ -1,3 +1,4 @@
+// src/routes/router.tsx
 import { createBrowserRouter, Navigate } from "react-router-dom";
 
 import { ChooseRole } from "@/pages/auth/choose-account";
@@ -26,7 +27,7 @@ import CreatorProgram from "@/components/legal/CreatorProgram";
 import Legal from "@/components/legal/Legal";
 import Privacy from "@/components/legal/Privacy";
 import Terms from "@/components/legal/Terms";
-import MessagePage from "@/components/messages/MessagePage";
+
 import { AboutYou } from "@/pages/auth/about-you";
 import { AddCertificates } from "@/pages/auth/add-certificates";
 import { MoreInfo } from "@/pages/auth/more-info";
@@ -48,6 +49,9 @@ import { PurchasePage } from "../pages/PurchasePage";
 import { Services } from "../pages/Services";
 import ProvidersDetails from "../pages/Services/ProvidersDetails";
 import ServiceProvider from "../pages/Services/ServiceProvider";
+import { MessagePage } from "@/pages/DashboardPage/message_page/MessagePage";
+
+import { ProtectedRoute } from "./ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -71,8 +75,15 @@ const router = createBrowserRouter([
         element: <ProvidersDetails />,
       },
       {
-        path: "services/:serviceId/providers/:providerId/purchase",
-        element: <PurchasePage />,
+        // Family-only purchase flow — providers or logged-out visitors
+        // get redirected before PurchasePage ever renders.
+        element: <ProtectedRoute allowedRoles={["family"]} />,
+        children: [
+          {
+            path: "services/:serviceId/providers/:providerId/purchase",
+            element: <PurchasePage />,
+          },
+        ],
       },
       {
         path: "for-families",
@@ -84,7 +95,6 @@ const router = createBrowserRouter([
       },
       {
         path: "how-it-works",
-        // element: <HowItWorksPage />,
         element: <HowItWorksPage2 />,
       },
       {
@@ -114,91 +124,102 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/dashboard/family",
-    element: <DashboardLayout />,
+    // Everything under /dashboard/family requires role === "family"
+    element: <ProtectedRoute allowedRoles={["family"]} />,
     children: [
       {
-        path: "overview",
-        element: <OverviewPage />,
-      },
-      {
-        path: "bookings",
-        element: <BookingsPage />,
-      },
-      {
-        path: "bookings/:id",
-        element: <BookingDetailsPage />,
-      },
-      {
-        path: "favorites",
-        element: <FavoritesPage />,
-      },
-      {
-        path: "help",
-        element: <HelpAndSupportPage />,
-      },
-      {
-        path: "message",
-        element: <MessagePage />,
-      },
-      {
-        path: "reviews",
-        element: <ReviewsPage />,
-      },
-      {
-        path: "settings",
-        element: <ProfileSettingsPage />,
-      },
-      {
-        path: "transactions",
-        element: <TransactionsPage />,
+        path: "/dashboard/family",
+        element: <DashboardLayout />,
+        children: [
+          {
+            path: "overview",
+            element: <OverviewPage />,
+          },
+          {
+            path: "bookings",
+            element: <BookingsPage />,
+          },
+          {
+            path: "bookings/:id",
+            element: <BookingDetailsPage />,
+          },
+          {
+            path: "favorites",
+            element: <FavoritesPage />,
+          },
+          {
+            path: "help",
+            element: <HelpAndSupportPage />,
+          },
+          {
+            path: "message",
+            element: <MessagePage />,
+          },
+          {
+            path: "reviews",
+            element: <ReviewsPage />,
+          },
+          {
+            path: "settings",
+            element: <ProfileSettingsPage />,
+          },
+          {
+            path: "transactions",
+            element: <TransactionsPage />,
+          },
+        ],
       },
     ],
   },
   {
-    path: "/dashboard/provider",
-    element: <ProviderDashboardLayout />,
+    // Everything under /dashboard/provider requires role === "provider"
+    element: <ProtectedRoute allowedRoles={["provider"]} />,
     children: [
       {
-        path: "overview",
-        element: <ProviderOverviewPage />,
-      },
-      {
-        path: "bookings",
-        element: <ProviderBookings />,
-        // element: <BookingsPage />,
-      },
-      {
-        path: "bookings/:id",
-        element: <ProvidersBookingDetailsPage />,
-      },
-      {
-        path: "calendar",
-        element: <ProviderCalendarPage />,
-      },
-      {
-        path: "availability",
-        element: <Availability />,
-      },
-      {
-        path: "earnings",
-        element: <ProviderEarningsPage />,
-      },
-      {
-        path: "help",
-        element: <HelpAndSupportPage />,
-      },
-      {
-        path: "message",
-        element: <MessagePage />,
-      },
-      {
-        path: "reviews",
-        element: <ProviderReviewsPage />,
-      },
-      {
-        path: "settings",
-        element: <ProfileSettingsPageProvider />,
+        path: "/dashboard/provider",
+        element: <ProviderDashboardLayout />,
+        children: [
+          {
+            path: "overview",
+            element: <ProviderOverviewPage />,
+          },
+          {
+            path: "bookings",
+            element: <ProviderBookings />,
+          },
+          {
+            path: "bookings/:id",
+            element: <ProvidersBookingDetailsPage />,
+          },
+          {
+            path: "calendar",
+            element: <ProviderCalendarPage />,
+          },
+          {
+            path: "availability",
+            element: <Availability />,
+          },
+          {
+            path: "earnings",
+            element: <ProviderEarningsPage />,
+          },
+          {
+            path: "help",
+            element: <HelpAndSupportPage />,
+          },
+          {
+            path: "message",
+            element: <MessagePage />,
+          },
+          {
+            path: "reviews",
+            element: <ProviderReviewsPage />,
+          },
+          {
+            path: "settings",
+            element: <ProfileSettingsPageProvider />,
+          },
+        ],
       },
     ],
   },
@@ -219,7 +240,6 @@ const router = createBrowserRouter([
     path: "/sign-up-family",
     element: <SignUp />,
   },
-
   {
     path: "/verify-family",
     element: <SubmitCode />,
@@ -232,8 +252,6 @@ const router = createBrowserRouter([
     path: "/welcome-weligo",
     element: <WelcomeToWeligo />,
   },
-
-  //
   {
     path: "/sign-up-provider",
     element: <SignUpProvider />,

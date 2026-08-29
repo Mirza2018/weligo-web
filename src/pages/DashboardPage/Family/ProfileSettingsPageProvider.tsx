@@ -12,6 +12,7 @@ import {
   TabsContent,
 } from "../../../components/ui/tabs";
 import { UserAvatar } from "../../../components/common/UserAvatar";
+import { AddressAutocompleteField } from "../../../components/auth/AddressAutocompleteField";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -26,6 +27,7 @@ import { setUserInfo } from "@/redux/slices/authSlice";
 
 import type { RootState } from "@/redux/store";
 import { getImageUrl } from "@/redux/getBaseUrl";
+import type { GeoPoint } from "@/types/website";
 
 const LANGUAGES = ["Deutsch", "English", "Français", "Italiano"];
 
@@ -91,10 +93,18 @@ function ProfileForm() {
   const [experience, setExperience] = useState(1);
   const [languages, setLanguages] = useState<Set<string>>(new Set());
 
+  // Google's autocomplete drives this - it's what actually gets sent as
+  // `location` in the update payload. Seeded from the user's existing
+  // location so saving other fields without touching the address doesn't
+  // wipe it out.
+  const [location, setLocation] = useState<GeoPoint | null>(null);
+  const [addressValue, setAddressValue] = useState("");
+
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<ProfileValues>({
     resolver: zodResolver(profileSchema),
@@ -120,6 +130,8 @@ function ProfileForm() {
       postalCode: user.postalCode ?? "",
       address: user.address ?? "",
     });
+    setAddressValue(user.address ?? "");
+    setLocation(user.location ?? null);
     setCategoryId(user.categoryId ?? null);
     setHourlyRate(user.hourlyRate ?? 30);
     setExperience(user.experience ?? 1);
@@ -148,12 +160,26 @@ function ProfileForm() {
   }
 
   const onSubmit = async (values: ProfileValues) => {
+    if (!location) {
+      toast.error(
+        "Please pick your address from the suggestions so we can save your location.",
+      );
+      return;
+    }
+
     const formData = new FormData();
     if (avatarFile) formData.append("image", avatarFile);
     formData.append(
       "data",
       JSON.stringify({
+        firstName: values.firstName,
+        lastName: values.lastName,
+        fullName: `${values.firstName} ${values.lastName}`.trim(),
         phone: values.phone,
+        city: values.city,
+        postalCode: values.postalCode,
+        address: values.address,
+        location,
         categoryId: categoryId ?? undefined,
         hourlyRate,
         experience,
@@ -208,10 +234,10 @@ function ProfileForm() {
         label="First Name"
         error={errors.firstName?.message}
       >
-        <Input id="firstName" disabled {...register("firstName")} />
+        <Input id="firstName" {...register("firstName")} />
       </Field>
       <Field id="lastName" label="Last Name" error={errors.lastName?.message}>
-        <Input id="lastName" disabled {...register("lastName")} />
+        <Input id="lastName" {...register("lastName")} />
       </Field>
       <Field id="email" label="Email" error={errors.email?.message}>
         <Input id="email" type="email" disabled {...register("email")} />
@@ -219,18 +245,58 @@ function ProfileForm() {
       <Field id="phone" label="Phone Number" error={errors.phone?.message}>
         <Input id="phone" {...register("phone")} />
       </Field>
+
+      <Field
+        id="address"
+        label="Address"
+        error={errors.address?.message}
+        hint="Start typing and pick your address from the list - it fills in city, postal code, and your saved location."
+      >
+        <AddressAutocompleteField
+          value={addressValue}
+          placeholder="Start typing your address..."
+          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs outline-none focus:border-primary"
+          onChange={(v) => {
+            setAddressValue(v);
+            setValue("address", v, { shouldValidate: true, shouldDirty: true });
+          }}
+          onPlaceSelected={(place) => {
+            setAddressValue(place.formattedAddress);
+            setValue("address", place.formattedAddress, {
+              shouldValidate: true,
+              shouldDirty: true,
+            });
+            setLocation({ type: "Point", coordinates: [place.lng, place.lat] });
+
+            // Google doesn't always return these (rural addresses, some
+            // countries, etc). When it does, auto-fill; when it doesn't,
+            // leave whatever's already there so "Required" validation
+            // forces manual entry before saving.
+            if (place.city) {
+              setValue("city", place.city, {
+                shouldValidate: true,
+                shouldDirty: true,
+              });
+            }
+            if (place.postalCode) {
+              setValue("postalCode", place.postalCode, {
+                shouldValidate: true,
+                shouldDirty: true,
+              });
+            }
+          }}
+        />
+      </Field>
+
       <Field id="city" label="City" error={errors.city?.message}>
-        <Input id="city" disabled {...register("city")} />
+        <Input id="city" {...register("city")} />
       </Field>
       <Field
         id="postalCode"
         label="Postal Code"
         error={errors.postalCode?.message}
       >
-        <Input id="postalCode" disabled {...register("postalCode")} />
-      </Field>
-      <Field id="address" label="Address" error={errors.address?.message}>
-        <Input id="address" disabled {...register("address")} />
+        <Input id="postalCode" {...register("postalCode")} />
       </Field>
 
       <div className="space-y-1.5">
@@ -403,11 +469,13 @@ function PasswordForm() {
 function Field({
   id,
   label,
+  hint,
   error,
   children,
 }: {
   id: string;
   label: string;
+  hint?: string;
   error?: string;
   children: React.ReactNode;
 }) {
@@ -415,6 +483,9 @@ function Field({
     <div className="space-y-1.5">
       <Label htmlFor={id}>{label}</Label>
       {children}
+      {hint && !error && (
+        <p className="text-xs text-muted-foreground">{hint}</p>
+      )}
       {error && <p className="text-sm text-destructive">{error}</p>}
     </div>
   );

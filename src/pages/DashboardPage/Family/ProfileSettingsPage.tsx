@@ -179,9 +179,7 @@ function ProfileForm() {
     (user?.profileImage
       ? (getImageUrl(user.profileImage) ?? undefined)
       : undefined);
-  console.log("====================================");
-  console.log(avatarSrc);
-  console.log("====================================");
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-5">
       <div className="relative w-fit">

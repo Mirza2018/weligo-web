@@ -1,10 +1,27 @@
+import { getImageUrl } from "@/redux/getBaseUrl";
 import { currentUser } from "../../assets/data/user";
 import { UserAvatar } from "../common/UserAvatar";
 import { Separator } from "../ui/separator";
 import { SidebarTrigger } from "../ui/sidebar";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/redux/store";
+import { SidebarAvater } from "./SidebarAvater";
 
 export function AppHeader({ title }: { title: string }) {
+  const userInfo = useSelector((state: RootState) => state.auth.userInfo);
+
+  const fullName =
+    userInfo?.fullName ||
+    `${userInfo?.firstName ?? ""} ${userInfo?.lastName ?? ""}`.trim() ||
+    "User";
+
+  // console.log(userInfo);
+
+  const avatarSrc =
+    userInfo?.profileImage && userInfo.profileImage.trim() !== ""
+      ? getImageUrl(userInfo.profileImage)
+      : undefined;
   return (
     <header className="sticky top-0 z-10 flex h-16 items-center gap-3 border-b border-border bg-background/80 px-4 backdrop-blur md:px-6">
       <SidebarTrigger />
@@ -19,7 +36,7 @@ export function AppHeader({ title }: { title: string }) {
         >
           <Bell className="h-4 w-4" />
         </button> */}
-        <UserAvatar name={`${currentUser.firstName} ${currentUser.lastName}`} size={36} />
+        <SidebarAvater name={fullName} src={avatarSrc} size={36} />
       </div>
     </header>
   );

@@ -1,33 +1,24 @@
+// src/components/messaging/MessageBubble.tsx
 import { getImageUrl } from "@/redux/getBaseUrl";
+import { cn } from "@/lib/utils";
+import type { Message } from "@/types/messaging";
 
-export interface ChatMessage {
-  id: string;
-  text: string;
-  images: string[];
-  senderId?: string;
-  senderName?: string;
-  createdAt: string;
-}
-
-interface MessageBubbleProps {
-  message: ChatMessage;
+export function MessageBubble({
+  message,
+  isMine,
+}: {
+  message: Message;
   isMine: boolean;
-}
-
-export const MessageBubble = ({ message, isMine }: MessageBubbleProps) => {
-  const time = new Date(message.createdAt).toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-
+}) {
   return (
-    <div className={`flex ${isMine ? "justify-end" : "justify-start"}`}>
+    <div className={cn("flex", isMine ? "justify-end" : "justify-start")}>
       <div
-        className={`max-w-[75%] rounded-2xl px-3.5 py-2 text-sm ${
+        className={cn(
+          "max-w-[75%] rounded-2xl px-4 py-2.5 text-sm",
           isMine
-            ? "rounded-br-md bg-primary text-primary-foreground"
-            : "rounded-bl-md bg-secondary text-secondary-foreground"
-        }`}
+            ? "rounded-br-sm bg-primary text-primary-foreground"
+            : "rounded-bl-sm bg-muted text-foreground",
+        )}
       >
         {message.images.length > 0 && (
           <div className="mb-1.5 grid grid-cols-2 gap-1.5">
@@ -35,7 +26,7 @@ export const MessageBubble = ({ message, isMine }: MessageBubbleProps) => {
               <img
                 key={img}
                 src={getImageUrl(img) ?? undefined}
-                alt=""
+                alt="Attachment"
                 className="h-28 w-full rounded-lg object-cover"
               />
             ))}
@@ -45,13 +36,18 @@ export const MessageBubble = ({ message, isMine }: MessageBubbleProps) => {
           <p className="whitespace-pre-wrap break-words">{message.text}</p>
         )}
         <p
-          className={`mt-1 text-right text-[10px] ${
-            isMine ? "text-primary-foreground/70" : "text-muted-foreground"
-          }`}
+          className={cn(
+            "mt-1 text-[10px]",
+            isMine ? "text-primary-foreground/70" : "text-muted-foreground",
+          )}
         >
-          {time}
+          {new Date(message.createdAt).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+          {isMine && (message.seen ? " · Seen" : "")}
         </p>
       </div>
     </div>
   );
-};
+}
