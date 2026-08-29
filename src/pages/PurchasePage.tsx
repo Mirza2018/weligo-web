@@ -200,6 +200,7 @@ function PurchaseFlow({
   userInfo: any;
   onRefetchProvider: () => void;
 }) {
+  const navigate = useNavigate();
   const { t } = useI18n();
   const key = storageKey(serviceId, providerId);
   const [draft, setDraft] = useState<Draft>(() => loadDraft(key));
@@ -299,7 +300,11 @@ function PurchaseFlow({
           <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
             <section className="rounded-3xl bg-card p-6 shadow-sm lg:p-10">
               {draft.step === 1 && (
-                <Step1 user={user} onNext={() => setStep(2)} />
+                <Step1
+                  user={user}
+                  onNext={() => setStep(2)}
+                  onBack={() => navigate(providerPath)}
+                />
               )}
               {draft.step === 2 && (
                 <Step2
@@ -588,9 +593,11 @@ function SumRow({
 function Step1({
   user,
   onNext,
+  onBack,
 }: {
   user: ProviderDetailsUser;
   onNext: () => void;
+  onBack: () => void;
 }) {
   const { t } = useI18n();
   return (
@@ -648,12 +655,18 @@ function Step1({
         </div>
       </div>
 
-      <Button
-        onClick={onNext}
-        className="mt-8 h-14 w-full rounded-full text-base"
-      >
-        {t("purchase.s1.sendRequest")} <ArrowRight className="ml-1 h-4 w-4" />
-      </Button>
+      <div className="mt-8 flex items-center justify-between gap-4">
+        <Button
+          variant="outline"
+          onClick={onBack}
+          className="h-14 rounded-full px-6"
+        >
+          <ArrowLeft className="mr-1 h-4 w-4" /> {t("purchase.s2.back")}
+        </Button>
+        <Button onClick={onNext} className="h-14 flex-1 rounded-full text-base">
+          {t("purchase.s1.sendRequest")} <ArrowRight className="ml-1 h-4 w-4" />
+        </Button>
+      </div>
     </div>
   );
 }
