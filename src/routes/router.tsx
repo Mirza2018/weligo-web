@@ -1,5 +1,5 @@
 // src/routes/router.tsx
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import { createBrowserRouter, Navigate, Outlet } from "react-router-dom";
 
 import { ChooseRole } from "@/pages/auth/choose-account";
 import { ComingSoon } from "../components/comingSoon/ComingSoon";
@@ -52,6 +52,7 @@ import ServiceProvider from "../pages/Services/ServiceProvider";
 import { MessagePage } from "@/pages/DashboardPage/message_page/MessagePage";
 
 import { ProtectedRoute } from "./ProtectedRoute";
+import { ProviderOnboardingProvider } from "@/context/ProviderOnboardingContext";
 
 const router = createBrowserRouter([
   {
@@ -253,32 +254,45 @@ const router = createBrowserRouter([
     element: <WelcomeToWeligo />,
   },
   {
-    path: "/sign-up-provider",
-    element: <SignUpProvider />,
-  },
-  {
-    path: "/verify-provider",
-    element: <SubmitCodeProvider />,
-  },
-  {
-    path: "/service-selection",
-    element: <ServiceSelection />,
-  },
-  {
-    path: "/add-certificates",
-    element: <AddCertificates />,
-  },
-  {
-    path: "/about-you",
-    element: <AboutYou />,
-  },
-  {
-    path: "/more-info-provider",
-    element: <MoreInfoProvider />,
-  },
-  {
-    path: "/welcome-weligo-provider",
-    element: <WelcomeToWeligoProvider />,
+    // The whole provider sign-up flow shares onboarding state (category,
+    // rate, experience, languages, certificates...) via ProviderOnboardingContext.
+    // Wrapping them all here means every step below can read/write that
+    // shared state without needing its own provider.
+    element: (
+      <ProviderOnboardingProvider>
+        <Outlet />
+      </ProviderOnboardingProvider>
+    ),
+    children: [
+      {
+        path: "/sign-up-provider",
+        element: <SignUpProvider />,
+      },
+      {
+        path: "/verify-provider",
+        element: <SubmitCodeProvider />,
+      },
+      {
+        path: "/service-selection",
+        element: <ServiceSelection />,
+      },
+      {
+        path: "/add-certificates",
+        element: <AddCertificates />,
+      },
+      {
+        path: "/about-you",
+        element: <AboutYou />,
+      },
+      {
+        path: "/more-info-provider",
+        element: <MoreInfoProvider />,
+      },
+      {
+        path: "/welcome-weligo-provider",
+        element: <WelcomeToWeligoProvider />,
+      },
+    ],
   },
 ]);
 

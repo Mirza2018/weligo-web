@@ -37,6 +37,8 @@ import { FavoriteButton } from "@/components/servicePage/FavoriteButton";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/redux/store";
 import { jwtDecode } from "jwt-decode";
+import { useCreateChatMutation } from "@/redux/api/messageApi";
+import { toast } from "sonner";
 
 const navItemDefs = [
   { key: "overview", href: "#overview" },
@@ -449,20 +451,44 @@ function BookingRequestCard({
   providerId?: string;
 }) {
   const navigate = useNavigate();
-  console.log(user);
 
-  const todaySchedule = availability.weeklySchedule.find(
+
+  const todaySchedule = availability?.weeklySchedule?.find(
     (d) => d.day === weekdayFromDate(new Date()),
   );
   const acceptingToday =
-    availability.bookingRules.acceptingBookings &&
+    availability?.bookingRules.acceptingBookings &&
     dayStatus(todaySchedule) !== "booked";
-
+  const [createChat] = useCreateChatMutation();
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
 
   const decodedToken = accessToken
     ? jwtDecode<DecodedToken>(accessToken)
     : null;
+  
+  
+    const handleMessage = async () => {
+      const toastId = toast.loading("Please wait...");
+      try {
+        const res = await createChat({ users: [user?._id] }).unwrap();
+  
+       
+        navigate(
+          `/dashboard/${decodedToken?.role}/message?chatId=/${res?.data?._id}`,
+        );
+  
+        toast.success(res?.message, {
+          id: toastId,
+          duration: 2000,
+        });
+      } catch (error) {
+        toast.error(error?.data?.message || "Couldn't create chat.", {
+          id: toastId,
+          duration: 2000,
+        });
+      }
+    };
+  
 
   return (
     <InfoCard className="bg-white p-4 sm:p-6">
@@ -517,9 +543,11 @@ function BookingRequestCard({
           <ArrowRight className="h-5 w-5" />
         </button>
       )}
-      {(decodedToken?.role === "family" ||
-        decodedToken?.role === "provider") && (
-        <button className="mt-2 flex h-11 w-full items-center justify-center gap-2 rounded-full border border-primary bg-white font-sans text-sm font-bold text-primary">
+      {decodedToken?.role === "family" && (
+        <button
+          onClick={() => handleMessage()}
+          className="mt-2 flex h-11 w-full items-center justify-center gap-2 rounded-full border border-primary bg-white font-sans text-sm font-bold text-primary"
+        >
           <MessageCircle className="h-5 w-5" />
           Send message
         </button>
@@ -541,7 +569,7 @@ function BookingRequestCard({
         <TrustItem icon={CreditCard} label="Secure payment" />
         <TrustItem
           icon={Check}
-          label={`Min. booking ${availability.bookingRules.minimumBookingHours}h`}
+          label={`Min. booking ${availability?.bookingRules.minimumBookingHours}h`}
         />
       </div>
     </InfoCard>
@@ -802,7 +830,7 @@ function AvailabilitySection({
 function WeeklyHoursCard({
   availability,
 }: Pick<ProviderDetailsData, "availability">) {
-  const byDay = new Map(availability.weeklySchedule.map((d) => [d.day, d]));
+  const byDay = new Map(availability?.weeklySchedule?.map((d) => [d.day, d]));
 
   return (
     <InfoCard className="bg-white p-5">
@@ -916,7 +944,7 @@ function CalendarCard({
         </span>
         <span className="flex items-center gap-1">
           <span className="h-2 w-2 rounded-sm bg-[#E5E8EF]" />
-          Booked
+          Unavailable
         </span>
       </div>
     </InfoCard>

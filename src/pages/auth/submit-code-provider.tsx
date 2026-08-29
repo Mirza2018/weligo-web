@@ -16,7 +16,7 @@ import { setAccessToken, clearAuth } from "../../redux/slices/authSlice";
 import type { RootState } from "@/redux/store";
 import { clearSignupEmail, getSignupEmail } from "@/redux/lib/signupSession";
 
-const CODE_LENGTH = 6;
+const CODE_LENGTH = 4;
 const RESEND_SECONDS = 45;
 
 export function SubmitCodeProvider() {

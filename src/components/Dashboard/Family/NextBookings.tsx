@@ -15,6 +15,8 @@ import {
   resolveImageUrl,
 } from "../../../lib/overview-helpers";
 import type { NextBooking } from "../../../types/overview";
+import { useCreateChatMutation } from "@/redux/api/messageApi";
+import { toast } from "sonner";
 
 function InfoPill({
   icon: Icon,
@@ -42,6 +44,7 @@ export function NextBookings({ booking }: { booking: NextBooking | null }) {
   const { t } = useI18n();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [createChat] = useCreateChatMutation();
 
   if (!booking) {
     return (
@@ -54,6 +57,27 @@ export function NextBookings({ booking }: { booking: NextBooking | null }) {
   }
 
   const { otherParty } = booking;
+
+
+
+  const handleMessage = async () => {
+    const toastId = toast.loading("Please wait...");
+    try {
+      const res = await createChat({ users: [otherParty?._id] }).unwrap();
+
+      navigate(`/dashboard/family/message?chatId=/${res?.data?._id}`);
+
+      toast.success(res?.message, {
+        id: toastId,
+        duration: 2000,
+      });
+    } catch (error) {
+      toast.error(error?.data?.message || "Couldn't create chat.", {
+        id: toastId,
+        duration: 2000,
+      });
+    }
+  };
 
   return (
     <SectionCard title={t("overview.nextBooking")}>
@@ -106,7 +130,7 @@ export function NextBookings({ booking }: { booking: NextBooking | null }) {
         <Button
           variant="secondary"
           className="flex-1 gap-2 bg-secondary text-secondary-foreground hover:bg-secondary/80"
-          onClick={() => setOpen(true)}
+          onClick={() => handleMessage()}
         >
           <MessageCircle className="h-4 w-4" />
           {t("overview.sendMessage")}

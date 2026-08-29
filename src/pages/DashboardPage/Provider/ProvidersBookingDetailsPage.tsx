@@ -56,6 +56,11 @@ import {
 import { getImageUrl } from "@/redux/getBaseUrl";
 import type { BookingCustomerRef, BookingRecordFull } from "@/types/bookings";
 import { isPopulatedPerson, type ReviewListItem } from "@/types/reviews";
+import { useCreateChatMutation } from "@/redux/api/messageApi";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/redux/store";
+import type { DecodedToken } from "@/lib/overview-helpers";
+import { jwtDecode } from "jwt-decode";
 
 export function ProvidersBookingDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -182,11 +187,42 @@ function BookingDetailsContent({
 
 function CustomerCard({
   customer,
-  onMessage,
 }: {
   customer: BookingCustomerRef | null;
   onMessage: () => void;
 }) {
+  const [createChat] = useCreateChatMutation();
+  const navigate = useNavigate();
+
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+
+  const decodedToken = accessToken
+    ? jwtDecode<DecodedToken>(accessToken)
+    : null;
+
+  
+    const handleMessage = async () => {
+      const toastId = toast.loading("Please wait...");
+      try {
+        const res = await createChat({ users: [customer?._id] }).unwrap();
+  
+       
+        navigate(
+          `/dashboard/${decodedToken?.role}/message?chatId=/${res?.data?._id}`,
+        );
+  
+        toast.success(res?.message, {
+          id: toastId,
+          duration: 2000,
+        });
+      } catch (error) {
+        toast.error(error?.data?.message || "Couldn't create chat.", {
+          id: toastId,
+          duration: 2000,
+        });
+      }
+    };
+  
   return (
     <div className="rounded-2xl border border-border bg-secondary/40 p-5">
       <div className="flex flex-col gap-4 sm:flex-row">
@@ -213,7 +249,10 @@ function CustomerCard({
             <p className="text-sm text-muted-foreground">{customer.email}</p>
           )}
           <div className="mt-4">
-            <Button onClick={onMessage} className="h-9 gap-2 rounded-lg px-4">
+            <Button
+              onClick={() => handleMessage()}
+              className="h-9 gap-2 rounded-lg px-4"
+            >
               <MessageCircle className="h-4 w-4" />
               Send Message
             </Button>

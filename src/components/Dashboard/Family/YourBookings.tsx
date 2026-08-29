@@ -106,7 +106,7 @@ export function YourBookings() {
         <div className="h-40 animate-pulse rounded-xl bg-muted-bg" />
       ) : (
         <Tabs defaultValue="upcoming">
-          <TabsList className="bg-transparent p-0">
+          {/* <TabsList className="bg-transparent p-0">
             {TAB_ORDER.map((tab) => (
               <TabsTrigger
                 key={tab}
@@ -116,7 +116,7 @@ export function YourBookings() {
                 {t(TAB_LABEL_KEY[tab])} ({byTab[tab].length})
               </TabsTrigger>
             ))}
-          </TabsList>
+          </TabsList> */}
           {TAB_ORDER.map((tab) => (
             <TabsContent key={tab} value={tab} className="mt-3">
               <ul className="flex flex-col gap-1">

@@ -12,7 +12,6 @@ import {
   useUserVerifyOTPResendMutation,
 } from "../../redux/api/authApi";
 import { setAccessToken, clearAuth } from "../../redux/slices/authSlice";
-// import { getSignupEmail, clearSignupEmail } from "../../lib/signupSession";
 import type { RootState } from "@/redux/store";
 import { clearSignupEmail, getSignupEmail } from "@/redux/lib/signupSession";
 

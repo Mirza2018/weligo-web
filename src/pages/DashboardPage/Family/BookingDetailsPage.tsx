@@ -1,47 +1,51 @@
 // src/pages/dashboard/family/BookingDetailsPage.tsx
-import { useState } from "react";
-import {
-  ArrowLeft,
-  CircleAlert,
-  Clock,
-  Flag,
-  HeartHandshake,
-  MapPin,
-  MessageCircle,
-  Star,
-  X,
-} from "lucide-react";
-import { toast } from "sonner";
-import { useI18n } from "../../../lib/i18n";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { SendMessageDialog } from "../../../components/Dashboard/Family/SendMessageDialog";
-import { ReportIssueDialog } from "@/components/Dashboard/Family/ReportDialog";
-import { UserAvatar } from "../../../components/common/UserAvatar";
-import { Button } from "../../../components/ui/button";
-import { Skeleton } from "../../../components/ui/skeleton";
-import { cn } from "../../../lib/utils";
-import { SectionCard } from "../../../components/common/SectionCard";
-import { formatCHF } from "../../../lib/format";
+import { BookingMap } from "@/components/bookings/BookingMap";
 import { ReasonDialog } from "@/components/bookings/ReasonDialog";
 import { ReviewDialog } from "@/components/bookings/ReviewDialog";
-import { BookingMap } from "@/components/bookings/BookingMap";
+import { ReportIssueDialog } from "@/components/Dashboard/Family/ReportDialog";
 import {
   formatBookingDate,
   formatTimeRange,
   statusBadgeClass,
   statusLabel,
 } from "@/lib/bookingHelpers";
+import type { DecodedToken } from "@/lib/overview-helpers";
+import { useCreateChatMutation } from "@/redux/api/messageApi";
 import {
-  useGetAllBookingsQuery,
-  useWithdrawBookingMutation,
   useCancelBookingMutation,
   useConfirmBookingMutation,
+  useGetAllBookingsQuery,
   useGetSingleReviewsQuery,
   useProviderDetailsQuery,
+  useWithdrawBookingMutation,
 } from "@/redux/api/websiteApi";
 import { getImageUrl } from "@/redux/getBaseUrl";
+import type { RootState } from "@/redux/store";
 import type { BookingRecordFull } from "@/types/bookings";
 import { isPopulatedPerson, type ReviewListItem } from "@/types/reviews";
+import { jwtDecode } from "jwt-decode";
+import {
+  ArrowLeft,
+  CircleAlert,
+  Clock,
+  Flag,
+  HeartHandshake,
+  MessageCircle,
+  Star,
+  X
+} from "lucide-react";
+import { useState } from "react"; 
+import { useSelector } from "react-redux";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { toast } from "sonner";
+import { SectionCard } from "../../../components/common/SectionCard";
+import { UserAvatar } from "../../../components/common/UserAvatar";
+import { SendMessageDialog } from "../../../components/Dashboard/Family/SendMessageDialog";
+import { Button } from "../../../components/ui/button";
+import { Skeleton } from "../../../components/ui/skeleton";
+import { formatCHF } from "../../../lib/format";
+import { useI18n } from "../../../lib/i18n";
+import { cn } from "../../../lib/utils";
 
 export function BookingDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -173,7 +177,7 @@ function BookingDetailsContent({
 
 function ProviderCard({
   provider,
-  onMessage,
+
 }: {
   provider?: {
     fullName: string;
@@ -184,6 +188,38 @@ function ProviderCard({
   };
   onMessage: () => void;
 }) {
+  const [createChat] = useCreateChatMutation();
+ const navigate = useNavigate();
+
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+
+  const decodedToken = accessToken
+    ? jwtDecode<DecodedToken>(accessToken)
+    : null;
+
+
+  const handleMessage = async () => {
+    const toastId = toast.loading("Please wait...");
+    try {
+      const res = await createChat({ users: [provider?._id] }).unwrap();
+
+     
+      navigate(
+        `/dashboard/${decodedToken?.role}/message?chatId=/${res?.data?._id}`,
+      );
+
+      toast.success(res?.message, {
+        id: toastId,
+        duration: 2000,
+      });
+    } catch (error) {
+      toast.error(error?.data?.message || "Couldn't create chat.", {
+        id: toastId,
+        duration: 2000,
+      });
+    }
+  };
+
   return (
     <div className="rounded-2xl border border-border bg-secondary/40 p-5">
       <div className="flex flex-col gap-4 sm:flex-row">
@@ -211,7 +247,10 @@ function ProviderCard({
             </>
           )}
           <div className="mt-4">
-            <Button onClick={onMessage} className="h-9 gap-2 rounded-lg px-4">
+            <Button
+              onClick={() => handleMessage()}
+              className="h-9 gap-2 rounded-lg px-4"
+            >
               <MessageCircle className="h-4 w-4" />
               Send Message
             </Button>
