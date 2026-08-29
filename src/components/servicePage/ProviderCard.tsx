@@ -5,11 +5,25 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 import type { Provider } from "@/types/website";
 import { getImageUrl } from "@/redux/getBaseUrl";
+import { FavoriteButton } from "./FavoriteButton";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/redux/store";
+import { jwtDecode } from "jwt-decode";
 
 interface ProviderCardProps {
   provider: Provider;
   isActive?: boolean;
   onHover?: (id: string | null) => void;
+}
+
+interface DecodedToken {
+  fullName: string;
+  email: string;
+  phone?: string;
+  userId: string;
+  role: string;
+  iat: number;
+  exp: number;
 }
 
 export function ProviderCard({
@@ -19,7 +33,11 @@ export function ProviderCard({
 }: ProviderCardProps) {
   const router = useNavigate();
   const { serviceId } = useParams();
-// console.log(provider);
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+
+  const decodedToken = accessToken
+    ? jwtDecode<DecodedToken>(accessToken)
+    : null;
 
   return (
     <article
@@ -30,13 +48,15 @@ export function ProviderCard({
         isActive ? "border-primary bg-primary/5" : "border-border bg-card"
       }`}
     >
-      <img
-        src={getImageUrl(provider.profileImage) ?? undefined}
-        alt={provider.fullName}
-        className="h-[163px] w-[147px] shrink-0 rounded-lg object-cover bg-muted"
-      />
+      <div className="relative h-[163px] w-[147px] shrink-0">
+        <img
+          src={getImageUrl(provider.profileImage) ?? undefined}
+          alt={provider.fullName}
+          className="h-full w-full rounded-lg object-cover bg-muted"
+        />
+      </div>
 
-      <div className="min-w-0 py-1">
+      <div className="min-w-0 py-1 relative">
         <div className="flex items-center gap-2">
           <h2 className="truncate font-serif text-3xl font-semibold leading-tight text-foreground">
             {provider.fullName}
@@ -68,6 +88,14 @@ export function ProviderCard({
         <div className="mt-3 inline-flex items-center rounded-full bg-primary px-3 py-1.5 font-sans text-sm font-bold text-primary-foreground">
           {provider.hourlyRate} / hr
         </div>
+
+        {decodedToken?.role === "family" && (
+          <FavoriteButton
+            providerId={provider._id}
+            providerName={provider.fullName}
+            className="absolute right-0 top-2"
+          />
+        )}
       </div>
     </article>
   );

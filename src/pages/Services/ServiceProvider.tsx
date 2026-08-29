@@ -105,7 +105,7 @@ const ServiceProvider = () => {
         : DEFAULT_CENTER);
 
   return (
-    <div className="mx-auto h-screen max-w-430 border border-border px-4 sm:px-6 lg:px-4">
+    <div className="mx-auto min-h-screen max-w-430 border border-border px-4 sm:px-6 lg:px-4">
       <div className="mt-5.75 grid max-w-119 gap-2 sm:grid-cols-2">
         <SearchBox
           icon={Search}

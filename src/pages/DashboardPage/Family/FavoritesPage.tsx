@@ -132,10 +132,10 @@ function FavoriteCard({
       </button>
 
       <div className="min-w-0 flex-1">
-        <h3 className="font-serif text-2xl font-medium leading-none">
+        <h3 className="font-serif sm:text-2xl font-medium leading-none">
           {favorite.fullName}
         </h3>
-        <div className="mt-2 flex items-center gap-1 text-sm">
+        <div className="mt-2 hidden items-center gap-1 text-sm sm:flex">
           {Array.from({ length: 5 }).map((_, i) => (
             <Star
               key={i}
@@ -164,7 +164,7 @@ function FavoriteCard({
         )}
       </div>
 
-      <div className="flex flex-col items-end gap-2">
+      <div className="flex flex-col items-end gap-2 ">
         <button
           type="button"
           aria-label="Unfavorite"
@@ -174,7 +174,7 @@ function FavoriteCard({
         >
           <Heart className="h-4 w-4 fill-primary" />
         </button>
-        <p className="font-serif text-2xl font-medium text-primary">
+        <p className="font-serif sm:text-2xl  font-medium text-primary">
           {formatCHF(favorite.hourlyRate)}
         </p>
         <p className="text-xs text-muted-foreground">per hour</p>

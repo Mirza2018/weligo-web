@@ -18,6 +18,10 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import AllImages from "../assets/AllImages";
 import { useI18n } from "../lib/i18n";
+import { FavoriteButton } from "@/components/servicePage/FavoriteButton";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/redux/store";
+import { jwtDecode } from "jwt-decode";
 
 // export const Route = createFileRoute("/")({
 //   component: Home,
@@ -309,6 +313,15 @@ function ServicesStrip() {
   );
 }
 
+interface DecodedToken {
+  fullName: string;
+  email: string;
+  phone?: string;
+  userId: string;
+  role: string;
+  iat: number;
+  exp: number;
+}
 function CaregiverPreview() {
   const { t } = useI18n();
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -319,6 +332,12 @@ function CaregiverPreview() {
   });
 
   const providers = data?.data ?? [];
+
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+
+  const decodedToken = accessToken
+    ? jwtDecode<DecodedToken>(accessToken)
+    : null;
 
   const scrollByCard = (direction: "left" | "right") => {
     const el = scrollRef.current;
@@ -420,6 +439,15 @@ function CaregiverPreview() {
                   {provider.averageRating?.toFixed(1) ?? "0.0"} (
                   {provider.totalReview ?? 0})
                 </div>
+
+                {decodedToken?.role === "family" && (
+                  <FavoriteButton
+                    providerId={provider._id}
+                    providerName={provider.fullName}
+                    className="absolute right-0 top-2"
+                  />
+                )}
+
                 <div className="absolute inset-x-0 bottom-0 p-5 text-white">
                   <p className="font-serif text-xl">{provider.fullName}</p>
                   <p className="text-xs text-white/80">

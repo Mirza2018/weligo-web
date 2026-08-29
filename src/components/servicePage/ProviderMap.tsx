@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useGoogleMaps } from "@/lib/googleMaps";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Provider } from "@/types/website";
+import { getImageUrl } from "@/redux/getBaseUrl";
 
 interface ProviderMapProps {
   providers: Provider[];
@@ -61,6 +62,12 @@ export function ProviderMap({
     return <Skeleton className="h-full w-full rounded-s-3xl" />;
   }
 
+  const getMarkerIcon = (isActive: boolean) => ({
+    url: "/marker-logo.png",
+    scaledSize: new google.maps.Size(isActive ? 48 : 40, isActive ? 48 : 40),
+    anchor: new google.maps.Point(isActive ? 24 : 20, isActive ? 24 : 20),
+  });
+
   return (
     <GoogleMap
       mapContainerStyle={containerStyle}
@@ -76,32 +83,61 @@ export function ProviderMap({
           onMouseOver={() => onMarkerHover?.(provider._id)}
           onMouseOut={() => onMarkerHover?.(null)}
           onClick={() => setOpenId(provider._id)}
-          icon={
-            activeProviderId === provider._id
-              ? {
-                  path: google.maps.SymbolPath.CIRCLE,
-                  scale: 10,
-                  fillColor: "#D97757",
-                  fillOpacity: 1,
-                  strokeColor: "#ffffff",
-                  strokeWeight: 2,
-                }
-              : undefined
-          }
+          icon={getMarkerIcon(activeProviderId === provider._id)}
         >
           {openId === provider._id && (
-            <InfoWindowF onCloseClick={() => setOpenId(null)}>
+            <InfoWindowF
+              onCloseClick={() => setOpenId(null)}
+              options={{
+                pixelOffset: new google.maps.Size(0, -8),
+              }}
+            >
               <div
-                className="cursor-pointer p-1"
+                className="min-w-[240px] cursor-pointer overflow-hidden rounded-xl bg-white"
                 onClick={() =>
                   router(`/services/${serviceId}/providers/${provider._id}`)
                 }
               >
-                <p className="font-semibold">{provider.fullName}</p>
-                <p className="text-xs text-muted-foreground">
-                  {provider.hourlyRate} / hr &middot;{" "}
-                  {provider.averageRating.toFixed(1)}★
-                </p>
+                <div className="flex items-center gap-3 p-3">
+                  {/* Profile Image */}
+                  <div className="relative shrink-0">
+                    <img
+                      src={getImageUrl(provider.profileImage)}
+                      alt={provider.fullName}
+                      className="h-14 w-14 rounded-full border-2 border-white object-cover shadow-md"
+                    />
+
+                    {/* Online/status indicator */}
+                    <span className="absolute bottom-0 right-0 h-4 w-4 rounded-full border-2 border-white bg-green-500" />
+                  </div>
+
+                  {/* Provider Info */}
+                  <div className="min-w-0 flex-1">
+                    <h3 className="truncate text-sm font-semibold text-gray-900">
+                      {provider.fullName}
+                    </h3>
+
+                    <div className="mt-1 flex items-center gap-2">
+                      {/* Rating */}
+                      <span className="flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-600">
+                        <span>★</span>
+                        {provider.averageRating?.toFixed(1) ?? "0.0"}
+                      </span>
+
+                      {/* Hourly Rate */}
+                      <span className="text-xs font-medium text-gray-500">
+                        {provider.hourlyRate} / hr
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bottom action */}
+                <div className="border-t bg-gray-50 px-3 py-2 text-center">
+                  <span className="text-xs font-medium text-purple-600">
+                    View provider details →
+                  </span>
+                </div>
               </div>
             </InfoWindowF>
           )}

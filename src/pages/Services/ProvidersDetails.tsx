@@ -33,6 +33,10 @@ import {
 } from "@/lib/providerDate";
 import type { ProviderDetailsData, Review } from "@/types/providerDetails";
 import { getImageUrl } from "@/redux/getBaseUrl";
+import { FavoriteButton } from "@/components/servicePage/FavoriteButton";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/redux/store";
+import { jwtDecode } from "jwt-decode";
 
 const navItemDefs = [
   { key: "overview", href: "#overview" },
@@ -426,7 +430,15 @@ function AtGlanceCard({
 /* -------------------------------------------------------------------- */
 /* Booking card                                                          */
 /* -------------------------------------------------------------------- */
-
+interface DecodedToken {
+  fullName: string;
+  email: string;
+  phone?: string;
+  userId: string;
+  role: string;
+  iat: number;
+  exp: number;
+}
 function BookingRequestCard({
   user,
   availability,
@@ -437,6 +449,7 @@ function BookingRequestCard({
   providerId?: string;
 }) {
   const navigate = useNavigate();
+  console.log(user);
 
   const todaySchedule = availability.weeklySchedule.find(
     (d) => d.day === weekdayFromDate(new Date()),
@@ -444,6 +457,12 @@ function BookingRequestCard({
   const acceptingToday =
     availability.bookingRules.acceptingBookings &&
     dayStatus(todaySchedule) !== "booked";
+
+  const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+
+  const decodedToken = accessToken
+    ? jwtDecode<DecodedToken>(accessToken)
+    : null;
 
   return (
     <InfoCard className="bg-white p-4 sm:p-6">
@@ -474,26 +493,48 @@ function BookingRequestCard({
         <ChevronRight className="h-5 w-5" />
       </a>
 
-      <button
-        onClick={() => {
-          navigate(`/services/${serviceId}/providers/${providerId}/purchase`);
-          localStorage.removeItem(`weligo:purchase:${serviceId}:${providerId}`);
-        }}
-        className="mt-7 flex h-11 w-full items-center justify-center gap-2 rounded-full bg-primary font-sans text-sm font-bold text-primary-foreground"
-      >
-        Send booking request
-        <ArrowRight className="h-5 w-5" />
-      </button>
+      {decodedToken?.role === "family" ? (
+        <button
+          onClick={() => {
+            navigate(`/services/${serviceId}/providers/${providerId}/purchase`);
+            localStorage.removeItem(
+              `weligo:purchase:${serviceId}:${providerId}`,
+            );
+          }}
+          className="mt-7 flex h-11 w-full items-center justify-center gap-2 rounded-full bg-primary font-sans text-sm font-bold text-primary-foreground"
+        >
+          Send booking request
+          <ArrowRight className="h-5 w-5" />
+        </button>
+      ) : (
+        <button
+          onClick={() => {
+            navigate(`/sign-in`);
+          }}
+          className="mt-7 flex h-11 w-full items-center justify-center gap-2 rounded-full bg-primary font-sans text-sm font-bold text-primary-foreground"
+        >
+          Login as a Family to Book
+          <ArrowRight className="h-5 w-5" />
+        </button>
+      )}
+      {(decodedToken?.role === "family" ||
+        decodedToken?.role === "provider") && (
+        <button className="mt-2 flex h-11 w-full items-center justify-center gap-2 rounded-full border border-primary bg-white font-sans text-sm font-bold text-primary">
+          <MessageCircle className="h-5 w-5" />
+          Send message
+        </button>
+      )}
 
-      <button className="mt-2 flex h-11 w-full items-center justify-center gap-2 rounded-full border border-primary bg-white font-sans text-sm font-bold text-primary">
-        <MessageCircle className="h-5 w-5" />
-        Send message
-      </button>
-
-      <button className="mx-auto mt-5 flex items-center justify-center gap-2 font-sans text-sm font-bold text-[#24252A]">
-        <Heart className="h-5 w-5" />
-        Add to favorites
-      </button>
+      {decodedToken?.role === "family" && (
+        <div className="flex justify-center items-center gap-2 font-sans mt-5">
+          <FavoriteButton
+            providerId={providerId}
+            providerName={user?.fullName}
+            className=""
+          />
+          Add to favorites
+        </div>
+      )}
 
       <div className="mt-7 space-y-4 border-t border-border pt-7">
         <TrustItem icon={ShieldCheck} label="Verified Profile" />
