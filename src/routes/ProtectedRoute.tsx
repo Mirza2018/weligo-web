@@ -9,7 +9,7 @@ interface DecodedToken {
   email: string;
   phone: string;
   userId: string;
-  role: "family" | "provider";
+  role: "family" | "provider" | "admin";
   iat: number;
   exp: number;
 }
@@ -45,12 +45,15 @@ export function ProtectedRoute({
   }
 
   if (!allowedRoles.includes(decodedToken.role)) {
-    // Logged in, but wrong role for this route — send them to their own
-    // dashboard instead of sign-in, since they don't need to log in again.
+    // Logged in, but wrong role for this route.
+    // - family/provider hitting the wrong dashboard -> send to their own
+    // - admin (or anything else) -> no dashboard for them here, send home
     const fallback =
       decodedToken.role === "family"
         ? "/dashboard/family/overview"
-        : "/dashboard/provider/overview";
+        : decodedToken.role === "provider"
+          ? "/dashboard/provider/overview"
+          : "/";
     return <Navigate to={fallback} replace />;
   }
 
