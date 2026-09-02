@@ -46,6 +46,8 @@ import { ForProvidersPage } from "../pages/ForProvidersPage";
 import { Home } from "../pages/Home";
 import { HowItWorksPage2 } from "../pages/HowItWorksPage2";
 import { PurchasePage } from "../pages/PurchasePage";
+import { PaymentCancelPage } from "@/pages/payment/PaymentCancelPage";
+import { PaymentSuccessPage } from "@/pages/payment/PaymentSuccessPage";
 import { Services } from "../pages/Services";
 import ProvidersDetails from "../pages/Services/ProvidersDetails";
 import ServiceProvider from "../pages/Services/ServiceProvider";
@@ -122,6 +124,16 @@ const router = createBrowserRouter([
       {
         path: "creator-program",
         element: <CreatorProgram />,
+      },
+      {
+        // Stripe redirects the browser here after Checkout - must stay
+        // public since the user may return before/without a fresh session.
+        path: "payment/success",
+        element: <PaymentSuccessPage />,
+      },
+      {
+        path: "payment/cancel",
+        element: <PaymentCancelPage />,
       },
     ],
   },

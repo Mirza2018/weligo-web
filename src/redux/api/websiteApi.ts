@@ -1,3 +1,4 @@
+import type { PaymentStatusResponse } from "@/types/payment";
 import { tagTypes } from "../tagTypes";
 import { baseApi } from "./baseApi";
 
@@ -263,6 +264,12 @@ export const websiteApi = baseApi.injectEndpoints({
       },
       invalidatesTags: [tagTypes.bookings],
     }),
+    getPaymentByBookingId: build.query<PaymentStatusResponse, string>({
+      query: (bookingId) => ({
+        url: `/payments/booking/${bookingId}`,
+        method: "GET",
+      }),
+    }),
     //
     getTransactions: build.query({
       query: (params) => {
@@ -415,6 +422,7 @@ export const {
   useStartBookingMutation,
   useDoneBookingMutation,
   useConfirmBookingMutation,
+  useLazyGetPaymentByBookingIdQuery,
   ///transactions
   useGetTransactionsQuery,
   ///reports

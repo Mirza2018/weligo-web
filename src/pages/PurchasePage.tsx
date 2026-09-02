@@ -31,6 +31,7 @@ import {
   useProviderDetailsQuery,
   useBookingMutation,
 } from "@/redux/api/websiteApi";
+import { setPendingPaymentBookingId } from "@/lib/paymentStorage";
 // import { getImageUrl } from "@/redux/slices/getBaseUrl";
 import {
   getSlotsForDate,
@@ -265,6 +266,9 @@ function PurchaseFlow({
         bookingId: res.data.booking.bookingReference,
         step: 5,
       }));
+      // Stripe's return URL carries no booking/payment id, so the payment
+      // success/cancel pages recover it from here.
+      setPendingPaymentBookingId(res.data.booking._id);
       setRedirectUrl(res.data.redirectUrl);
       localStorage.removeItem(`weligo:purchase:${serviceId}:${providerId}`);
       if (typeof window !== "undefined")
