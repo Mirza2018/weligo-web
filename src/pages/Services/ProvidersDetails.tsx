@@ -1,4 +1,5 @@
 // src/pages/ProvidersDetails.tsx
+import { useProviderDetailsQuery } from "@/redux/api/websiteApi";
 import {
   ArrowRight,
   CalendarDays,
@@ -7,21 +8,19 @@ import {
   ChevronRight,
   CreditCard,
   Flag,
-  Heart,
   MapPin,
   MessageCircle,
-  ShieldCheck,
+  ShieldCheck
 } from "lucide-react";
 import React, { useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import AllImages from "../../assets/AllImages";
 import { Separator } from "../../components/ui/separator";
-import { useProviderDetailsQuery } from "@/redux/api/websiteApi";
 // import { getImageUrl } from "@/redux/slices/getBaseUrl";
-import { useGoogleMaps } from "@/lib/googleMaps";
-import { GoogleMap, MarkerF } from "@react-google-maps/api";
-import { StarRating } from "@/components/providers/StarRating";
 import { ProviderDetailsSkeleton } from "@/components/providers/ProviderDetailsSkeleton";
+import { StarRating } from "@/components/providers/StarRating";
+import { FavoriteButton } from "@/components/servicePage/FavoriteButton";
+import { useGoogleMaps } from "@/lib/googleMaps";
 import {
   buildCalendarGrid,
   capitalize,
@@ -31,13 +30,13 @@ import {
   weekdayFromDate,
   WEEKDAYS_MON_FIRST,
 } from "@/lib/providerDate";
-import type { ProviderDetailsData, Review } from "@/types/providerDetails";
-import { getImageUrl } from "@/redux/getBaseUrl";
-import { FavoriteButton } from "@/components/servicePage/FavoriteButton";
-import { useSelector } from "react-redux";
-import type { RootState } from "@/redux/store";
-import { jwtDecode } from "jwt-decode";
 import { useCreateChatMutation } from "@/redux/api/messageApi";
+import { getImageUrl } from "@/redux/getBaseUrl";
+import type { RootState } from "@/redux/store";
+import type { ProviderDetailsData, Review } from "@/types/providerDetails";
+import { GoogleMap, MarkerF } from "@react-google-maps/api";
+import { jwtDecode } from "jwt-decode";
+import { useSelector } from "react-redux";
 import { toast } from "sonner";
 
 const navItemDefs = [
@@ -337,17 +336,17 @@ function DetailsNav({ reviewCount }: { reviewCount: number }) {
       <div className="mx-auto flex max-w-430 gap-7 overflow-x-auto px-6 pt-8 sm:px-10 lg:px-16">
         {navItemDefs.map((item, index) => (
           <a
-            key={item.href}
-            href={item.href}
+            key={item?.href}
+            href={item?.href}
             className={`shrink-0 border-b-3 pb-2 font-sans text-lg font-bold ${
               index === 0
                 ? "border-primary text-[#303139]"
                 : "border-transparent text-[#5E6068]"
             }`}
           >
-            {item.key === "reviews"
+            {item?.key === "reviews"
               ? `Reviews (${reviewCount})`
-              : navLabel(item.key)}
+              : navLabel(item?.key)}
           </a>
         ))}
       </div>
@@ -373,15 +372,15 @@ function OverviewSection({
   user,
   profile,
 }: Pick<ProviderDetailsData, "user" | "profile">) {
-  const paragraphs = (profile.longBio ?? "").split("\n").filter(Boolean);
+  const paragraphs = (profile?.longBio ?? "").split("\n").filter(Boolean);
 
   return (
     <section id="overview" className="scroll-mt-28">
-      <SectionKicker>About {user.firstName}</SectionKicker>
+      <SectionKicker>About {user?.firstName}</SectionKicker>
       <div className="grid gap-9 lg:grid-cols-[1fr_310px]">
         <div>
-          {profile.longBioTitle && (
-            <SectionTitle>{profile.longBioTitle}</SectionTitle>
+          {profile?.longBioTitle && (
+            <SectionTitle>{profile?.longBioTitle}</SectionTitle>
           )}
           <div className="mt-8 max-w-[520px] space-y-5 font-sans text-xl leading-[1.18] text-[#2F3037]">
             {paragraphs.map((p, i) => (
@@ -400,15 +399,15 @@ function AtGlanceCard({
   profile,
 }: Pick<ProviderDetailsData, "user" | "profile">) {
   const items: [string, string][] = [
-    ["Experience", `${user.experience} years`],
-    ["Languages", user.lenguages?.join(", ") || "—"],
-    ["Smoker", profile.preferences.nonSmoker ? "No" : "Yes"],
-    ["Has Children", profile.preferences.hasChildren ? "Yes" : "No"],
-    ["Drives", profile.preferences.driverLicense ? "Yes" : "No"],
-    ["Own Vehicle", profile.preferences.ownVehicle ? "Yes" : "No"],
+    ["Experience", `${user?.experience} years`],
+    ["Languages", user?.lenguages?.join(", ") || "—"],
+    ["Smoker", profile?.preferences?.nonSmoker ? "No" : "Yes"],
+    ["Has Children", profile?.preferences?.hasChildren ? "Yes" : "No"],
+    ["Drives", profile?.preferences?.driverLicense ? "Yes" : "No"],
+    ["Own Vehicle", profile?.preferences?.ownVehicle ? "Yes" : "No"],
     [
       "Comfortable with Pets",
-      profile.preferences.comfortableWithPets ? "Yes" : "No",
+      profile?.preferences?.comfortableWithPets ? "Yes" : "No",
     ],
   ];
 
@@ -600,7 +599,7 @@ function TrustItem({
 function QualificationsSection({
   profile,
 }: Pick<ProviderDetailsData, "profile">) {
-  const certificates = profile.certificates ?? [];
+  const certificates = profile?.certificates ?? [];
 
   return (
     <section id="experience" className="scroll-mt-28">
@@ -608,18 +607,18 @@ function QualificationsSection({
       <SectionTitle>Trained. Certified. Trusted.</SectionTitle>
       <div className="mt-7 grid gap-8 lg:grid-cols-[1fr_336px]">
         <InfoCard className="bg-white px-8 py-8">
-          {certificates.length === 0 ? (
+          {certificates?.length === 0 ? (
             <p className="font-sans text-base text-muted-foreground">
               No certificates listed yet.
             </p>
           ) : (
             <div className="divide-y divide-border">
-              {certificates.map((cert, index) => (
+              {certificates?.map((cert, index) => (
                 <NumberedDetail
-                  key={cert._id}
+                  key={cert?._id}
                   index={index + 1}
-                  title={cert.type}
-                  text={cert.description}
+                  title={cert?.type}
+                  text={cert?.description}
                 />
               ))}
             </div>
@@ -664,16 +663,16 @@ function CertificateCard({
 }) {
   return (
     <InfoCard className="self-start bg-white p-8">
-      <h3 className="font-serif text-2xl font-semibold">{certificate.type}</h3>
-      {certificate.imgUrl && (
+      <h3 className="font-serif text-2xl font-semibold">{certificate?.type}</h3>
+      {certificate?.imgUrl && (
         <img
-          src={getImageUrl(certificate.imgUrl) ?? undefined}
-          alt={certificate.type}
+          src={getImageUrl(certificate?.imgUrl) ?? undefined}
+          alt={certificate?.type}
           className="mt-5 h-[205px] w-full rounded-xl object-cover bg-muted"
         />
       )}
       <p className="mt-4 font-mono text-xs leading-relaxed text-[#9CA0AE]">
-        {certificate.description}
+        {certificate?.description}
       </p>
     </InfoCard>
   );
@@ -687,14 +686,14 @@ function ReviewsSection({
   reviews,
   ratingSummary,
 }: Pick<ProviderDetailsData, "reviews" | "ratingSummary">) {
-  const left = reviews.filter((_, i) => i % 2 === 0);
-  const right = reviews.filter((_, i) => i % 2 === 1);
+  const left = reviews?.filter((_, i) => i % 2 === 0);
+  const right = reviews?.filter((_, i) => i % 2 === 1);
 
   return (
     <section id="reviews" className="scroll-mt-28">
       <SectionKicker>Reviews</SectionKicker>
       <h2 className="font-serif text-[32px] font-semibold leading-tight text-[#1E1E22]">
-        {ratingSummary.totalReviews} reviews, {ratingSummary.averageRating}{" "}
+        {ratingSummary?.totalReviews} reviews, {ratingSummary?.averageRating}{" "}
         average.
       </h2>
 
@@ -707,12 +706,12 @@ function ReviewsSection({
           <ReviewStatsCard ratingSummary={ratingSummary} />
           <div className="space-y-4">
             {left.map((review) => (
-              <ReviewCard key={review._id} review={review} />
+              <ReviewCard key={review?._id} review={review} />
             ))}
           </div>
           <div className="space-y-4">
             {right.map((review) => (
-              <ReviewCard key={review._id} review={review} />
+              <ReviewCard key={review?._id} review={review} />
             ))}
           </div>
         </div>
@@ -727,28 +726,28 @@ function ReviewStatsCard({
   return (
     <InfoCard className="self-start bg-[#EEF0FF] p-7">
       <div className="font-serif text-[64px] font-semibold leading-none text-primary">
-        {ratingSummary.averageRating}
+        {ratingSummary?.averageRating}
       </div>
-      <StarRating rating={ratingSummary.averageRating} className="mt-7" />
+      <StarRating rating={ratingSummary?.averageRating} className="mt-7" />
       <p className="mt-4 font-mono text-[10px] leading-tight text-[#9CA0AE]">
-        Based on {ratingSummary.totalReviews} verified review
-        {ratingSummary.totalReviews === 1 ? "" : "s"}
+        Based on {ratingSummary?.totalReviews} verified review
+        {ratingSummary?.totalReviews === 1 ? "" : "s"}
       </p>
       <div className="mt-5 space-y-2">
-        {ratingSummary.ratings.map((bucket) => (
+        {ratingSummary?.ratings.map((bucket) => (
           <div
-            key={bucket.rating}
+            key={bucket?.rating}
             className="grid grid-cols-[44px_1fr_30px] gap-2"
           >
-            <span className="font-sans text-xs">{bucket.rating} stars</span>
+            <span className="font-sans text-xs">{bucket?.rating} stars</span>
             <span className="mt-1 h-2 rounded-full bg-[#DDE1EE]">
               <span
                 className="block h-full rounded-full bg-primary"
-                style={{ width: `${bucket.percentage}%` }}
+                style={{ width: `${bucket?.percentage}%` }}
               />
             </span>
             <span className="text-right font-sans text-xs">
-              {bucket.percentage}%
+              {bucket?.percentage}%
             </span>
           </div>
         ))}
@@ -768,10 +767,10 @@ function ReviewCard({ review }: { review: Review }) {
   return (
     <InfoCard className="bg-white p-5">
       <div className="flex items-start gap-3">
-        {review.reviewerId.profileImage ? (
+        {review?.reviewerId?.profileImage ? (
           <img
-            src={getImageUrl(review.reviewerId.profileImage) ?? undefined}
-            alt={review.reviewerId.fullName}
+            src={getImageUrl(review?.reviewerId?.profileImage) ?? undefined}
+            alt={review?.reviewerId?.fullName}
             className="h-7 w-7 shrink-0 rounded-full object-cover"
           />
         ) : (
@@ -780,22 +779,22 @@ function ReviewCard({ review }: { review: Review }) {
         <div className="min-w-0 flex-1">
           <div className="flex items-center justify-between gap-2">
             <p className="font-serif text-sm font-semibold">
-              {review.reviewerId.fullName}
+              {review?.reviewerId?.fullName}
             </p>
             <span className="font-mono text-[10px] text-[#9CA0AE]">
-              {formatRelativeTime(review.createdAt)}
+              {formatRelativeTime(review?.createdAt)}
             </span>
           </div>
-          <StarRating rating={review.rating} size="xs" />
+          <StarRating rating={review?.rating} size="xs" />
         </div>
       </div>
       <p className="mt-3 font-serif-italic text-black text-sm font-semibold leading-relaxed">
-        {review.comment}
+        {review?.comment}
       </p>
 
-      {review.reply && (
+      {review?.reply && (
         <div className="mt-4 rounded-e-sm border-l-3 border-primary bg-[#FAF9F6] px-3 py-3 font-sans text-[11px] leading-snug text-[#555866]">
-          {review.reply.comment}
+          {review?.reply?.comment}
         </div>
       )}
     </InfoCard>
@@ -816,7 +815,7 @@ function AvailabilitySection({
       <SectionKicker>Availability</SectionKicker>
       <h2 className="font-serif text-[34px] font-semibold leading-tight">
         When{" "}
-        <span className="font-serif-italic text-primary">{user.firstName}</span>{" "}
+        <span className="font-serif-italic text-primary">{user?.firstName}</span>{" "}
         is free.
       </h2>
       <div className="mt-8 grid gap-5 lg:grid-cols-[280px_1fr]">
@@ -961,7 +960,7 @@ function LocationSection({ user }: Pick<ProviderDetailsData, "user">) {
       <SectionKicker>Location</SectionKicker>
       <h2 className="font-serif text-[34px] font-semibold leading-tight">
         Where{" "}
-        <span className="font-serif-italic text-primary">{user.firstName}</span>{" "}
+        <span className="font-serif-italic text-primary">{user?.firstName}</span>{" "}
         works.
       </h2>
       <div className="mt-8 grid gap-5 lg:grid-cols-[280px_1fr] items-start">

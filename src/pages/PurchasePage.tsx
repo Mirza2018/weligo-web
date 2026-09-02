@@ -213,7 +213,7 @@ function PurchaseFlow({
   }, [key, draft]);
 
   // Price scales only with duration (hours), never with number of persons.
-  const total = user.hourlyRate * draft.duration;
+  const total = user?.hourlyRate * draft?.duration;
 
   function setStep(s: Step) {
     setDraft((d) => ({ ...d, step: s }));
@@ -222,8 +222,8 @@ function PurchaseFlow({
   }
 
   async function handleConfirm() {
-    if (!draft.agree) return toast.error(t("purchase.s4.mustAgree"));
-    if (!draft.date || !draft.slot)
+    if (!draft?.agree) return toast.error(t("purchase.s4.mustAgree"));
+    if (!draft?.date || !draft?.slot)
       return toast.error(t("purchase.s2.pickSlot"));
     if (!userInfo?._id) {
       toast.error("Please log in to complete this booking.");
@@ -231,31 +231,31 @@ function PurchaseFlow({
     }
 
     const address =
-      draft.location === "ourHome"
-        ? userInfo.address ||
-          `${userInfo.city ?? ""} ${userInfo.postalCode ?? ""}`.trim()
-        : user.address || `${user.city ?? ""} ${user.postalCode ?? ""}`.trim();
+      draft?.location === "ourHome"
+        ? userInfo?.address ||
+          `${userInfo?.city ?? ""} ${userInfo?.postalCode ?? ""}`.trim()
+        : user?.address || `${user?.city ?? ""} ${user?.postalCode ?? ""}`.trim();
 
     const location =
-      draft.location === "ourHome"
-        ? (userInfo.location ?? {
+      draft?.location === "ourHome"
+        ? (userInfo?.location ?? {
             type: "Point" as const,
             coordinates: [0, 0] as [number, number],
           })
         : user.location;
 
     const body: BookingRequestBody = {
-      customer: userInfo._id,
-      serviceProvider: user._id,
-      bookingDate: draft.date,
-      timeSlotId: draft.slot._id,
-      durationInHours: draft.duration,
-      ageGroup: draft.ageGroup,
-      numberOfPersons: draft.persons,
-      whatToExpect: draft.expect,
+      customer: userInfo?._id,
+      serviceProvider: user?._id,
+      bookingDate: draft?.date,
+      timeSlotId: draft?.slot?._id,
+      durationInHours: draft?.duration,
+      ageGroup: draft?.ageGroup,
+      numberOfPersons: draft?.persons,
+      whatToExpect: draft?.expect,
       address,
       location,
-      paymentMethod: draft.payment,
+      paymentMethod: draft?.payment,
       amount: total,
     };
 
@@ -263,13 +263,13 @@ function PurchaseFlow({
       const res = await createBooking(body).unwrap();
       setDraft((d) => ({
         ...d,
-        bookingId: res.data.booking.bookingReference,
+        bookingId: res?.data?.booking?.bookingReference,
         step: 5,
       }));
       // Stripe's return URL carries no booking/payment id, so the payment
       // success/cancel pages recover it from here.
-      setPendingPaymentBookingId(res.data.booking._id);
-      setRedirectUrl(res.data.redirectUrl);
+      setPendingPaymentBookingId(res?.data?.booking?._id);
+      setRedirectUrl(res?.data?.redirectUrl);
       localStorage.removeItem(`weligo:purchase:${serviceId}:${providerId}`);
       if (typeof window !== "undefined")
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -290,27 +290,27 @@ function PurchaseFlow({
 
   return (
     <div className="flex min-h-screen flex-col bg-[#f6f8fe]">
-      <Stepper current={draft.step} />
+      <Stepper current={draft?.step} />
 
       <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 lg:px-8">
-        {draft.step === 5 && redirectUrl ? (
+        {draft?.step === 5 && redirectUrl ? (
           <PaymentRedirectScreen
             redirectUrl={redirectUrl}
-            bookingReference={draft.bookingId ?? ""}
+            bookingReference={draft?.bookingId ?? ""}
             totalLabel={formatCHF(total)}
             providerPath={providerPath}
           />
         ) : (
           <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
             <section className="rounded-3xl bg-card p-6 shadow-sm lg:p-10">
-              {draft.step === 1 && (
+              {draft?.step === 1 && (
                 <Step1
                   user={user}
                   onNext={() => setStep(2)}
                   onBack={() => navigate(providerPath)}
                 />
               )}
-              {draft.step === 2 && (
+              {draft?.step === 2 && (
                 <Step2
                   user={user}
                   availability={availability}
@@ -321,7 +321,7 @@ function PurchaseFlow({
                   onNext={() => setStep(3)}
                 />
               )}
-              {draft.step === 3 && (
+              {draft?.step === 3 && (
                 <Step3
                   user={user}
                   draft={draft}
@@ -330,7 +330,7 @@ function PurchaseFlow({
                   onNext={() => setStep(4)}
                 />
               )}
-              {draft.step === 4 && (
+              {draft?.step === 4 && (
                 <Step4
                   user={user}
                   draft={draft}
@@ -368,11 +368,11 @@ function Stepper({ current }: { current: Step }) {
   return (
     <div className="border-b border-border/60 bg-card">
       <div className="mx-auto flex max-w-5xl items-start justify-between gap-2 px-4 py-6 lg:px-8">
-        {items.map((s, i) => {
-          const done = current > s.n;
-          const active = current === s.n;
+        {items?.map((s, i) => {
+          const done = current > s?.n;
+          const active = current === s?.n;
           return (
-            <div key={s.n} className="flex flex-1 items-start gap-2">
+            <div key={s?.n} className="flex flex-1 items-start gap-2">
               <div className="flex flex-col items-center text-center">
                 <div
                   className={cn(
@@ -382,7 +382,7 @@ function Stepper({ current }: { current: Step }) {
                     !done && !active && "bg-muted text-muted-foreground",
                   )}
                 >
-                  {done ? <Check className="h-5 w-5" /> : pad(s.n)}
+                  {done ? <Check className="h-5 w-5" /> : pad(s?.n)}
                 </div>
                 <span
                   className={cn(
@@ -392,10 +392,10 @@ function Stepper({ current }: { current: Step }) {
                       : "text-muted-foreground",
                   )}
                 >
-                  {s.label}
+                  {s?.label}
                 </span>
               </div>
-              {i < items.length - 1 && (
+              {i < items?.length - 1 && (
                 <div className="mt-5 h-px flex-1 bg-border" />
               )}
             </div>
@@ -465,7 +465,7 @@ function FooterCol({ title, links }: { title: string; links: string[] }) {
     <div>
       <h4 className="text-sm font-semibold">{title}</h4>
       <ul className="mt-4 space-y-3 text-sm text-primary-foreground/80">
-        {links.map((l) => (
+        {links?.map((l) => (
           <li key={l}>
             <a href="#" className="hover:text-white">
               {l}
@@ -489,8 +489,8 @@ function SummaryCard({
   total: number;
 }) {
   const { t, lang } = useI18n();
-  const dateLabel = draft.date
-    ? parseKey(draft.date).toLocaleDateString(
+  const dateLabel = draft?.date
+    ? parseKey(draft?.date).toLocaleDateString(
         lang === "de" ? "de-CH" : "en-GB",
         {
           month: "long",
@@ -499,8 +499,8 @@ function SummaryCard({
         },
       )
     : t("purchase.summary.notSelected");
-  const timeLabel = draft.slot
-    ? `${draft.slot.startTime}–${draft.slot.endTime}`
+  const timeLabel = draft?.slot
+    ? `${draft?.slot?.startTime}–${draft?.slot?.endTime}`
     : t("purchase.summary.notSelected");
 
   return (
@@ -510,16 +510,16 @@ function SummaryCard({
       </p>
       <div className="mt-4 flex items-center gap-3">
         <UserAvatar
-          name={user.fullName}
-          imageUrl={getImageUrl(user.profileImage) ?? undefined}
+          name={user?.fullName}
+          imageUrl={getImageUrl(user?.profileImage) ?? undefined}
           size={44}
         />
         <div>
-          <div className="font-serif text-lg font-medium">{user.fullName}</div>
+          <div className="font-serif text-lg font-medium">{user?.fullName}</div>
           <div className="flex items-center gap-1 text-xs text-muted-foreground">
             <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />{" "}
-            {user.averageRating}
-            <span className="ml-1">&middot; {user.city}</span>
+            {user?.averageRating}
+            <span className="ml-1">&middot; {user?.city}</span>
           </div>
         </div>
       </div>
@@ -538,16 +538,16 @@ function SummaryCard({
         <SumRow
           icon={<Hourglass className="h-4 w-4" />}
           label={t("purchase.summary.duration")}
-          value={`${draft.duration} ${t("purchase.s2.hours")}`}
+          value={`${draft?.duration} ${t("purchase.s2.hours")}`}
         />
         <SumRow
           icon={<MapPin className="h-4 w-4" />}
           label={t("purchase.summary.location")}
           value={
-            draft.step >= 3
-              ? draft.location === "ourHome"
+            draft?.step >= 3
+              ? draft?.location === "ourHome"
                 ? t("purchase.s3.atOurHome")
-                : t("purchase.s3.atProviderPlace", { name: user.firstName })
+                : t("purchase.s3.atProviderPlace", { name: user?.firstName })
               : t("purchase.summary.notSelected")
           }
         />
@@ -562,11 +562,11 @@ function SummaryCard({
         </span>
       </div>
       <p className="mt-1 text-right text-xs text-muted-foreground">
-        {user.hourlyRate}/hr &times; {draft.duration}h
+        {user?.hourlyRate}/hr &times; {draft?.duration}h
       </p>
       <div className="mt-5 flex items-center gap-2 text-xs text-muted-foreground">
         <ShieldCheck className="h-4 w-4 text-emerald-600" />
-        {t("purchase.summary.paymentHeld", { name: user.firstName })}
+        {t("purchase.summary.paymentHeld", { name: user?.firstName })}
       </div>
     </div>
   );
@@ -610,20 +610,20 @@ function Step1({
         {t("purchase.s1.tag")}
       </p>
       <h1 className="mt-3 font-serif text-4xl font-medium leading-tight lg:text-5xl">
-        {t("purchase.s1.heading", { name: user.firstName })}
+        {t("purchase.s1.heading", { name: user?.firstName })}
       </h1>
 
       <div className="mt-8 rounded-2xl bg-secondary/60 p-5">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
             <UserAvatar
-              name={user.fullName}
-              imageUrl={getImageUrl(user.profileImage) ?? undefined}
+              name={user?.fullName}
+              imageUrl={getImageUrl(user?.profileImage) ?? undefined}
               size={72}
             />
             <div>
               <div className="font-serif text-xl font-medium">
-                {user.fullName}
+                {user?.fullName}
               </div>
               <div className="mt-1 flex items-center gap-1 text-sm">
                 {Array.from({ length: 5 }).map((_, i) => (
@@ -631,26 +631,26 @@ function Step1({
                     key={i}
                     className={cn(
                       "h-4 w-4",
-                      i < Math.round(user.averageRating)
+                      i < Math.round(user?.averageRating)
                         ? "fill-amber-400 text-amber-400"
                         : "fill-none text-muted-foreground/30",
                     )}
                   />
                 ))}
-                <span className="ml-1 font-medium">{user.averageRating}</span>
+                <span className="ml-1 font-medium">{user?.averageRating}</span>
                 <span className="ml-1 text-muted-foreground">
-                  ({user.totalReview} {t("purchase.s1.reviews")})
+                  ({user?.totalReview} {t("purchase.s1.reviews")})
                 </span>
               </div>
               <div className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
-                <MapPin className="h-3.5 w-3.5" /> {user.city}
-                {user.postalCode ? `, ${user.postalCode}` : ""}
+                <MapPin className="h-3.5 w-3.5" /> {user?.city}
+                {user?.postalCode ? `, ${user?.postalCode}` : ""}
               </div>
             </div>
           </div>
           <div className="text-right">
             <div className="font-serif text-3xl font-semibold text-primary">
-              {formatCHF(user.hourlyRate)}
+              {formatCHF(user?.hourlyRate)}
             </div>
             <div className="text-xs text-muted-foreground">
               {t("purchase.s1.perHour")}
@@ -698,7 +698,7 @@ function Step2({
   const todayKey = fmtKey(new Date(new Date().setHours(0, 0, 0, 0)));
 
   const [viewMonth, setViewMonth] = useState<Date>(() => {
-    const base = draft.date ? parseKey(draft.date) : new Date();
+    const base = draft?.date ? parseKey(draft?.date) : new Date();
     return new Date(base.getFullYear(), base.getMonth(), 1);
   });
 
@@ -708,7 +708,7 @@ function Step2({
   );
   const monthDays = useMemo(() => buildMonthGrid(viewMonth), [viewMonth]);
 
-  const selectedDate = draft.date ? parseKey(draft.date) : null;
+  const selectedDate = draft?.date ? parseKey(draft?.date) : null;
   const selectedSlots = selectedDate
     ? getSlotsForDate(selectedDate, availability, bookings)
     : [];
@@ -724,8 +724,8 @@ function Step2({
     if (slot.booked) return; // already taken - shown red, not selectable
     const duration = clampDuration(
       slot,
-      availability.bookingRules.minimumBookingHours,
-      draft.duration,
+      availability?.bookingRules?.minimumBookingHours,
+      draft?.duration,
     );
     setDraft((d) => ({ ...d, slot, duration }));
   }
@@ -740,7 +740,7 @@ function Step2({
       availability.bookingRules.minimumBookingHours || 1,
       max,
     );
-    const next = draft.duration + delta;
+    const next = draft?.duration + delta;
     if (next < min) {
       toast.error(t("purchase.s2.minDuration"));
       return;
@@ -754,8 +754,8 @@ function Step2({
   }
 
   function handleNext() {
-    if (!draft.date) return toast.error(t("purchase.s2.pickDateFirst"));
-    if (!draft.slot) return toast.error(t("purchase.s2.pickSlot"));
+    if (!draft?.date) return toast.error(t("purchase.s2.pickDateFirst"));
+    if (!draft?.slot) return toast.error(t("purchase.s2.pickSlot"));
     onNext();
   }
 
@@ -775,7 +775,7 @@ function Step2({
         {t("purchase.s2.tag")}
       </p>
       <h1 className="mt-3 font-serif text-3xl font-medium leading-tight lg:text-4xl">
-        {t("purchase.s2.heading", { name: user.firstName })}
+        {t("purchase.s2.heading", { name: user?.firstName })}
       </h1>
 
       <div className="mt-8">
@@ -809,12 +809,12 @@ function Step2({
         </div>
 
         <div className="mt-4 grid grid-cols-7 gap-2 text-center text-xs text-muted-foreground">
-          {weekdayKeys.map((k) => (
+          {weekdayKeys?.map((k) => (
             <div key={k}>{t(`purchase.s2.weekday.${k}`)}</div>
           ))}
         </div>
         <div className="mt-2 grid grid-cols-7 gap-2">
-          {monthDays.map((d, idx) => {
+          {monthDays?.map((d, idx) => {
             if (!d) return <div key={`e-${idx}`} className="aspect-square" />;
             const dateKey = fmtKey(d);
             const past = dateKey < todayKey;
@@ -822,7 +822,7 @@ function Step2({
             const fullyBooked =
               bookable &&
               getSlotsForDate(d, availability, bookings).every((s) => s.booked);
-            const selected = draft.date === dateKey;
+            const selected = draft?.date === dateKey;
             return (
               <button
                 key={dateKey}
@@ -852,10 +852,10 @@ function Step2({
           })}
         </div>
 
-        {draft.date && (
+        {draft?.date && (
           <div className="mt-4 text-sm text-emerald-600">
-            &#10003; {t("purchase.s2.availableOn", { name: user.firstName })}{" "}
-            {parseKey(draft.date).toLocaleDateString(
+            &#10003; {t("purchase.s2.availableOn", { name: user?.firstName })}{" "}
+            {parseKey(draft?.date).toLocaleDateString(
               lang === "de" ? "de-CH" : "en-GB",
               {
                 weekday: "long",
@@ -873,27 +873,27 @@ function Step2({
             {t("purchase.s2.chooseSlot")}
           </div>
           <div className="mt-3 grid gap-3 sm:grid-cols-3">
-            {selectedSlots.map((s) => {
-              const sel = draft.slot && draft.slot._id === s._id;
+            {selectedSlots?.map((s) => {
+              const sel = draft?.slot && draft?.slot?._id === s?._id;
               return (
                 <button
-                  key={s._id}
+                  key={s?._id}
                   type="button"
-                  disabled={s.booked}
+                  disabled={s?.booked}
                   onClick={() => selectSlot(s)}
-                  title={s.booked ? "Already booked" : undefined}
+                  title={s?.booked ? "Already booked" : undefined}
                   className={cn(
                     "rounded-full border px-4 py-3 text-sm font-medium transition",
-                    s.booked &&
+                    s?.booked &&
                       "cursor-not-allowed border-red-200 bg-red-50 text-red-400 line-through",
-                    !s.booked &&
+                    !s?.booked &&
                       (sel
                         ? "border-primary bg-primary text-primary-foreground"
                         : "border-border bg-card text-foreground hover:border-primary/50"),
                   )}
                 >
-                  {s.startTime} – {s.endTime}
-                  {s.booked && (
+                  {s?.startTime} – {s?.endTime}
+                  {s?.booked && (
                     <span className="ml-1 text-[10px] normal-case no-underline">
                       (booked)
                     </span>
@@ -917,7 +917,7 @@ function Step2({
               <Minus className="h-4 w-4" />
             </button>
             <div className="font-serif text-3xl font-medium">
-              {draft.duration}
+              {draft?.duration}
             </div>
             <button
               type="button"
@@ -987,7 +987,7 @@ function Step3({
   const { t } = useI18n();
 
   function handleNext() {
-    if (!draft.ageGroup.trim())
+    if (!draft?.ageGroup.trim())
       return toast.error(t("purchase.s3.ageRequired"));
     onNext();
   }
@@ -998,7 +998,7 @@ function Step3({
         {t("purchase.s3.tag")}
       </p>
       <h1 className="mt-3 font-serif text-3xl font-medium leading-tight lg:text-4xl">
-        {t("purchase.s3.heading", { name: user.firstName })}
+        {t("purchase.s3.heading", { name: user?.firstName })}
       </h1>
 
       <div className="mt-8 space-y-6">
@@ -1007,7 +1007,7 @@ function Step3({
             {t("purchase.s3.ageGroup")}
           </label>
           <Input
-            value={draft.ageGroup}
+            value={draft?.ageGroup}
             onChange={(e) =>
               setDraft((d) => ({ ...d, ageGroup: e.target.value }))
             }
@@ -1030,7 +1030,7 @@ function Step3({
               <Minus className="h-4 w-4" />
             </button>
             <div className="font-serif text-3xl font-medium">
-              {draft.persons}
+              {draft?.persons}
             </div>
             <button
               type="button"
@@ -1048,7 +1048,7 @@ function Step3({
         </div>
         <div>
           <label className="text-sm font-medium">
-            {t("purchase.s3.tellWhat", { name: user.firstName })}
+            {t("purchase.s3.tellWhat", { name: user?.firstName })}
           </label>
           <Textarea
             value={draft.expect}
@@ -1059,7 +1059,7 @@ function Step3({
             className="mt-2 min-h-[140px] rounded-xl bg-card"
           />
           <div className="mt-1 text-right text-xs text-muted-foreground">
-            {draft.expect.length}/500
+            {draft?.expect?.length}/500
           </div>
         </div>
         <div>
@@ -1068,32 +1068,32 @@ function Step3({
           </label>
           <div className="mt-2 grid gap-3 sm:grid-cols-2">
             <LocationOption
-              active={draft.location === "ourHome"}
+              active={draft?.location === "ourHome"}
               onClick={() => setDraft((d) => ({ ...d, location: "ourHome" }))}
               icon={<HomeIcon className="h-6 w-6" />}
               label={t("purchase.s3.atOurHome")}
             />
             <LocationOption
-              active={draft.location === "providerPlace"}
+              active={draft?.location === "providerPlace"}
               onClick={() =>
                 setDraft((d) => ({ ...d, location: "providerPlace" }))
               }
               icon={<Smile className="h-6 w-6" />}
-              label={t("purchase.s3.atProviderPlace", { name: user.firstName })}
+              label={t("purchase.s3.atProviderPlace", { name: user?.firstName })}
             />
           </div>
         </div>
         <div className="space-y-3">
           <label className="flex items-center gap-3 text-sm">
             <Checkbox
-              checked={draft.meal}
+              checked={draft?.meal}
               onCheckedChange={(v) => setDraft((d) => ({ ...d, meal: !!v }))}
             />
             {t("purchase.s3.willMeal")}
           </label>
           <label className="flex items-center gap-3 text-sm">
             <Checkbox
-              checked={draft.pets}
+              checked={draft?.pets}
               onCheckedChange={(v) => setDraft((d) => ({ ...d, pets: !!v }))}
             />
             {t("purchase.s3.havePets")}
@@ -1199,16 +1199,16 @@ function Step4({
       <div className="mt-6 rounded-2xl bg-secondary/60 p-5">
         <div className="flex items-center gap-3">
           <UserAvatar
-            name={user.fullName}
-            imageUrl={getImageUrl(user.profileImage) ?? undefined}
+            name={user?.fullName}
+            imageUrl={getImageUrl(user?.profileImage) ?? undefined}
             size={48}
           />
           <div>
             <div className="flex items-center gap-2 font-serif text-lg font-medium">
-              {user.fullName}{" "}
+              {user?.fullName}{" "}
               <ShieldCheck className="h-4 w-4 text-emerald-600" />
             </div>
-            <div className="text-xs text-muted-foreground">{user.city}</div>
+            <div className="text-xs text-muted-foreground">{user?.city}</div>
           </div>
         </div>
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
@@ -1216,26 +1216,26 @@ function Step4({
           <Field
             label={t("purchase.s5.time")}
             value={
-              draft.slot
-                ? `${draft.slot.startTime} – ${draft.slot.endTime}`
+              draft?.slot
+                ? `${draft?.slot?.startTime} – ${draft?.slot?.endTime}`
                 : ""
             }
           />
           <Field
             label={t("purchase.summary.duration")}
-            value={`${draft.duration} ${t("purchase.s2.hours")}`}
+            value={`${draft?.duration} ${t("purchase.s2.hours")}`}
           />
           <Field
             label={t("purchase.s5.location")}
             value={
-              draft.location === "ourHome"
+              draft?.location === "ourHome"
                 ? t("purchase.s3.atOurHome")
-                : t("purchase.s3.atProviderPlace", { name: user.firstName })
+                : t("purchase.s3.atProviderPlace", { name: user?.firstName })
             }
           />
           <Field
             label={t("purchase.s4.children")}
-            value={`${draft.persons} ${draft.persons === 1 ? t("purchase.s4.person") : t("purchase.s4.persons")}${draft.ageGroup ? ` (${draft.ageGroup})` : ""}`}
+            value={`${draft?.persons} ${draft?.persons === 1 ? t("purchase.s4.person") : t("purchase.s4.persons")}${draft?.ageGroup ? ` (${draft?.ageGroup})` : ""}`}
           />
         </div>
       </div>
@@ -1247,8 +1247,8 @@ function Step4({
         <div className="mt-4 space-y-3 font-mono text-sm">
           <div className="flex justify-between">
             <span>
-              {user.firstName}&apos;s service — {draft.duration} hrs &times;{" "}
-              {formatCHF(user.hourlyRate)}/hr
+              {user?.firstName}&apos;s service — {draft?.duration} hrs &times;{" "}
+              {formatCHF(user?.hourlyRate)}/hr
             </span>
             <span>{formatCHF(total)}</span>
           </div>
@@ -1270,13 +1270,13 @@ function Step4({
         </div>
         <div className="mt-3 grid gap-3 sm:grid-cols-2">
           <PayOption
-            active={draft.payment === "apple_pay"}
+            active={draft?.payment === "apple_pay"}
             onClick={() => setDraft((d) => ({ ...d, payment: "apple_pay" }))}
             title={t("purchase.s4.twint")}
             sub={t("purchase.s4.twintSub")}
           />
           <PayOption
-            active={draft.payment === "card"}
+            active={draft?.payment === "card"}
             onClick={() => setDraft((d) => ({ ...d, payment: "card" }))}
             title={t("purchase.s4.card")}
             sub={t("purchase.s4.cardSub")}
@@ -1286,7 +1286,7 @@ function Step4({
 
       <div className="mt-6 flex flex-wrap gap-x-8 gap-y-2 rounded-xl bg-emerald-50 px-5 py-3 text-sm text-emerald-700">
         <span>
-          &#10003; {t("purchase.s4.payOnly", { name: user.firstName })}
+          &#10003; {t("purchase.s4.payOnly", { name: user?.firstName })}
         </span>
         <span>&#10003; {t("purchase.s4.cancel24")}</span>
         <span>&#10003; {t("purchase.s4.encrypted")}</span>
@@ -1294,7 +1294,7 @@ function Step4({
 
       <label className="mt-6 flex items-start gap-3 text-sm">
         <Checkbox
-          checked={draft.agree}
+          checked={draft?.agree}
           onCheckedChange={(v) => setDraft((d) => ({ ...d, agree: !!v }))}
           className="mt-0.5"
         />
