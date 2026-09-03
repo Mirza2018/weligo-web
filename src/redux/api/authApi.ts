@@ -78,6 +78,30 @@ export const authApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: [tagTypes.user],
     }),
+    forgotPassword: build.mutation<Response, any>({
+      query: (body) => ({
+        url: `/auth/forgot-password-otpByEmail`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: [tagTypes.user],
+    }),
+    forgotPasswordOTP: build.mutation<Response, any>({
+      query: (body) => ({
+        url: `/auth/forgot-password-otp-match`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: [tagTypes.user],
+    }),
+    forgotPasswordReset: build.mutation<Response, any>({
+      query: (body) => ({
+        url: `/auth/forgot-password-reset`,
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: [tagTypes.user],
+    }),
 
     //End
   }),
@@ -92,4 +116,7 @@ export const {
   useUserProfileQuery,
   useUserPasswordChangeMutation,
   useUserUpdateFamilyProfileMutation,
+  useForgotPasswordMutation,
+  useForgotPasswordOTPMutation,
+  useForgotPasswordResetMutation,
 } = authApi;

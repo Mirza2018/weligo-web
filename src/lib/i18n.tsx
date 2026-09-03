@@ -330,6 +330,45 @@ export const dict = {
       en: "Comfortable with pets",
     },
 
+    ///
+    forgotA: {
+      de: "Passwort vergessen?",
+      en: "Forgot your password?",
+    },
+    forgotB: {
+      de: "Kein Problem!",
+      en: "No problem!",
+    },
+    forgotC: {
+      de: "Gib deine E-Mail-Adresse ein und wir senden dir einen Link zum Zurücksetzen deines Passworts.",
+      en: "Enter your email address and we'll send you a link to reset your password.",
+    },
+
+    resetA: {
+      de: "Passwort zurücksetzen",
+      en: "Reset Password",
+    },
+    resetB: {
+      de: "Erstelle ein neues Passwort",
+      en: "Create a New Password",
+    },
+    resetc: {
+      de: "Gib dein neues Passwort ein und bestätige es, um dein Passwort zurückzusetzen.",
+      en: "Enter your new password and confirm it to reset your password.",
+    },
+    confirmPassword: {
+      de: "Passwort bestätigen",
+      en: "Confirm Password",
+    },
+    newPasswordPh: {
+      de: "Neues Passwort eingeben",
+      en: "Enter new password",
+    },
+    confirmPasswordPh: {
+      de: "Neues Passwort bestätigen",
+      en: "Confirm new password",
+    },
+
     ////
 
     fullName: { de: "Vollständiger Name", en: "Full Name" },

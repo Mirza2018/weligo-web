@@ -1,5 +1,5 @@
 // src/routes/auth/sign-up.tsx
-import { ArrowRight, ChevronDown } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useState } from "react";
 
 import { toast } from "sonner";
@@ -49,6 +49,13 @@ export function SignUp() {
       toast.error("Please fill in all fields.", { id: toastId });
       return;
     }
+    if (!location) {
+      toast.error(
+        "Please pick your address from the suggestions so we can save your location.",
+        { id: toastId },
+      );
+      return;
+    }
     if (!agree) {
       toast.error(
         t("auth.mustAgree") ?? "Please accept the terms to continue.",
@@ -67,12 +74,7 @@ export function SignUp() {
       city,
       postalCode,
       address,
-      // Fall back to (0,0) only if the address autocomplete never resolved -
-      // the form still requires a typed address either way.
-      location: location ?? {
-        type: "Point" as const,
-        coordinates: [0, 0] as [number, number],
-      },
+      location,
     };
 
     try {
@@ -107,73 +109,51 @@ export function SignUp() {
     >
       <form className="space-y-5" onSubmit={handleSubmit}>
         <div className="grid grid-cols-2 gap-4">
-          <Field label={t("auth.firstName")}>
+          <Field label={t("auth.firstName")} required>
             <input
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               placeholder={t("auth.firstNamePh")}
+              required
               className="h-12 w-full rounded-lg border border-input px-4 text-sm outline-none focus:border-primary bg-white!"
             />
           </Field>
-          <Field label={t("auth.lastName")}>
+          <Field label={t("auth.lastName")} required>
             <input
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
               placeholder={t("auth.lastNamePh")}
+              required
               className="h-12 w-full rounded-lg border border-input px-4 text-sm outline-none focus:border-primary bg-white!"
             />
           </Field>
         </div>
-        <Field label={t("auth.email")} hint={t("auth.emailHint")}>
+        <Field label={t("auth.email")} hint={t("auth.emailHint")} required>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder={t("auth.email") || "you@example.com"}
+            required
             className="h-12 w-full rounded-lg border border-input px-4 text-sm outline-none focus:border-primary bg-white!"
           />
         </Field>
-        <Field label={t("auth.password")}>
+        <Field label={t("auth.password")} required>
           <input
             type="password"
             value={pw}
             onChange={(e) => setPw(e.target.value)}
             placeholder={t("auth.passwordPh")}
+            required
             className="h-12 w-full rounded-lg border border-input px-4 text-sm outline-none focus:border-primary bg-white!"
           />
           <PasswordStrength password={pw} />
         </Field>
 
-        <div className="grid grid-cols-2 gap-4">
-          <Field label={t("auth.city")}>
-            <div className="relative">
-              <select
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                className="h-12 w-full appearance-none rounded-lg border border-input bg-white! px-4 pr-10 text-sm outline-none focus:border-primary"
-              >
-                <option value="">{t("auth.cityPh")}</option>
-                <option value="Zürich">Zürich</option>
-                <option value="Genève">Genève</option>
-                <option value="Basel">Basel</option>
-                <option value="Bern">Bern</option>
-                <option value="Lausanne">Lausanne</option>
-              </select>
-              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            </div>
-          </Field>
-          <Field label={t("auth.postCode")}>
-            <input
-              value={postalCode}
-              onChange={(e) => setPostalCode(e.target.value)}
-              placeholder={t("auth.postCodePh")}
-              className="h-12 w-full rounded-lg border border-input px-4 text-sm outline-none focus:border-primary bg-white!"
-            />
-          </Field>
-        </div>
         <Field
           label={t("auth.address")}
-          hint="Start typing and pick your address from the list."
+          hint="Start typing and pick your address from the list - it fills in city and postal code below."
+          required
         >
           <AddressAutocompleteField
             value={address}
@@ -182,15 +162,49 @@ export function SignUp() {
             className="h-12 w-full rounded-lg border border-input px-4 text-sm outline-none focus:border-primary bg-white!"
             onPlaceSelected={(place) => {
               setAddress(place.formattedAddress);
-              if (place.city) setCity((c) => c || place.city);
-              if (place.postalCode) setPostalCode((p) => p || place.postalCode);
               setLocation({
                 type: "Point",
                 coordinates: [place.lng, place.lat],
               });
+
+              // Google doesn't always return city/postal code (rural
+              // addresses, some countries, etc). When it does, auto-fill;
+              // when it doesn't - or when the user already typed something
+              // in manually - leave it alone so we don't clobber their
+              // input.
+              if (place.city) {
+                setCity((c) => c || place.city);
+              }
+              if (place.postalCode) {
+                setPostalCode((p) => p || place.postalCode);
+              }
             }}
           />
         </Field>
+        <div className="grid grid-cols-2 gap-4">
+          <Field
+            label={t("auth.city")}
+            hint="Filled automatically from your address, or enter it yourself."
+            required
+          >
+            <input
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              placeholder={t("auth.cityPh")}
+              required
+              className="h-12 w-full rounded-lg border border-input px-4 text-sm outline-none focus:border-primary bg-white!"
+            />
+          </Field>
+          <Field label={t("auth.postCode")} required>
+            <input
+              value={postalCode}
+              onChange={(e) => setPostalCode(e.target.value)}
+              placeholder={t("auth.postCodePh")}
+              required
+              className="h-12 w-full rounded-lg border border-input px-4 text-sm outline-none focus:border-primary bg-white!"
+            />
+          </Field>
+        </div>
         <p className="text-sm text-muted-foreground flex items-center gap-2">
           <Checkbox checked={agree} onCheckedChange={(v) => setAgree(!!v)} />
           {t("auth.agree")}
@@ -234,16 +248,19 @@ export function SignUp() {
 function Field({
   label,
   hint,
+  required,
   children,
 }: {
   label: string;
   hint?: string;
+  required?: boolean;
   children: React.ReactNode;
 }) {
   return (
     <div>
       <label className="mb-1.5 block text-sm font-medium text-foreground">
         {label}
+        {required && <span className="ml-0.5 text-destructive">*</span>}
       </label>
       {children}
       {hint && <p className="mt-1 text-xs text-muted-foreground">{hint}</p>}

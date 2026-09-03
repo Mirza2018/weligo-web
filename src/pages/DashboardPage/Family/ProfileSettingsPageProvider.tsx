@@ -1,6 +1,6 @@
 // src/pages/dashboard/provider/ProfileSettingsPageProvider.tsx
 import { useEffect, useRef, useState } from "react";
-import { Camera, Eye, EyeOff, Minus, Plus } from "lucide-react";
+import { Camera, Eye, EyeOff, Minus, Plus, Trash2 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
@@ -31,6 +31,33 @@ import type { GeoPoint } from "@/types/website";
 
 const LANGUAGES = ["Deutsch", "English", "Français", "Italiano"];
 
+type PreferenceKey =
+  | "nonSmoker"
+  | "driverLicense"
+  | "ownVehicle"
+  | "comfortableWithPets"
+  | "hasChildren";
+
+const PREFERENCE_OPTIONS: { key: PreferenceKey; label: string }[] = [
+  { key: "nonSmoker", label: "Non-smoker" },
+  { key: "driverLicense", label: "Driver's license" },
+  { key: "ownVehicle", label: "Own vehicle" },
+  { key: "comfortableWithPets", label: "Comfortable with pets" },
+  { key: "hasChildren", label: "Has children" },
+];
+
+type CertificateItem = {
+  /** Local React key. Equal to the server _id for existing certs. */
+  id: string;
+  /** Present only for certificates that already exist on the server. */
+  _id?: string;
+  type: string;
+  description: string;
+  imgUrl?: string;
+  file: File | null;
+  preview: string | null;
+};
+
 const profileSchema = z.object({
   firstName: z.string().min(1, "Required"),
   lastName: z.string().min(1, "Required"),
@@ -39,6 +66,10 @@ const profileSchema = z.object({
   city: z.string().min(1, "Required"),
   postalCode: z.string().min(1, "Required"),
   address: z.string().min(1, "Required"),
+  shortBioTitle: z.string().optional(),
+  shortBio: z.string().optional(),
+  longBioTitle: z.string().optional(),
+  longBio: z.string().optional(),
 });
 type ProfileValues = z.infer<typeof profileSchema>;
 
@@ -93,6 +124,21 @@ function ProfileForm() {
   const [experience, setExperience] = useState(1);
   const [languages, setLanguages] = useState<Set<string>>(new Set());
 
+  const [preferences, setPreferences] = useState<
+    Record<PreferenceKey, boolean>
+  >({
+    nonSmoker: false,
+    driverLicense: false,
+    ownVehicle: false,
+    comfortableWithPets: false,
+    hasChildren: false,
+  });
+
+  const [certificates, setCertificates] = useState<CertificateItem[]>([]);
+  const [deleteCertificateIds, setDeleteCertificateIds] = useState<string[]>(
+    [],
+  );
+
   // Google's autocomplete drives this - it's what actually gets sent as
   // `location` in the update payload. Seeded from the user's existing
   // location so saving other fields without touching the address doesn't
@@ -116,11 +162,24 @@ function ProfileForm() {
       city: "",
       postalCode: "",
       address: "",
+      shortBioTitle: "",
+      shortBio: "",
+      longBioTitle: "",
+      longBio: "",
     },
   });
 
+  // IMPORTANT: depends on `user` itself, not `user?._id`. `user` is
+  // `profileData?.data ?? storedUser`, and on first mount `storedUser`
+  // (from Redux at login) is usually a slimmer object than what
+  // `useUserProfileQuery` eventually returns. Same `_id`, different
+  // object/reference — so keying off `_id` alone meant this effect never
+  // reran once the full profile (certificates, preferences, bios) arrived,
+  // leaving the form stuck on stale/empty values.
   useEffect(() => {
     if (!user) return;
+    const providerProfile = (user as any).providerProfileId ?? {};
+
     reset({
       firstName: user.firstName ?? "",
       lastName: user.lastName ?? "",
@@ -129,15 +188,44 @@ function ProfileForm() {
       city: user.city ?? "",
       postalCode: user.postalCode ?? "",
       address: user.address ?? "",
+      shortBioTitle: providerProfile.shortBioTitle ?? "",
+      shortBio: providerProfile.shortBio ?? "",
+      longBioTitle: providerProfile.longBioTitle ?? "",
+      longBio: providerProfile.longBio ?? "",
     });
     setAddressValue(user.address ?? "");
     setLocation(user.location ?? null);
-    setCategoryId(user.categoryId ?? null);
+    setCategoryId(
+      typeof user.categoryId === "string"
+        ? user.categoryId
+        : (user.categoryId?._id ?? null),
+    );
     setHourlyRate(user.hourlyRate ?? 30);
     setExperience(user.experience ?? 1);
     setLanguages(new Set(user.lenguages ?? []));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?._id]);
+
+    setPreferences({
+      nonSmoker: providerProfile.preferences?.nonSmoker ?? false,
+      driverLicense: providerProfile.preferences?.driverLicense ?? false,
+      ownVehicle: providerProfile.preferences?.ownVehicle ?? false,
+      comfortableWithPets:
+        providerProfile.preferences?.comfortableWithPets ?? false,
+      hasChildren: providerProfile.preferences?.hasChildren ?? false,
+    });
+
+    setCertificates(
+      (providerProfile.certificates ?? []).map((c: any) => ({
+        id: c._id,
+        _id: c._id,
+        type: c.type ?? "",
+        description: c.description ?? "",
+        imgUrl: c.imgUrl ?? "",
+        file: null,
+        preview: null,
+      })),
+    );
+    setDeleteCertificateIds([]);
+  }, [user]);
 
   function toggleLanguage(lang: string) {
     setLanguages((prev) => {
@@ -145,6 +233,57 @@ function ProfileForm() {
       if (next.has(lang)) next.delete(lang);
       else next.add(lang);
       return next;
+    });
+  }
+
+  function togglePreference(key: PreferenceKey) {
+    setPreferences((prev) => ({ ...prev, [key]: !prev[key] }));
+  }
+
+  function addCertificate() {
+    setCertificates((prev) => [
+      ...prev,
+      {
+        id: `new-${Date.now()}-${Math.random().toString(36).slice(2)}`,
+        type: "",
+        description: "",
+        file: null,
+        preview: null,
+      },
+    ]);
+  }
+
+  function updateCertificate(
+    id: string,
+    field: "type" | "description",
+    value: string,
+  ) {
+    setCertificates((prev) =>
+      prev.map((c) => (c.id === id ? { ...c, [field]: value } : c)),
+    );
+  }
+
+  function handleCertificateFile(id: string, file: File | null) {
+    setCertificates((prev) =>
+      prev.map((c) =>
+        c.id === id
+          ? {
+              ...c,
+              file,
+              preview: file ? URL.createObjectURL(file) : c.preview,
+            }
+          : c,
+      ),
+    );
+  }
+
+  function removeCertificate(id: string) {
+    setCertificates((prev) => {
+      const target = prev.find((c) => c.id === id);
+      if (target?._id) {
+        setDeleteCertificateIds((ids) => [...ids, target._id as string]);
+      }
+      return prev.filter((c) => c.id !== id);
     });
   }
 
@@ -169,6 +308,18 @@ function ProfileForm() {
 
     const formData = new FormData();
     if (avatarFile) formData.append("image", avatarFile);
+
+    // Keep this the single source of truth for ordering: certificateFiles
+    // below are appended in this exact same iteration order.
+    const certificatesPayload = certificates.map((c) => {
+      const entry: Record<string, unknown> = {
+        type: c.type,
+        description: c.description,
+      };
+      if (c._id) entry._id = c._id;
+      return entry;
+    });
+
     formData.append(
       "data",
       JSON.stringify({
@@ -184,14 +335,29 @@ function ProfileForm() {
         hourlyRate,
         experience,
         lenguages: Array.from(languages),
+        shortBioTitle: values.shortBioTitle,
+        shortBio: values.shortBio,
+        longBioTitle: values.longBioTitle,
+        longBio: values.longBio,
+        preferences,
+        certificates: certificatesPayload,
+        deleteCertificateIds,
       }),
     );
+
+    certificates.forEach((c) => {
+      if (c.file) formData.append("certificateFiles", c.file);
+    });
 
     try {
       const res = await updateProfile(formData).unwrap();
 
       dispatch(setUserInfo(res.data));
       setAvatarFile(null);
+      setDeleteCertificateIds([]);
+      setCertificates((prev) =>
+        prev.map((c) => ({ ...c, file: null, preview: null })),
+      );
       toast.success(res?.message || "Profile updated");
     } catch (error: any) {
       toast.error(error?.data?.message || "Couldn't update your profile.");
@@ -268,10 +434,6 @@ function ProfileForm() {
             });
             setLocation({ type: "Point", coordinates: [place.lng, place.lat] });
 
-            // Google doesn't always return these (rural addresses, some
-            // countries, etc). When it does, auto-fill; when it doesn't,
-            // leave whatever's already there so "Required" validation
-            // forces manual entry before saving.
             if (place.city) {
               setValue("city", place.city, {
                 shouldValidate: true,
@@ -382,6 +544,143 @@ function ProfileForm() {
               >
                 {lang}
               </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <Field
+        id="shortBioTitle"
+        label="Short bio title"
+        error={errors.shortBioTitle?.message}
+      >
+        <Input id="shortBioTitle" {...register("shortBioTitle")} />
+      </Field>
+      <Field id="shortBio" label="Short bio" error={errors.shortBio?.message}>
+        <textarea
+          id="shortBio"
+          rows={3}
+          className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus:border-primary"
+          {...register("shortBio")}
+        />
+      </Field>
+      <Field
+        id="longBioTitle"
+        label="Long bio title"
+        error={errors.longBioTitle?.message}
+      >
+        <Input id="longBioTitle" {...register("longBioTitle")} />
+      </Field>
+      <Field id="longBio" label="Long bio" error={errors.longBio?.message}>
+        <textarea
+          id="longBio"
+          rows={6}
+          className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus:border-primary"
+          {...register("longBio")}
+        />
+      </Field>
+
+      <div className="space-y-1.5">
+        <Label>Preferences</Label>
+        <div className="space-y-2">
+          {PREFERENCE_OPTIONS.map(({ key, label }) => (
+            <ToggleSwitch
+              key={key}
+              checked={preferences[key]}
+              onChange={() => togglePreference(key)}
+              label={label}
+            />
+          ))}
+        </div>
+      </div>
+
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <Label>Certificates</Label>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={addCertificate}
+          >
+            Add certificate
+          </Button>
+        </div>
+
+        {certificates.length === 0 && (
+          <p className="text-xs text-muted-foreground">
+            No certificates added yet.
+          </p>
+        )}
+
+        <div className="space-y-4">
+          {certificates.map((cert) => {
+            const imageSrc =
+              cert.preview ??
+              (cert.imgUrl ? getImageUrl(cert.imgUrl) : undefined);
+            return (
+              <div
+                key={cert.id}
+                className="space-y-2 rounded-lg border border-input p-3"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-md bg-muted">
+                    {imageSrc && (
+                      <img
+                        src={imageSrc}
+                        alt={cert.type || "Certificate"}
+                        className="h-full w-full object-cover"
+                      />
+                    )}
+                  </div>
+                  <div className="flex-1 space-y-2">
+                    <Input
+                      placeholder="Certificate type"
+                      value={cert.type}
+                      onChange={(e) =>
+                        updateCertificate(cert.id, "type", e.target.value)
+                      }
+                    />
+                    <textarea
+                      placeholder="Description"
+                      rows={2}
+                      className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus:border-primary"
+                      value={cert.description}
+                      onChange={(e) =>
+                        updateCertificate(
+                          cert.id,
+                          "description",
+                          e.target.value,
+                        )
+                      }
+                    />
+                    <div className="flex items-center justify-between">
+                      <label className="cursor-pointer text-xs font-semibold text-primary">
+                        {cert.file ? cert.file.name : "Upload image"}
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) =>
+                            handleCertificateFile(
+                              cert.id,
+                              e.target.files?.[0] ?? null,
+                            )
+                          }
+                        />
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => removeCertificate(cert.id)}
+                        className="flex items-center gap-1 text-xs font-semibold text-destructive"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             );
           })}
         </div>
@@ -506,6 +805,39 @@ function ToggleEye({
       className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
     >
       {shown ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+    </button>
+  );
+}
+
+function ToggleSwitch({
+  checked,
+  onChange,
+  label,
+}: {
+  checked: boolean;
+  onChange: () => void;
+  label: string;
+}) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      onClick={onChange}
+      className="flex w-full items-center justify-between rounded-lg border border-input px-3 py-2 text-left"
+    >
+      <span className="text-sm">{label}</span>
+      <span
+        className={`relative h-5 w-9 shrink-0 rounded-full transition-colors ${
+          checked ? "bg-primary" : "bg-muted"
+        }`}
+      >
+        <span
+          className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform ${
+            checked ? "translate-x-4" : "translate-x-0.5"
+          }`}
+        />
+      </span>
     </button>
   );
 }

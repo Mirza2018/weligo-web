@@ -8,14 +8,43 @@ import { useI18n } from "../../lib/i18n";
 import { LangSwitch } from "./LangSwitch";
 import { jwtDecode, type JwtPayload } from "jwt-decode";
 
+interface AppJwtPayload extends JwtPayload {
+  role?: "family" | "provider";
+}
+
+const safeJwtDecode = <T extends JwtPayload = AppJwtPayload>(
+  token: unknown,
+): T | null => {
+  if (typeof token !== "string") {
+    console.warn("JWT token is not a string:", token);
+    return null;
+  }
+
+  const trimmedToken = token.trim();
+
+  if (!trimmedToken) {
+    return null;
+  }
+
+  try {
+    return jwtDecode<T>(trimmedToken);
+  } catch (error) {
+    console.error("Failed to decode JWT:", error);
+    return null;
+  }
+};
+
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  interface AppJwtPayload extends JwtPayload {
-    role: "family" | "provider";
-  }
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
-const decodedToken = accessToken ? jwtDecode<AppJwtPayload>(accessToken) : null;
-  const isLogin = !!accessToken;
+
+  
+  
+  const decodedToken = safeJwtDecode<AppJwtPayload>(accessToken);
+  console.log(decodedToken);
+
+
+  const isLogin = decodedToken?.role==="family"|| decodedToken?.role==="provider";
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

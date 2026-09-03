@@ -32,7 +32,7 @@ export function WelcomeToWeligo() {
     // The account is already created and logged in at this point (OTP
     // verified + profile completed), so this goes to the app, not back to
     // sign-in.
-    navigate("/");
+    navigate("/sign-in");
   };
 
   return (

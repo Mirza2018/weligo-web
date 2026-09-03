@@ -105,7 +105,7 @@ function ProvidersDetailsContent({
 }) {
   const { user, profile, reviews, ratingSummary, availability, bookings } =
     data;
-  console.log(user);
+  // console.log(user);
 
   return (
     <main className="min-h-screen bg-[#F8F9FC] text-[#202126]">
@@ -387,6 +387,18 @@ function OverviewSection({
               <p key={i}>{p}</p>
             ))}
           </div>
+
+          {/* shortBio is shown up in the hero, but it's easy to miss up
+              there — surface it again here as a lead-in line right above
+              the long bio so it isn't lost. */}
+          {profile?.shortBioTitle && (
+            <SectionTitle>{profile?.shortBioTitle}</SectionTitle>
+          )}
+          {profile?.shortBio && (
+            <p className="mt-6 max-w-[520px] font-sans text-xl leading-[1.3] text-[#1E1E22]">
+              {profile.shortBio}
+            </p>
+          )}
         </div>
         <AtGlanceCard user={user} profile={profile} />
       </div>
@@ -506,8 +518,7 @@ function BookingRequestCard({
         />
         {acceptingToday ? "Available Today" : "Not available today"}
       </p>
-
-      <a
+<a
         href="#availability"
         className="mt-5 flex h-11 w-full items-center justify-between rounded-lg border border-border bg-white px-3 font-sans text-sm font-bold text-[#303139]"
       >
@@ -624,7 +635,9 @@ function QualificationsSection({
             </div>
           )}
         </InfoCard>
-        {certificates[0] && <CertificateCard certificate={certificates[0]} />}
+        {certificates.length > 0 && (
+          <CertificateCarousel certificates={certificates} />
+        )}
       </div>
     </section>
   );
@@ -656,24 +669,90 @@ function NumberedDetail({
   );
 }
 
-function CertificateCard({
-  certificate,
+function CertificateCarousel({
+  certificates,
 }: {
-  certificate: ProviderDetailsData["profile"]["certificates"][number];
+  certificates: ProviderDetailsData["profile"]["certificates"];
 }) {
+  const [index, setIndex] = useState(0);
+  const total = certificates.length;
+  const certificate = certificates[index];
+
+  function goPrev() {
+    setIndex((i) => (i - 1 + total) % total);
+  }
+
+  function goNext() {
+    setIndex((i) => (i + 1) % total);
+  }
+
   return (
     <InfoCard className="self-start bg-white p-8">
-      <h3 className="font-serif text-2xl font-semibold">{certificate?.type}</h3>
-      {certificate?.imgUrl && (
-        <img
-          src={getImageUrl(certificate?.imgUrl) ?? undefined}
-          alt={certificate?.type}
-          className="mt-5 h-[205px] w-full rounded-xl object-cover bg-muted"
-        />
-      )}
+      <div className="flex items-center justify-between gap-3">
+        <h3 className="font-serif text-2xl font-semibold">
+          {certificate?.type}
+        </h3>
+        {total > 1 && (
+          <span className="shrink-0 font-mono text-xs text-[#9CA0AE]">
+            {index + 1}/{total}
+          </span>
+        )}
+      </div>
+
+      <div className="relative mt-5">
+        {certificate?.imgUrl ? (
+          <img
+            src={getImageUrl(certificate.imgUrl) ?? undefined}
+            alt={certificate.type}
+            className="h-[205px] w-full rounded-xl object-cover bg-muted"
+          />
+        ) : (
+          <div className="flex h-[205px] w-full items-center justify-center rounded-xl bg-muted text-xs text-muted-foreground">
+            No image
+          </div>
+        )}
+
+        {total > 1 && (
+          <>
+            <button
+              type="button"
+              aria-label="Previous certificate"
+              onClick={goPrev}
+              className="absolute left-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#303139] shadow hover:bg-white"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              aria-label="Next certificate"
+              onClick={goNext}
+              className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-[#303139] shadow hover:bg-white"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </>
+        )}
+      </div>
+
       <p className="mt-4 font-mono text-xs leading-relaxed text-[#9CA0AE]">
         {certificate?.description}
       </p>
+
+      {total > 1 && (
+        <div className="mt-4 flex justify-center gap-1.5">
+          {certificates.map((c, i) => (
+            <button
+              key={c._id}
+              type="button"
+              aria-label={`Go to certificate ${i + 1}`}
+              onClick={() => setIndex(i)}
+              className={`h-1.5 rounded-full transition-all ${
+                i === index ? "w-5 bg-primary" : "w-1.5 bg-[#DDE1EE]"
+              }`}
+            />
+          ))}
+        </div>
+      )}
     </InfoCard>
   );
 }

@@ -56,6 +56,9 @@ import { MessagePage } from "@/pages/DashboardPage/message_page/MessagePage";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { ProviderOnboardingProvider } from "@/context/ProviderOnboardingContext";
 import { SocketProvider } from "@/socket/SocketProvider";
+import { ForgotPassword } from "@/pages/auth/forgot-pass";
+import { ForgetCode } from "@/pages/auth/forget-otp";
+import { ResetPassword } from "@/pages/auth/reset-password";
 
 const router = createBrowserRouter([
   {
@@ -255,6 +258,18 @@ const router = createBrowserRouter([
     element: <SignIn />,
   },
   {
+    path: "/forgot-password",
+    element: <ForgotPassword />,
+  },
+  {
+    path: "/reset-password",
+    element: <ResetPassword />,
+  },
+  {
+    path: "/forgot-code",
+    element: <ForgetCode />,
+  },
+  {
     path: "/choose-account",
     element: <ChooseRole />,
   },
@@ -267,7 +282,7 @@ const router = createBrowserRouter([
     element: <SubmitCode />,
   },
   {
-    path: "/more-info",
+    path: "/more-info-family",
     element: <MoreInfo />,
   },
   {
