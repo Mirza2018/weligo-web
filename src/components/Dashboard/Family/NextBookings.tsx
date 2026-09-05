@@ -50,7 +50,7 @@ export function NextBookings({ booking }: { booking: NextBooking | null }) {
     return (
       <SectionCard title={t("overview.nextBooking")}>
         <p className="py-8 text-center text-sm text-muted-foreground">
-          No upcoming bookings yet.
+          {t("familyDashboard.noupcoming")}
         </p>
       </SectionCard>
     );

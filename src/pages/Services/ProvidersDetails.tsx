@@ -38,6 +38,7 @@ import { GoogleMap, MarkerF } from "@react-google-maps/api";
 import { jwtDecode } from "jwt-decode";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
+import { useI18n } from "@/lib/i18n";
 
 const navItemDefs = [
   { key: "overview", href: "#overview" },
@@ -49,11 +50,12 @@ const navItemDefs = [
 
 const ProvidersDetails = () => {
   const navigate = useNavigate();
+  const { t } = useI18n()
   const { serviceId, providerId } = useParams<{
     serviceId: string;
     providerId: string;
   }>();
-
+ 
   const { data, isLoading, isError } = useProviderDetailsQuery(
     providerId ?? "",
     {
@@ -67,16 +69,16 @@ const ProvidersDetails = () => {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center gap-3 bg-[#F8F9FC] px-6 text-center">
         <p className="font-serif text-2xl font-semibold text-[#1E1E22]">
-          We couldn&apos;t load this profile
+          {t("providers.couldntLoad")}
         </p>
         <p className="max-w-sm text-sm text-muted-foreground">
-          It may have been removed, or something went wrong on our end.
+          {t("providers.mayRemove")}
         </p>
         <button
           onClick={() => navigate(-1)}
           className="mt-2 rounded-full bg-primary px-5 py-2 text-sm font-bold text-primary-foreground"
         >
-          Go back
+          {t("providers.goBack")}
         </button>
       </main>
     );
@@ -156,18 +158,18 @@ function HeroSection({
   onBack: () => void;
 }) {
   const tags = useMemo(() => buildProfileTags(user, profile), [user, profile]);
-
+const { t } = useI18n()
   return (
     <section className="bg-[#EEF0FF]">
       <div className="mx-auto max-w-430 px-6 py-4 sm:px-10 lg:px-19.75">
         <div className="flex items-center justify-between">
           <IconButton
-            label="Go back"
+            label={t("providers.goBack")}
             icon={ChevronLeft}
             variant="solid"
             onClick={onBack}
           />
-          <IconButton label="Report profile" icon={Flag} />
+          <IconButton label={t("providers.profileReport")} icon={Flag} />
         </div>
 
         <div className="grid items-end gap-12 pt-3 lg:grid-cols-[1fr_1.02fr]">
@@ -239,6 +241,8 @@ function ProfileSummary({
   const [firstName, ...rest] = user.fullName.split(" ");
   const lastName = rest.join(" ");
 
+  const { t } = useI18n()
+
   return (
     <div className="max-w-[545px] pb-3">
       <ProfileAvatar
@@ -261,7 +265,8 @@ function ProfileSummary({
         <div className="mt-4 flex items-center gap-2 font-serif text-xl text-[#1E1E22]">
           <StarRating rating={ratingSummary.averageRating} />
           <span>
-            {ratingSummary.averageRating} ({ratingSummary.totalReviews} Reviews)
+            {ratingSummary.averageRating} ({ratingSummary.totalReviews}{" "}
+            {t("providers.reviews")})
           </span>
         </div>
 
@@ -331,6 +336,7 @@ function HeroImage({ src, alt }: { src: string; alt: string }) {
 }
 
 function DetailsNav({ reviewCount }: { reviewCount: number }) {
+  const { t } = useI18n();
   return (
     <nav className="sticky top-0 z-20 border-b border-transparent bg-[#F8F9FC]/95 backdrop-blur">
       <div className="mx-auto flex max-w-430 gap-7 overflow-x-auto px-6 pt-8 sm:px-10 lg:px-16">
@@ -346,7 +352,7 @@ function DetailsNav({ reviewCount }: { reviewCount: number }) {
           >
             {item?.key === "reviews"
               ? `Reviews (${reviewCount})`
-              : navLabel(item?.key)}
+              : navLabel(item?.key,t)}
           </a>
         ))}
       </div>
@@ -354,13 +360,29 @@ function DetailsNav({ reviewCount }: { reviewCount: number }) {
   );
 }
 
-function navLabel(key: string) {
+
+
+// function navLabel(key: string) {
+
+
+//   const labels: Record<string, string> = {
+//     overview: "Overview",
+//     experience: "Experience & Qualifications",
+//     availability: "Availability",
+//     location: "Location",
+//   };
+  
+//   return labels[key] ?? key;
+// }
+
+function navLabel(key: string, t: any) {
   const labels: Record<string, string> = {
-    overview: "Overview",
-    experience: "Experience & Qualifications",
-    availability: "Availability",
-    location: "Location",
+    overview: t("providers.overview"),
+    experience: t("providers.experienceQualifications"),
+    availability: t("providers.availability"),
+    location: t("providers.location"),
   };
+
   return labels[key] ?? key;
 }
 
@@ -410,16 +432,39 @@ function AtGlanceCard({
   user,
   profile,
 }: Pick<ProviderDetailsData, "user" | "profile">) {
+  const { t } = useI18n()
   const items: [string, string][] = [
-    ["Experience", `${user?.experience} years`],
-    ["Languages", user?.lenguages?.join(", ") || "—"],
-    ["Smoker", profile?.preferences?.nonSmoker ? "No" : "Yes"],
-    ["Has Children", profile?.preferences?.hasChildren ? "Yes" : "No"],
-    ["Drives", profile?.preferences?.driverLicense ? "Yes" : "No"],
-    ["Own Vehicle", profile?.preferences?.ownVehicle ? "Yes" : "No"],
+    [`${t("providers.experience")}`, `${user?.experience} years`],
+    [`${t("providers.languages")}`, user?.lenguages?.join(", ") || "—"],
     [
-      "Comfortable with Pets",
-      profile?.preferences?.comfortableWithPets ? "Yes" : "No",
+      `${t("providers.smoker")}`,
+      profile?.preferences?.nonSmoker
+        ? `${t("providers.no")}`
+        : `${t("providers.yes")}`,
+    ],
+    [
+      `${t("providers.hasChildren")}`,
+      profile?.preferences?.hasChildren
+        ? `${t("providers.yes")}`
+        : `${t("providers.no")}`,
+    ],
+    [
+      `${t("providers.drives")}`,
+      profile?.preferences?.driverLicense
+        ? `${t("providers.yes")}`
+        : `${t("providers.no")}`,
+    ],
+    [
+      `${t("providers.ownVehicle")}`,
+      profile?.preferences?.ownVehicle
+        ? `${t("providers.yes")}`
+        : `${t("providers.no")}`,
+    ],
+    [
+      `${t("providers.pets")}`,
+      profile?.preferences?.comfortableWithPets
+        ? `${t("providers.yes")}`
+        : `${t("providers.no")}`,
     ],
   ];
 
@@ -462,7 +507,7 @@ function BookingRequestCard({
   providerId?: string;
 }) {
   const navigate = useNavigate();
-
+const { t } = useI18n()
 
   const todaySchedule = availability?.weeklySchedule?.find(
     (d) => d.day === weekdayFromDate(new Date()),
@@ -479,7 +524,7 @@ function BookingRequestCard({
   
   
     const handleMessage = async () => {
-      const toastId = toast.loading("Please wait...");
+      const toastId = toast.loading(`${t("providers.pleaseWait")}`);
       try {
         const res = await createChat({ users: [user?._id] }).unwrap();
   
@@ -505,7 +550,9 @@ function BookingRequestCard({
     <InfoCard className="bg-white p-4 sm:p-6">
       <div className="font-serif text-[44px] font-semibold leading-none text-primary">
         {user.hourlyRate}{" "}
-        <span className="font-sans text-xl text-[#44454C]">/ hour</span>
+        <span className="font-sans text-xl text-[#44454C]">
+          {t("services.perHr")}
+        </span>
       </div>
 
       <p
@@ -516,15 +563,17 @@ function BookingRequestCard({
         <span
           className={`h-3 w-3 rounded-full ${acceptingToday ? "bg-[#22C55E]" : "bg-[#9CA0AE]"}`}
         />
-        {acceptingToday ? "Available Today" : "Not available today"}
+        {acceptingToday
+          ? `${t("providers.available")}`
+          : `${t("providers.notAvailable")}`}
       </p>
-<a
+      <a
         href="#availability"
         className="mt-5 flex h-11 w-full items-center justify-between rounded-lg border border-border bg-white px-3 font-sans text-sm font-bold text-[#303139]"
       >
         <span className="flex items-center gap-3">
           <CalendarDays className="h-5 w-5" />
-          Pick your Dates
+          {t("providers.pickDates")}
         </span>
         <ChevronRight className="h-5 w-5" />
       </a>
@@ -539,7 +588,7 @@ function BookingRequestCard({
           }}
           className="mt-7 flex h-11 w-full items-center justify-center gap-2 rounded-full bg-primary font-sans text-sm font-bold text-primary-foreground"
         >
-          Send booking request
+          {t("providers.sendRequest")}
           <ArrowRight className="h-5 w-5" />
         </button>
       ) : (
@@ -549,7 +598,7 @@ function BookingRequestCard({
           }}
           className="mt-7 flex h-11 w-full items-center justify-center gap-2 rounded-full bg-primary font-sans text-sm font-bold text-primary-foreground"
         >
-          Login as a Family to Book
+          {t("providers.familyLogin")}
           <ArrowRight className="h-5 w-5" />
         </button>
       )}
@@ -559,7 +608,7 @@ function BookingRequestCard({
           className="mt-2 flex h-11 w-full items-center justify-center gap-2 rounded-full border border-primary bg-white font-sans text-sm font-bold text-primary"
         >
           <MessageCircle className="h-5 w-5" />
-          Send message
+          {t("providers.sendMessage")}
         </button>
       )}
 
@@ -570,16 +619,18 @@ function BookingRequestCard({
             providerName={user?.fullName}
             className=""
           />
-          Add to favorites
+          {t("providers.addFavorite")}
         </div>
       )}
 
       <div className="mt-7 space-y-4 border-t border-border pt-7">
-        <TrustItem icon={ShieldCheck} label="Verified Profile" />
-        <TrustItem icon={CreditCard} label="Secure payment" />
+        <TrustItem icon={ShieldCheck} label={t("providers.verifiedProfile")} />
+
+        <TrustItem icon={CreditCard} label={t("providers.securePayment")} />
+
         <TrustItem
           icon={Check}
-          label={`Min. booking ${availability?.bookingRules.minimumBookingHours}h`}
+          label={`${t("providers.minBooking")} ${availability?.bookingRules.minimumBookingHours}h`}
         />
       </div>
     </InfoCard>
@@ -611,16 +662,17 @@ function QualificationsSection({
   profile,
 }: Pick<ProviderDetailsData, "profile">) {
   const certificates = profile?.certificates ?? [];
+  const { t } = useI18n();
 
   return (
     <section id="experience" className="scroll-mt-28">
-      <SectionKicker>Experience & Qualifications</SectionKicker>
-      <SectionTitle>Trained. Certified. Trusted.</SectionTitle>
+      <SectionKicker>{t("providers.experienceQualifications")}</SectionKicker>
+      <SectionTitle>{t("providers.tct")}</SectionTitle>
       <div className="mt-7 grid gap-8 lg:grid-cols-[1fr_336px]">
         <InfoCard className="bg-white px-8 py-8">
           {certificates?.length === 0 ? (
             <p className="font-sans text-base text-muted-foreground">
-              No certificates listed yet.
+              {t("providers.noCertificates")}
             </p>
           ) : (
             <div className="divide-y divide-border">
@@ -685,7 +737,7 @@ function CertificateCarousel({
   function goNext() {
     setIndex((i) => (i + 1) % total);
   }
-
+const { t } = useI18n();
   return (
     <InfoCard className="self-start bg-white p-8">
       <div className="flex items-center justify-between gap-3">
@@ -708,7 +760,7 @@ function CertificateCarousel({
           />
         ) : (
           <div className="flex h-[205px] w-full items-center justify-center rounded-xl bg-muted text-xs text-muted-foreground">
-            No image
+            {t("providers.noImage")}
           </div>
         )}
 
@@ -767,18 +819,18 @@ function ReviewsSection({
 }: Pick<ProviderDetailsData, "reviews" | "ratingSummary">) {
   const left = reviews?.filter((_, i) => i % 2 === 0);
   const right = reviews?.filter((_, i) => i % 2 === 1);
-
+const { t } = useI18n();
   return (
     <section id="reviews" className="scroll-mt-28">
       <SectionKicker>Reviews</SectionKicker>
       <h2 className="font-serif text-[32px] font-semibold leading-tight text-[#1E1E22]">
         {ratingSummary?.totalReviews} reviews, {ratingSummary?.averageRating}{" "}
-        average.
+        {t("providers.average")}
       </h2>
 
       {reviews.length === 0 ? (
         <p className="mt-8 font-sans text-base text-muted-foreground">
-          No reviews yet.
+          {t("providers.noRatting")}
         </p>
       ) : (
         <div className="mt-8 grid gap-5 lg:grid-cols-[280px_1fr_1fr]">
@@ -802,6 +854,7 @@ function ReviewsSection({
 function ReviewStatsCard({
   ratingSummary,
 }: Pick<ProviderDetailsData, "ratingSummary">) {
+  const { t } = useI18n();
   return (
     <InfoCard className="self-start bg-[#EEF0FF] p-7">
       <div className="font-serif text-[64px] font-semibold leading-none text-primary">
@@ -809,7 +862,8 @@ function ReviewStatsCard({
       </div>
       <StarRating rating={ratingSummary?.averageRating} className="mt-7" />
       <p className="mt-4 font-mono text-[10px] leading-tight text-[#9CA0AE]">
-        Based on {ratingSummary?.totalReviews} verified review
+        {t("providers.basedon")} {ratingSummary?.totalReviews}{" "}
+        {t("providers.verifiedReview")}
         {ratingSummary?.totalReviews === 1 ? "" : "s"}
       </p>
       <div className="mt-5 space-y-2">
@@ -818,7 +872,9 @@ function ReviewStatsCard({
             key={bucket?.rating}
             className="grid grid-cols-[44px_1fr_30px] gap-2"
           >
-            <span className="font-sans text-xs">{bucket?.rating} stars</span>
+            <span className="font-sans text-xs">
+              {bucket?.rating} {t("providers.stars")}
+            </span>
             <span className="mt-1 h-2 rounded-full bg-[#DDE1EE]">
               <span
                 className="block h-full rounded-full bg-primary"
@@ -889,13 +945,16 @@ function AvailabilitySection({
   availability,
   bookings,
 }: Pick<ProviderDetailsData, "user" | "availability" | "bookings">) {
+  const { t } = useI18n();
   return (
     <section id="availability" className="scroll-mt-28">
       <SectionKicker>Availability</SectionKicker>
       <h2 className="font-serif text-[34px] font-semibold leading-tight">
-        When{" "}
-        <span className="font-serif-italic text-primary">{user?.firstName}</span>{" "}
-        is free.
+        {t("providers.when")}{" "}
+        <span className="font-serif-italic text-primary">
+          {user?.firstName}
+        </span>{" "}
+        {t("providers.free")}
       </h2>
       <div className="mt-8 grid gap-5 lg:grid-cols-[280px_1fr]">
         <WeeklyHoursCard availability={availability} />
@@ -909,10 +968,12 @@ function WeeklyHoursCard({
   availability,
 }: Pick<ProviderDetailsData, "availability">) {
   const byDay = new Map(availability?.weeklySchedule?.map((d) => [d.day, d]));
-
+const { t } = useI18n();
   return (
     <InfoCard className="bg-white p-5">
-      <SectionKicker className="text-[9px]">Weekly Hours</SectionKicker>
+      <SectionKicker className="text-[9px]">
+        {t("providers.weeklyHours")}
+      </SectionKicker>
       <div className="mt-4 divide-y divide-border">
         {WEEKDAYS_MON_FIRST.map((day) => {
           const schedule = byDay.get(day);
@@ -921,8 +982,8 @@ function WeeklyHoursCard({
             status === "available"
               ? formatSlotRange(schedule!.slots)
               : status === "partial"
-                ? "No slot"
-                : "Unavailable";
+                ? `${t("providers.noslot")}`
+                : `${t("providers.unavailable")}`;
 
           return (
             <div key={day} className="flex items-center justify-between py-3">
@@ -964,6 +1025,7 @@ function CalendarCard({
     month: "long",
     year: "numeric",
   });
+  const { t } = useI18n();
 
   return (
     <InfoCard className="bg-white p-6">
@@ -1014,15 +1076,15 @@ function CalendarCard({
       <div className="mt-5 flex flex-wrap justify-center gap-5 font-sans text-[10px]">
         <span className="flex items-center gap-1">
           <span className="h-2 w-2 rounded-sm bg-[#22C55E]" />
-          Available
+          {t("providers.availabl")}
         </span>
         <span className="flex items-center gap-1">
           <span className="h-2 w-2 rounded-sm bg-[#FDE9C8]" />
-          No slot
+          {t("providers.noslot")}
         </span>
         <span className="flex items-center gap-1">
           <span className="h-2 w-2 rounded-sm bg-[#E5E8EF]" />
-          Unavailable
+          {t("providers.unavailable")}
         </span>
       </div>
     </InfoCard>
@@ -1034,13 +1096,16 @@ function CalendarCard({
 /* -------------------------------------------------------------------- */
 
 function LocationSection({ user }: Pick<ProviderDetailsData, "user">) {
+  const { t } = useI18n();
   return (
     <section id="location" className="scroll-mt-28">
-      <SectionKicker>Location</SectionKicker>
+      <SectionKicker>{t("providers.location")}</SectionKicker>
       <h2 className="font-serif text-[34px] font-semibold leading-tight">
-        Where{" "}
-        <span className="font-serif-italic text-primary">{user?.firstName}</span>{" "}
-        works.
+        {t("providers.where")}
+        <span className="font-serif-italic text-primary">
+          {user?.firstName}
+        </span>{" "}
+        {t("providers.works")}
       </h2>
       <div className="mt-8 grid gap-5 lg:grid-cols-[280px_1fr] items-start">
         <LocationInfoCard user={user} />
@@ -1091,9 +1156,12 @@ function ProviderLocationMap({ user }: Pick<ProviderDetailsData, "user">) {
 }
 
 function LocationInfoCard({ user }: Pick<ProviderDetailsData, "user">) {
+  const { t } = useI18n();
   return (
     <InfoCard className="bg-[#EEF0FF] p-5">
-      <SectionKicker className="text-[9px]">Based in</SectionKicker>
+      <SectionKicker className="text-[9px]">
+        {t("providers.basedin")}
+      </SectionKicker>
       <h3 className="mt-3 font-serif text-xl font-semibold">
         {user.city}
         {user.postalCode ? `, ${user.postalCode}` : ""}
@@ -1107,7 +1175,7 @@ function LocationInfoCard({ user }: Pick<ProviderDetailsData, "user">) {
         )}
       </h3>
       <p className="mt-4 font-sans text-[11px] leading-relaxed text-[#555866]">
-        Serves the {user.city} area.
+        {t("providers.serves")} {user.city} {t("providers.area")}
       </p>
     </InfoCard>
   );

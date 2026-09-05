@@ -83,7 +83,9 @@ export function BookingsPage() {
 
   return (
     <div className="flex flex-col gap-5">
-      <h2 className="font-serif text-3xl font-medium tracking-tight">{t("bookings.title")}</h2>
+      <h2 className="font-serif text-3xl font-medium tracking-tight">
+        {t("bookings.title")}
+      </h2>
 
       <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
         <Tabs
@@ -105,7 +107,7 @@ export function BookingsPage() {
                 value={f}
                 className="flex-shrink-0 whitespace-nowrap rounded-full px-3 py-1.5 text-sm data-[state=active]:bg-white data-[state=active]:text-black data-[state=active]:font-bold data-[state=active]:border data-[state=active]:border-[#2B2B2B]/10 data-[state=active]:shadow"
               >
-                {f === "all" ? t("bookings.all") : t(`bookingStatus.${f}`)} 
+                {f === "all" ? t("bookings.all") : t(`bookingStatus.${f}`)}
               </TabsTrigger>
             ))}
           </TabsList>
@@ -130,13 +132,23 @@ export function BookingsPage() {
           <TableHeader>
             <TableRow className="bg-secondary/50 hover:bg-secondary/50">
               <TableHead className="px-4 py-3">{t("bookings.id")}</TableHead>
-              <TableHead className="px-4 py-3">{t("bookings.provider")}</TableHead>
-              <TableHead className="px-4 py-3">{t("bookings.service")}</TableHead>
+              <TableHead className="px-4 py-3">
+                {t("bookings.provider")}
+              </TableHead>
+              <TableHead className="px-4 py-3">
+                {t("bookings.service")}
+              </TableHead>
               <TableHead className="px-4 py-3">{t("bookings.date")}</TableHead>
               <TableHead className="px-4 py-3">{t("bookings.time")}</TableHead>
-              <TableHead className="px-4 py-3">{t("bookings.amount")}</TableHead>
-              <TableHead className="px-4 py-3">{t("bookings.status")}</TableHead>
-              <TableHead className="px-4 py-3 text-right">{t("bookings.action")}</TableHead>
+              <TableHead className="px-4 py-3">
+                {t("bookings.amount")}
+              </TableHead>
+              <TableHead className="px-4 py-3">
+                {t("bookings.status")}
+              </TableHead>
+              <TableHead className="px-4 py-3 text-right">
+                {t("bookings.action")}
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -151,7 +163,10 @@ export function BookingsPage() {
 
             {!isLoading && isError && (
               <TableRow>
-                <TableCell colSpan={8} className="px-4 py-10 text-center text-sm text-muted-foreground">
+                <TableCell
+                  colSpan={8}
+                  className="px-4 py-10 text-center text-sm text-muted-foreground"
+                >
                   Couldn&apos;t load your bookings.
                 </TableCell>
               </TableRow>
@@ -170,8 +185,11 @@ export function BookingsPage() {
 
             {!isLoading && !isError && pageItems.length === 0 && (
               <TableRow>
-                <TableCell colSpan={8} className="px-4 py-10 text-center text-sm text-muted-foreground">
-                  No bookings found
+                <TableCell
+                  colSpan={8}
+                  className="px-4 py-10 text-center text-sm text-muted-foreground"
+                >
+                  {t("familyDashboard.nobookings")}
                 </TableCell>
               </TableRow>
             )}

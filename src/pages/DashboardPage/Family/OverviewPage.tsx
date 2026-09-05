@@ -16,10 +16,11 @@ import type { RootState } from "@/redux/store";
 
 export function OverviewPage() {
   const { t } = useI18n();
-  const { data, isLoading } = useMyOverviewQuery();
+  const { data, isLoading } = useMyOverviewQuery({});
 
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
   const decoded = decodeAccessToken(accessToken);
+  const userInfo = useSelector((state: RootState) => state.auth.userInfo);
 
   const overview = data?.data;
   const stats = overview?.stats;
@@ -48,10 +49,13 @@ export function OverviewPage() {
     <div className="flex flex-col gap-5">
       <div>
         <h2 className="font-serif-italic text-3xl">
-          {t("overview.hello")} {firstNameOf(decoded?.fullName)}
+          {t("overview.hello")} {firstNameOf(userInfo?.fullName)}
           <span className="ml-1">👋</span>
         </h2>
-        <p className="text-sm text-muted-foreground">Welcome back.</p>
+        <p className="text-sm text-muted-foreground">
+          {" "}
+          {t("familyDashboard.welcome")}
+        </p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">

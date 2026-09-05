@@ -34,7 +34,7 @@ export function RecentMessages({
     >
       {messages.length === 0 ? (
         <p className="py-8 text-center text-sm text-muted-foreground">
-          No messages yet.
+          {t("familyDashboard.nomessages")}
         </p>
       ) : (
         <ul className="flex flex-col gap-3">

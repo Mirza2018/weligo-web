@@ -125,7 +125,7 @@ export function YourBookings() {
                 ))}
                 {byTab[tab].length === 0 && (
                   <li className="py-6 text-center text-sm text-muted-foreground">
-                    No bookings
+                    {t("familyDashboard.nobookings")}
                   </li>
                 )}
               </ul>

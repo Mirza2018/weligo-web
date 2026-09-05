@@ -75,7 +75,7 @@ export function SignIn() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder={t("auth.newPasswordPh")}
+            placeholder={t("auth.password")}
             className="h-12 w-full rounded-lg border border-input bg-background px-4 text-sm outline-none focus:border-primary bg-white!"
           />
         </Field>

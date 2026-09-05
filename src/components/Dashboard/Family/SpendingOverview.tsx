@@ -36,7 +36,7 @@ export function SpendingOverview({
 
       {slices.length === 0 ? (
         <p className="mt-4 text-sm text-muted-foreground">
-          No spending recorded yet.
+          {t("familyDashboard.nospending")}
         </p>
       ) : (
         <div className="mt-4 flex items-center gap-4">

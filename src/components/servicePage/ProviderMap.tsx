@@ -6,6 +6,7 @@ import { useGoogleMaps } from "@/lib/googleMaps";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Provider } from "@/types/website";
 import { getImageUrl } from "@/redux/getBaseUrl";
+import { useI18n } from "@/lib/i18n";
 
 interface ProviderMapProps {
   providers: Provider[];
@@ -33,6 +34,7 @@ export function ProviderMap({
 }: ProviderMapProps) {
   const { isLoaded, loadError } = useGoogleMaps();
   const router = useNavigate();
+  const { t } = useI18n();
   const { serviceId } = useParams();
   const [openId, setOpenId] = useState<string | null>(null);
 
@@ -126,7 +128,7 @@ export function ProviderMap({
 
                       {/* Hourly Rate */}
                       <span className="text-xs font-medium text-gray-500">
-                        {provider.hourlyRate} / hr
+                        {provider.hourlyRate} {t("services.perHr")}
                       </span>
                     </div>
                   </div>
@@ -135,7 +137,7 @@ export function ProviderMap({
                 {/* Bottom action */}
                 <div className="border-t bg-gray-50 px-3 py-2 text-center">
                   <span className="text-xs font-medium text-purple-600">
-                    View provider details →
+                    {t("services.providerDetails")} →
                   </span>
                 </div>
               </div>

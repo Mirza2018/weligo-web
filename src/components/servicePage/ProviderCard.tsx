@@ -9,6 +9,7 @@ import { FavoriteButton } from "./FavoriteButton";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/redux/store";
 import { jwtDecode } from "jwt-decode";
+import { useI18n } from "@/lib/i18n";
 
 interface ProviderCardProps {
   provider: Provider;
@@ -34,7 +35,7 @@ export function ProviderCard({
   const router = useNavigate();
   const { serviceId } = useParams();
   const accessToken = useSelector((state: RootState) => state.auth.accessToken);
-
+const {t}=useI18n()
   const decodedToken = accessToken
     ? jwtDecode<DecodedToken>(accessToken)
     : null;
@@ -77,7 +78,7 @@ export function ProviderCard({
         <p className="mt-2 font-sans text-base font-semibold text-foreground">
           {provider.categoryId?.name}
           {provider.experience
-            ? ` \u2022 ${provider.experience} yrs experience`
+            ? `• ${provider.experience} ${t("services.yearsExp")}`
             : ""}
         </p>
         <p className="mt-1 truncate font-sans text-sm font-medium text-muted-foreground">
@@ -86,7 +87,7 @@ export function ProviderCard({
         </p>
 
         <div className="mt-3 inline-flex items-center rounded-full bg-primary px-3 py-1.5 font-sans text-sm font-bold text-primary-foreground">
-          {provider.hourlyRate} / hr
+          {provider.hourlyRate} {t("services.perHr")}
         </div>
 
         {decodedToken?.role === "family" && (

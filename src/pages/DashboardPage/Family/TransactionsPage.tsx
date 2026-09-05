@@ -23,8 +23,7 @@ import { useGetTransactionsQuery } from "../../../redux/api/websiteApi"; // adju
 import { formatCHF } from "../../../lib/format";
 import { cn } from "../../../lib/utils";
 import { toast } from "sonner";
-
-
+import { useI18n } from "@/lib/i18n";
 
 // Map API paymentStatus values to badge styles
 const statusClass: Record<string, string> = {
@@ -163,12 +162,14 @@ export function TransactionsPage() {
       toast.error("Could not generate invoice");
     }
   };
-
+  const { t } = useI18n();
   return (
     <div className="flex flex-col gap-6">
-      <h2 className="font-serif text-3xl font-medium">Transactions</h2>
+      <h2 className="font-serif text-3xl font-medium">
+        {t("familyDashboard.transactions")}
+      </h2>
       <Input
-        placeholder="Search by provider name..."
+        placeholder={t("familyDashboard.search")}
         value={searchInput}
         onChange={(e) => setSearchInput(e.target.value)}
         className="max-w-sm bg-card"
@@ -177,11 +178,11 @@ export function TransactionsPage() {
         <Table>
           <TableHeader>
             <TableRow className="bg-secondary/60">
-              <TableHead>Booking ID</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>Provider Name</TableHead>
-              <TableHead>Amount</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead>{t("familyDashboard.bookingID")}</TableHead>
+              <TableHead>{t("familyDashboard.date")}</TableHead>
+              <TableHead>{t("familyDashboard.providername")}</TableHead>
+              <TableHead>{t("familyDashboard.amount")}</TableHead>
+              <TableHead>{t("familyDashboard.status")}</TableHead>
               <TableHead className="w-12" />
             </TableRow>
           </TableHeader>
@@ -192,7 +193,7 @@ export function TransactionsPage() {
                   colSpan={6}
                   className="text-center text-muted-foreground py-8"
                 >
-                  Loading transactions...
+                  {t("familyDashboard.loadtransactions")}
                 </TableCell>
               </TableRow>
             ) : isError ? (
@@ -201,7 +202,7 @@ export function TransactionsPage() {
                   colSpan={6}
                   className="text-center text-destructive py-8"
                 >
-                  Failed to load transactions.
+                  {t("familyDashboard.failedToLoad")}
                 </TableCell>
               </TableRow>
             ) : rows.length === 0 ? (
@@ -210,7 +211,7 @@ export function TransactionsPage() {
                   colSpan={6}
                   className="text-center text-muted-foreground py-8"
                 >
-                  No transactions found.
+                  {t("familyDashboard.notransactions")}
                 </TableCell>
               </TableRow>
             ) : (

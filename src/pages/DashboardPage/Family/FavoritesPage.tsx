@@ -12,6 +12,7 @@ import {
 } from "@/redux/api/websiteApi";
 import { getImageUrl } from "@/redux/getBaseUrl";
 import type { FavoriteItem } from "@/types/favorites";
+import { useI18n } from "@/lib/i18n";
 
 export function FavoritesPage() {
   const [query, setQuery] = useState("");
@@ -41,12 +42,15 @@ export function FavoritesPage() {
       setRemovingId(null);
     }
   };
+  const {t}=useI18n()
 
   return (
     <div className="flex flex-col gap-6">
-      <h2 className="font-serif text-3xl font-medium">Favorites</h2>
+      <h2 className="font-serif text-3xl font-medium">
+        {t("familyDashboard.favorites")}
+      </h2>
       <Input
-        placeholder="Search..."
+        placeholder={t("familyDashboard.search")}
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         className="max-w-sm bg-card"
@@ -62,19 +66,19 @@ export function FavoritesPage() {
 
       {!isLoading && isError && (
         <p className="py-8 text-center text-sm text-muted-foreground">
-          Couldn&apos;t load your favorites. Please try again.
+          {t("familyDashboard.noLoadFavorites")}
         </p>
       )}
 
       {!isLoading && !isError && favorites.length === 0 && (
         <p className="py-8 text-center text-sm text-muted-foreground">
-          You haven&apos;t favorited anyone yet.
+          {t("familyDashboard.havenotFavorited")}
         </p>
       )}
 
       {!isLoading && !isError && favorites.length > 0 && list.length === 0 && (
         <p className="py-8 text-center text-sm text-muted-foreground">
-          No favorites match your search.
+          {t("familyDashboard.noFavoritedMatch")}
         </p>
       )}
 
@@ -107,6 +111,8 @@ function FavoriteCard({
   const avatarUrl = favorite.profileImage
     ? getImageUrl(favorite.profileImage)
     : null;
+  
+  const {t}=useI18n()
 
   return (
     <article className="flex items-center gap-4 rounded-2xl bg-secondary/60 p-5">
@@ -177,7 +183,9 @@ function FavoriteCard({
         <p className="font-serif sm:text-2xl  font-medium text-primary">
           {formatCHF(favorite.hourlyRate)}
         </p>
-        <p className="text-xs text-muted-foreground">per hour</p>
+        <p className="text-xs text-muted-foreground">
+          {t("familyDashboard.perhour")}
+        </p>
       </div>
     </article>
   );

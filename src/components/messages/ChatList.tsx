@@ -5,6 +5,7 @@ import { Input } from "../ui/input";
 import { Skeleton } from "../ui/skeleton";
 import { useGetChatListQuery } from "@/redux/api/messageApi";
 import { ChatListItem } from "./ChatListItem";
+import { useI18n } from "@/lib/i18n";
 
 
 export function ChatList({
@@ -24,7 +25,7 @@ export function ChatList({
     const name = other?.fullName ?? other?.name ?? "";
     return name.toLowerCase().includes(query.toLowerCase());
   });
-
+const {t} = useI18n()
   return (
     <div className="flex h-full flex-col border-r border-border">
       <div className="border-b border-border p-3">
@@ -33,7 +34,7 @@ export function ChatList({
           <Input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search conversations"
+            placeholder={t("familyDashboard.searchC")}
             className="pl-9"
           />
         </div>
@@ -47,13 +48,13 @@ export function ChatList({
 
         {!isLoading && isError && (
           <p className="p-4 text-center text-sm text-muted-foreground">
-            Couldn&apos;t load your chats.
+            {t("familyDashboard.noLoad")}
           </p>
         )}
 
         {!isLoading && !isError && filtered.length === 0 && (
           <p className="p-4 text-center text-sm text-muted-foreground">
-            No conversations yet.
+            {t("familyDashboard.noconversation")}
           </p>
         )}
 

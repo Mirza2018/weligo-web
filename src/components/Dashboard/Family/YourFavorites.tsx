@@ -29,7 +29,7 @@ export function YourFavorites({
     >
       {favorites.length === 0 ? (
         <p className="py-8 text-center text-sm text-muted-foreground">
-          No favorites yet.
+          {t("familyDashboard.nofavorites")}
         </p>
       ) : (
         <div className="grid grid-cols-2 gap-3">

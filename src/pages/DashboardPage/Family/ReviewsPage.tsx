@@ -49,6 +49,7 @@ import {
 
 import { isPopulatedPerson, type ReviewListItem } from "@/types/reviews";
 import { getImageUrl } from "@/redux/getBaseUrl";
+import { useI18n } from "@/lib/i18n";
 
 const PAGE_SIZE = 10;
 
@@ -102,12 +103,15 @@ export function ReviewsPage() {
       toast.error(error?.data?.message || "Couldn't delete your review.");
     }
   };
-
+const {t}=useI18n();
   return (
     <div className="flex flex-col gap-6">
-      <h2 className="font-serif text-3xl font-medium">Reviews</h2>
+      <h2 className="font-serif text-3xl font-medium">
+        {" "}
+        {t("familyDashboard.reviews")}
+      </h2>
       <Input
-        placeholder="Search..."
+        placeholder={t("familyDashboard.search")}
         value={query}
         onChange={(e) => {
           setQuery(e.target.value);
@@ -120,11 +124,13 @@ export function ReviewsPage() {
         <Table>
           <TableHeader>
             <TableRow className="bg-secondary/60">
-              <TableHead>Provider Name</TableHead>
-              <TableHead>Ratings</TableHead>
-              <TableHead>Your Comments</TableHead>
-              <TableHead>Provider Reply</TableHead>
-              <TableHead className="w-16 text-right">Action</TableHead>
+              <TableHead>{t("familyDashboard.providername")}</TableHead>
+              <TableHead>{t("familyDashboard.ratings")}</TableHead>
+              <TableHead>{t("familyDashboard.comments")}</TableHead>
+              <TableHead>{t("familyDashboard.providerreply")}</TableHead>
+              <TableHead className="w-16 text-right">
+                {t("familyDashboard.action")}
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -143,7 +149,7 @@ export function ReviewsPage() {
                   colSpan={5}
                   className="py-8 text-center text-muted-foreground"
                 >
-                  Couldn&apos;t load your reviews.
+                  {t("familyDashboard.noLoadReview")}
                 </TableCell>
               </TableRow>
             )}
@@ -154,7 +160,7 @@ export function ReviewsPage() {
                   colSpan={5}
                   className="py-8 text-center text-muted-foreground"
                 >
-                  You haven&apos;t left any reviews yet.
+                  {t("familyDashboard.noReview")}
                 </TableCell>
               </TableRow>
             )}
@@ -215,13 +221,15 @@ export function ReviewsPage() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem onClick={() => openEdit(r)}>
-                            <Pencil className="mr-2 h-4 w-4" /> Edit Review
+                            <Pencil className="mr-2 h-4 w-4" />{" "}
+                            {t("familyDashboard.editReview")}
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="text-destructive focus:text-destructive"
                             onClick={() => setDeleting(r)}
                           >
-                            <Trash2 className="mr-2 h-4 w-4" /> Delete Review
+                            <Trash2 className="mr-2 h-4 w-4" />{" "}
+                            {t("familyDashboard.deleteReview")}
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -306,7 +314,9 @@ export function ReviewsPage() {
               Cancel
             </Button>
             <Button onClick={saveEdit} disabled={isSaving}>
-              {isSaving ? "Saving…" : "Save Changes"}
+              {isSaving
+                ? `${t("familyDashboard.saving")}`
+                : `${t("familyDashboard.saveChange")}`}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -320,11 +330,11 @@ export function ReviewsPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete this review?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. Your review for{" "}
+              {t("familyDashboard.actionUndone")}
               {isPopulatedPerson(deleting?.receiverId ?? "")
                 ? (deleting?.receiverId as any).fullName
-                : "this provider"}{" "}
-              will be permanently removed.
+                : `${t("familyDashboard.thisProvider")}`}{" "}
+              {t("familyDashboard.removedPermanently")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

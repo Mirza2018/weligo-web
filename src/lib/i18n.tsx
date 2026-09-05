@@ -96,46 +96,76 @@ export const dict = {
       de: "Jetzt registrieren",
       en: "Register now",
     },
-
     signUpA: {
-      de: "",
+      de: "Erstellen Sie Ihr Konto.",
       en: "Create your account.",
     },
     signUpB: {
-      de: "",
+      de: "Es ist kostenlos.",
       en: "It's free.",
     },
     signUpDesc: {
-      de: "",
+      de: "Schließen Sie sich Tausenden von Schweizer Familien an, die Weligo bereits nutzen.",
       en: "Join thousands of Swiss families already using Weligo.",
     },
-    firstName: { de: "", en: "First Name" },
-    firstNamePh: { de: "", en: "Enter your first name" },
-    lastName: { de: "", en: "Last Name" },
-    lastNamePh: { de: "", en: "Enter your last name" },
-    city: { de: "", en: "City" },
-    cityPh: { de: "", en: "Select your city" },
-    postCode: { de: "", en: "Postal Code" },
-    postCodePh: { de: "", en: "Type your postal code" },
-    address: { de: "", en: "Address" },
-    addressPh: { de: "", en: "Enter your address" },
-    hasAccount: { de: "Bereits registriert?", en: "Already registered?" },
+    firstName: {
+      de: "Vorname",
+      en: "First Name",
+    },
+    firstNamePh: {
+      de: "Geben Sie Ihren Vornamen ein",
+      en: "Enter your first name",
+    },
+    lastName: {
+      de: "Nachname",
+      en: "Last Name",
+    },
+    lastNamePh: {
+      de: "Geben Sie Ihren Nachnamen ein",
+      en: "Enter your last name",
+    },
+    city: {
+      de: "Stadt",
+      en: "City",
+    },
+    cityPh: {
+      de: "Wählen Sie Ihre Stadt aus",
+      en: "Select your city",
+    },
+    postCode: {
+      de: "Postleitzahl",
+      en: "Postal Code",
+    },
+    postCodePh: {
+      de: "Geben Sie Ihre Postleitzahl ein",
+      en: "Type your postal code",
+    },
+    address: {
+      de: "Adresse",
+      en: "Address",
+    },
+    addressPh: {
+      de: "Geben Sie Ihre Adresse ein",
+      en: "Enter your address",
+    },
+
     agree: {
-      de: "",
+      de: "Ich stimme den",
       en: "I agree to Weligo's",
     },
     terms: {
-      de: "",
+      de: "Nutzungsbedingungen",
       en: "Terms of Service",
     },
     privacy: {
-      de: "",
+      de: "Datenschutzbestimmungen",
       en: "Privacy Policy",
     },
     and: {
-      de: "",
+      de: "und",
       en: "and",
     },
+    hasAccount: { de: "Bereits registriert?", en: "Already registered?" },
     /////Verify code
     verifyA: { de: "", en: "Submit your code" },
     verifyB: {
@@ -415,6 +445,7 @@ export const dict = {
     },
   },
   home: {
+    anonymous: { de: "Anonymer Benutzer", en: "Anonymous user" },
     eyebrow: { de: "VERTRAUENSVOLLE BETREUUNG", en: "TRUSTED CARE" },
     titleA: {
       de: "Vertrauensvolle Unterstützung für",
@@ -593,7 +624,15 @@ export const dict = {
     comingSoon: { de: "Bald verfügbar", en: "Coming Soon" },
     providers: { de: "Dienstleister", en: "providers" },
     from: { de: "ab CHF", en: "from CHF" },
-    perHr: { de: "/Std", en: "/hr" },
+    perHr: { de: "/Std.", en: "/hr" },
+    yearsExp: {
+      de: "Jahre Erfahrung",
+      en: "years experience",
+    },
+    providerDetails: {
+      de: "Anbieterdetails",
+      en: "View provider details",
+    },
   },
 
   purchase: {
@@ -943,6 +982,198 @@ export const dict = {
       de: "Anbieter:innen konnten nicht geladen werden. Bitte versuche es erneut.",
       en: "Couldn't load providers. Please try again.",
     },
+    couldntLoad: {
+      de: "Dieses Profil konnte nicht geladen werden",
+      en: "We couldn&apos;t load this profile",
+    },
+    mayRemove: {
+      de: "Es wurde möglicherweise entfernt, oder auf unserer Seite ist ein Fehler aufgetreten.",
+      en: "It may have been removed, or something went wrong on our end.",
+    },
+    goBack: {
+      de: "Zurück",
+      en: "Go back",
+    },
+    profileReport: {
+      de: "Profil melden",
+      en: "Report profile",
+    },
+    reviews: {
+      de: "Bewertungen",
+      en: "Reviews",
+    },
+    experience: {
+      de: "Erfahrung",
+      en: "Experience",
+    },
+    languages: {
+      de: "Sprachen",
+      en: "Languages",
+    },
+    smoker: {
+      de: "Raucher",
+      en: "Smoker",
+    },
+    hasChildren: {
+      de: "Hat Kinder",
+      en: "Has Children",
+    },
+    drives: {
+      de: "Fährt",
+      en: "Drives",
+    },
+    ownVehicle: {
+      de: "Eigenes Fahrzeug",
+      en: "Own Vehicle",
+    },
+    pets: {
+      de: "Haustiere sind kein Problem",
+      en: "Comfortable with Pets",
+    },
+    yes: {
+      de: "Ja",
+      en: "Yes",
+    },
+    no: {
+      de: "NEIN",
+      en: "NO",
+    },
+    pleaseWait: {
+      de: "Bitte warten...",
+      en: "Please wait...",
+    },
+    available: {
+      de: "Heute verfügbar",
+      en: "Available Today",
+    },
+    notAvailable: {
+      de: "Heute nicht verfügbar",
+      en: "Not available today",
+    },
+    pickDates: {
+      de: "Wählen Sie Ihre Termine",
+      en: "Pick your Dates",
+    },
+    sendRequest: {
+      de: "Buchungsanfrage senden",
+      en: " Send booking request",
+    },
+    familyLogin: {
+      de: "Als Familie anmelden, um zu buchen",
+      en: "Login as a Family to Book",
+    },
+    sendMessage: {
+      de: "Nachricht senden",
+      en: " Send message",
+    },
+    addFavorite: {
+      de: "Zu Favoriten hinzufügen",
+      en: "Add to favorites",
+    },
+    experienceQualifications: {
+      de: "Erfahrung & Qualifikationen",
+      en: "Experience & Qualifications",
+    },
+    tct: {
+      de: "Ausgebildet. Zertifiziert. Vertrauenswürdig.",
+      en: "Trained. Certified. Trusted.",
+    },
+    noCertificates: {
+      de: "Noch keine Zertifikate aufgeführt.",
+      en: "No certificates listed yet.",
+    },
+    noImage: {
+      de: "Kein Bild",
+      en: "No image",
+    },
+    average: {
+      de: "Durchschnitt",
+      en: "average",
+    },
+    noRatting: {
+      de: "Noch keine Bewertungen.",
+      en: "No reviews yet.",
+    },
+    basedon: {
+      de: "Basierend auf",
+      en: "Based on",
+    },
+    verifiedReview: {
+      de: "verifizierten Bewertung",
+      en: "verified review",
+    },
+    stars: {
+      de: "Sterne",
+      en: "stars",
+    },
+    when: {
+      de: "Wann",
+      en: "When",
+    },
+    free: {
+      de: "ist verfügbar",
+      en: "is free",
+    },
+    noslot: {
+      de: "Kein Termin",
+      en: "No slot",
+    },
+    unavailable: {
+      de: "Nicht verfügbar",
+      en: "Unavailable",
+    },
+    availabl: {
+      de: "Verfügbar",
+      en: "Available",
+    },
+    weeklyHours: {
+      de: "Wochenstunden",
+      en: "Weekly Hours",
+    },
+    location: {
+      de: "Standort",
+      en: "Location",
+    },
+    where: {
+      de: "Wo",
+      en: "Where",
+    },
+    works: {
+      de: "arbeitet.",
+      en: "works.",
+    },
+    basedin: {
+      de: "Ansässig in",
+      en: "Based in",
+    },
+    serves: {
+      de: "Bedient das ",
+      en: "Serves the ",
+    },
+    area: {
+      de: "Gebiet.",
+      en: "area.",
+    },
+    overview: {
+      de: "Übersicht",
+      en: "Overview",
+    },
+    availability: {
+      de: "Verfügbarkeit",
+      en: "Availability",
+    },
+    verifiedProfile: {
+      de: "Verifiziertes Profil",
+      en: "Verified Profile",
+    },
+    securePayment: {
+      de: "Sichere Zahlung",
+      en: "Secure payment",
+    },
+    minBooking: {
+      de: "Min. Buchung",
+      en: "Min. booking",
+    },
   },
   trust: {
     verified: { de: "Geprüfte Dienstleister", en: "Verified providers" },
@@ -1223,6 +1454,79 @@ export const dict = {
       de: "Rechnung wird heruntergeladen",
       en: "Invoice download started",
     },
+  },
+  familyDashboard: {
+    welcome: { de: "", en: "Welcome back." },
+    noupcoming: { de: "", en: "No upcoming bookings yet." },
+    nomessages: { de: "", en: "No messages yet." },
+    nobookings: { de: "", en: "No bookings" },
+    nofavorites: { de: "", en: "No favorites yet." },
+    nospending: { de: "", en: "No spending recorded yet." },
+    messages: { de: "", en: "Messages" },
+    calls: { de: "", en: "Calls" },
+    searchC: { de: "", en: "Search conversations" },
+    noLoad: { de: "", en: " Couldn&apos;t load your chats." },
+    noconversation: { de: "", en: "No conversations yet." },
+    selectconversation: {
+      de: "",
+      en: "Select a conversation to start chatting.",
+    },
+    favorites: { de: "", en: "Favorites" },
+    search: { de: "", en: "Search..." },
+    noLoadFavorites: {
+      de: "",
+      en: " Couldn't load your favorites. Please try again.",
+    },
+    perhour: { de: "", en: "per hour" },
+    havenotFavorited: { de: "", en: "You haven't favorited anyone yet." },
+    noFavoritedMatch: { de: "", en: "No favorites match your search." },
+    transactions: { de: "", en: "Transactions" },
+    bookingID: { de: "", en: "Booking ID" },
+    date: { de: "", en: "Date" },
+    providername: { de: "", en: "Provider Name" },
+    amount: { de: "", en: "Amount" },
+    status: { de: "", en: "Status" },
+    loadtransactions: { de: "", en: "Loading transactions..." },
+    failedToLoad: { de: "", en: "Failed to load transactions." },
+    notransactions: { de: "", en: "No transactions found." },
+    reviews: { de: "", en: "Reviews" },
+    ratings: { de: "", en: "Ratings" },
+    comments: { de: "", en: "Your Comments" },
+    providerreply: { de: "", en: "Provider Reply" },
+    action: { de: "", en: "Action" },
+    noLoadReview: { de: "", en: "Couldn't load your reviews." },
+    noReview: { de: "", en: "You haven't left any reviews yet." },
+    editReview: { de: "", en: "Edit Review" },
+    deleteReview: { de: "", en: "Delete Review" },
+    saving: { de: "", en: "Saving…" },
+    saveChange: { de: "", en: "Save Changes" },
+    actionUndone: {
+      de: "",
+      en: "This action cannot be undone. Your review for",
+    },
+    removedPermanently: { de: "", en: "will be permanently removed." },
+    thisProvider: { de: "", en: "This Provider" },
+    helpSupport: { de: "", en: "Help & Support" },
+    yourTickets: { de: "", en: "Your Tickets" },
+    newTickets: { de: "", en: "New Ticket" },
+    noTickets: { de: "", en: "No support tickets yet." },
+    profileSettings: { de: "", en: "Profile Settings" },
+    profile: { de: "", en: "Profile" },
+    changePassword: { de: "", en: "Change Password" },
+    firstName: { de: "", en: "First Name" },
+    lastName: { de: "", en: "Last Name" },
+    eamil: { de: "", en: "Email" },
+    phone: { de: "", en: "Phone Number" },
+    address: { de: "", en: "Address" },
+    addressPh: { de: "", en: "Start typing your address..." },
+    startType: {
+      de: "",
+      en: "Start typing and pick your address from the list - it fills in city, postal code, and your saved location.",
+    },
+    editInformation: { de: "", en: "Edit Information" },
+    currentPass: { de: "", en: "Current Password" },
+    newPass: { de: "", en: "New Password" },
+    updatePass: { de: "", en: "Update Password" },
   },
 } as const;
 

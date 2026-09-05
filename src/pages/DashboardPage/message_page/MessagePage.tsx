@@ -10,6 +10,7 @@ import {
 import { ChatList } from "@/components/messages/ChatList";
 import { ConversationView } from "@/components/messages/ConversationView";
 import { CallHistoryList } from "@/components/messages/CallHistoryList";
+import { useI18n } from "@/lib/i18n";
 // import { ChatList } from "../../../components/messaging/ChatList";
 // import { ConversationView } from "../../../components/messaging/ConversationView";
 // import { CallHistoryList } from "../../../components/messaging/CallHistoryList";
@@ -17,16 +18,18 @@ import { CallHistoryList } from "@/components/messages/CallHistoryList";
 export function MessagePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const chatId = searchParams.get("chatId");
+  const {t}=useI18n()
 
   return (
     <div className="flex h-[calc(100vh-8rem)] flex-col">
       <Tabs defaultValue="messages" className="flex h-full flex-col">
         <TabsList className="w-fit">
           <TabsTrigger value="messages" className="gap-1.5">
-            <MessageCircle className="h-4 w-4" /> Messages
+            <MessageCircle className="h-4 w-4" />{" "}
+            {t("familyDashboard.messages")}
           </TabsTrigger>
           <TabsTrigger value="calls" className="gap-1.5">
-            <Phone className="h-4 w-4" /> Calls
+            <Phone className="h-4 w-4" /> {t("familyDashboard.calls")}
           </TabsTrigger>
         </TabsList>
 
@@ -49,7 +52,7 @@ export function MessagePage() {
                 <ConversationView chatId={chatId} />
               ) : (
                 <p className="text-sm text-muted-foreground">
-                  Select a conversation to start chatting.
+                  {t("familyDashboard.selectconversation")}
                 </p>
               )}
             </div>
