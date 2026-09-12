@@ -15,13 +15,7 @@ import { setUserInfo } from "@/redux/slices/authSlice";
 import { AuthLayout } from "@/components/authPage/AuthLayout";
 import { useI18n } from "@/lib/i18n";
 
-const REFERRAL_OPTIONS = [
-  { value: "google-search", labelFallback: "Google search" },
-  { value: "social-media", labelFallback: "Social media" },
-  { value: "friend-family", labelFallback: "Friend or family" },
-  { value: "ad", labelFallback: "Online ad" },
-  { value: "other", labelFallback: "Other" },
-];
+
 
 export function MoreInfoProvider() {
   const navigate = useNavigate();
@@ -29,7 +23,13 @@ export function MoreInfoProvider() {
   const { t } = useI18n();
   const { state, update, reset } = useProviderOnboarding();
   const [updateProfile, { isLoading }] = useUserUpdateProviderProfileMutation();
-
+  const REFERRAL_OPTIONS = [
+    { value: "google-search", labelFallback: t("auth.googleSearch") },
+    { value: "social-media", labelFallback: t("auth.socialMedia") },
+    { value: "friend-family", labelFallback: t("auth.friendFamily") },
+    { value: "ad", labelFallback: t("auth.ad") },
+    { value: "other", labelFallback: t("auth.other") },
+  ];
   const [phone, setPhone] = useState(state.phone);
   const [referral, setReferral] = useState(state.referralSource);
   const [shortBioTitle, setShortBioTitle] = useState(state.shortBioTitle);
@@ -127,7 +127,7 @@ export function MoreInfoProvider() {
           </label>
           <input
             type="tel"
-            value={phone}
+            value={phone} 
             onChange={(e) => setPhone(e.target.value)}
             placeholder={t("auth.phonePh")}
             className="h-12 w-full rounded-lg border border-input bg-white px-4 text-sm outline-none focus:border-primary"

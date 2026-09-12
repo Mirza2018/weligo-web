@@ -11,19 +11,19 @@ import { AuthLayout } from "../../components/authPage/AuthLayout";
 import { useUserUpdateFamilyProfileMutation } from "../../redux/api/authApi";
 import { setUserInfo } from "../../redux/slices/authSlice";
 
-const REFERRAL_OPTIONS = [
-  { value: "google-search", labelFallback: "Google search" },
-  { value: "social-media", labelFallback: "Social media" },
-  { value: "friend-family", labelFallback: "Friend or family" },
-  { value: "ad", labelFallback: "Online ad" },
-  { value: "other", labelFallback: "Other" },
-];
-
 export function MoreInfo() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { t } = useI18n();
   const [updateProfile, { isLoading }] = useUserUpdateFamilyProfileMutation();
+
+  const REFERRAL_OPTIONS = [
+    { value: "google-search", labelFallback: t("auth.googleSearch") },
+    { value: "social-media", labelFallback: t("auth.socialMedia") },
+    { value: "friend-family", labelFallback: t("auth.friendFamily") },
+    { value: "ad", labelFallback: t("auth.ad") },
+    { value: "other", labelFallback: t("auth.other") },
+  ];
 
   const [phone, setPhone] = useState("");
   const [referral, setReferral] = useState("");

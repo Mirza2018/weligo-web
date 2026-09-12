@@ -414,6 +414,11 @@ export const dict = {
       en: "Log in to your waitlist account",
     },
     joinCta: { de: "Warteliste beitreten", en: "Join the waitlist" },
+    googleSearch: { de: "", en: "Google search" },
+    socialMedia: { de: "", en: "Social media" },
+    friendFamily: { de: "", en: "Friend or family" },
+    ad: { de: "", en: "Online ad" },
+    other: { de: "", en: "Other" },
     strength: {
       0: { de: "Zu schwach", en: "Too weak" },
       1: { de: "Schwach", en: "Weak" },
