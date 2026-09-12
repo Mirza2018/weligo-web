@@ -1,3 +1,5 @@
+import { useI18n } from "@/lib/i18n";
+
 export type TicketStatus = "open" | "inProgress" | "resolved";
 
 export type Ticket = {
@@ -39,24 +41,29 @@ export const tickets: Ticket[] = [
   },
 ];
 
-export const issueTypes = [
-  "Booking Issue",
-  "Reschedule Appointment",
-  "Cancel Booking",
-  "Provider Didn't Arrive",
-  "Late Arrival",
-  "Service Quality Concern",
-  "Incorrect Charges / Billing",
-  "Refund Request",
-  "Payment Failed",
-  "Payment Inquiry",
-  "Account & Login Issues",
-  "Profile Update",
-  "Communication with Provider",
-  "Technical Issue",
-  "Promo Code / Discount Issue",
-  "Report a Provider",
-  "Safety Concern",
-  "General Inquiry",
-  "Other",
-];
+export const useIssueTypes = () => {
+  const { t } = useI18n();
+
+  return [
+    t("familyDashboard.bookingIssue"),
+    t("familyDashboard.rescheduleAppointment"),
+    t("familyDashboard.cancelBooking"),
+    t("familyDashboard.providerDidntArrive"),
+    t("familyDashboard.lateArrival"),
+    t("familyDashboard.serviceQualityConcern"),
+    t("familyDashboard.incorrectChargesBilling"),
+    t("familyDashboard.refundRequest"),
+    t("familyDashboard.paymentFailed"),
+    t("familyDashboard.paymentInquiry"),
+    t("familyDashboard.accountLoginIssues"),
+    t("familyDashboard.profileUpdate"),
+    t("familyDashboard.communicationWithProvider"),
+    t("familyDashboard.technicalIssue"),
+    t("familyDashboard.promoCodeDiscountIssue"),
+    t("familyDashboard.reportAProvider"),
+    t("familyDashboard.safetyConcern"),
+    t("familyDashboard.generalInquiry"),
+    t("familyDashboard.other"),
+  ];
+};
+

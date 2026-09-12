@@ -28,6 +28,7 @@ import { setUserInfo } from "@/redux/slices/authSlice";
 import type { RootState } from "@/redux/store";
 import { getImageUrl } from "@/redux/getBaseUrl";
 import type { GeoPoint } from "@/types/website";
+import { useI18n } from "@/lib/i18n";
 
 const LANGUAGES = ["Deutsch", "English", "Français", "Italiano"];
 
@@ -38,13 +39,6 @@ type PreferenceKey =
   | "comfortableWithPets"
   | "hasChildren";
 
-const PREFERENCE_OPTIONS: { key: PreferenceKey; label: string }[] = [
-  { key: "nonSmoker", label: "Non-smoker" },
-  { key: "driverLicense", label: "Driver's license" },
-  { key: "ownVehicle", label: "Own vehicle" },
-  { key: "comfortableWithPets", label: "Comfortable with pets" },
-  { key: "hasChildren", label: "Has children" },
-];
 
 type CertificateItem = {
   /** Local React key. Equal to the server _id for existing certs. */
@@ -85,13 +79,21 @@ const passwordSchema = z
 type PasswordValues = z.infer<typeof passwordSchema>;
 
 export function ProfileSettingsPageProvider() {
+    const {t}=useI18n();
   return (
     <div className="flex max-w-md flex-col gap-6 pb-24">
-      <h2 className="font-serif text-3xl font-medium">Profile Settings</h2>
+      <h2 className="font-serif text-3xl font-medium">
+        {" "}
+        {t("familyDashboard.profileSettings")}
+      </h2>
       <Tabs defaultValue="profile">
         <TabsList>
-          <TabsTrigger value="profile">Profile</TabsTrigger>
-          <TabsTrigger value="password">Change Password</TabsTrigger>
+          <TabsTrigger value="profile">
+            {t("familyDashboard.profile")}
+          </TabsTrigger>
+          <TabsTrigger value="password">
+            {t("familyDashboard.changePassword")}
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="profile">
           <ProfileForm />
@@ -105,10 +107,22 @@ export function ProfileSettingsPageProvider() {
 }
 
 function ProfileForm() {
+  const { t } = useI18n();
+
+  const PREFERENCE_OPTIONS: { key: PreferenceKey; label: string }[] = [
+    { key: "nonSmoker", label: t("familyDashboard.nonSmoker") },
+    { key: "driverLicense", label: t("familyDashboard.driverLicense") },
+    { key: "ownVehicle", label: t("familyDashboard.ownVehicle") },
+    {
+      key: "comfortableWithPets",
+      label: t("familyDashboard.comfortableWithPets"),
+    },
+    { key: "hasChildren", label: t("familyDashboard.hasChildren") },
+  ];
   const dispatch = useDispatch();
   const storedUser = useSelector((state: RootState) => state.auth.userInfo);
-  const { data: profileData } = useUserProfileQuery();
-  const { data: categoryData } = useGetCategoriesQuery();
+  const { data: profileData } = useUserProfileQuery({});
+  const { data: categoryData } = useGetCategoriesQuery({});
   const [updateProfile, { isLoading: isSaving }] =
     useUserUpdateProviderProfileMutation();
 
@@ -397,30 +411,42 @@ function ProfileForm() {
 
       <Field
         id="firstName"
-        label="First Name"
+        label={t("familyDashboard.firstName")}
         error={errors.firstName?.message}
       >
         <Input id="firstName" {...register("firstName")} />
       </Field>
-      <Field id="lastName" label="Last Name" error={errors.lastName?.message}>
+      <Field
+        id="lastName"
+        label={t("familyDashboard.lastName")}
+        error={errors.lastName?.message}
+      >
         <Input id="lastName" {...register("lastName")} />
       </Field>
-      <Field id="email" label="Email" error={errors.email?.message}>
+      <Field
+        id="email"
+        label={t("familyDashboard.eamil")}
+        error={errors.email?.message}
+      >
         <Input id="email" type="email" disabled {...register("email")} />
       </Field>
-      <Field id="phone" label="Phone Number" error={errors.phone?.message}>
+      <Field
+        id="phone"
+        label={t("familyDashboard.phone")}
+        error={errors.phone?.message}
+      >
         <Input id="phone" {...register("phone")} />
       </Field>
 
       <Field
         id="address"
-        label="Address"
+        label={t("familyDashboard.address")}
         error={errors.address?.message}
-        hint="Start typing and pick your address from the list - it fills in city, postal code, and your saved location."
+        hint={t("familyDashboard.startType")}
       >
         <AddressAutocompleteField
           value={addressValue}
-          placeholder="Start typing your address..."
+          placeholder={t("familyDashboard.addressPh")}
           className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs outline-none focus:border-primary"
           onChange={(v) => {
             setAddressValue(v);
@@ -450,19 +476,23 @@ function ProfileForm() {
         />
       </Field>
 
-      <Field id="city" label="City" error={errors.city?.message}>
+      <Field
+        id="city"
+        label={t("familyDashboard.city")}
+        error={errors.city?.message}
+      >
         <Input id="city" {...register("city")} />
       </Field>
       <Field
         id="postalCode"
-        label="Postal Code"
+        label={t("familyDashboard.postalCode")}
         error={errors.postalCode?.message}
       >
         <Input id="postalCode" {...register("postalCode")} />
       </Field>
 
       <div className="space-y-1.5">
-        <Label>Service category</Label>
+        <Label>{t("familyDashboard.serviceCategory")}</Label>
         <div className="grid grid-cols-2 gap-2">
           {categories.map((category) => (
             <button
@@ -485,7 +515,7 @@ function ProfileForm() {
       </div>
 
       <div className="space-y-1.5">
-        <Label>Hourly rate (CHF)</Label>
+        <Label>{t("familyDashboard.hourlyRate")}</Label>
         <div className="flex h-10 items-center justify-between rounded-lg border border-input bg-white px-2.5">
           <button
             type="button"
@@ -506,7 +536,7 @@ function ProfileForm() {
       </div>
 
       <div className="space-y-1.5">
-        <Label>Experience (years)</Label>
+        <Label>{t("familyDashboard.experience")}</Label>
         <div className="flex h-10 items-center justify-between rounded-lg border border-input bg-white px-2.5">
           <button
             type="button"
@@ -527,7 +557,7 @@ function ProfileForm() {
       </div>
 
       <div className="space-y-1.5">
-        <Label>Languages</Label>
+        <Label>{t("familyDashboard.languages")}</Label>
         <div className="flex flex-wrap gap-1.5">
           {LANGUAGES.map((lang) => {
             const selected = languages.has(lang);
@@ -551,12 +581,16 @@ function ProfileForm() {
 
       <Field
         id="shortBioTitle"
-        label="Short bio title"
+        label={t("familyDashboard.shortBioTitle")}
         error={errors.shortBioTitle?.message}
       >
         <Input id="shortBioTitle" {...register("shortBioTitle")} />
       </Field>
-      <Field id="shortBio" label="Short bio" error={errors.shortBio?.message}>
+      <Field
+        id="shortBio"
+        label={t("familyDashboard.shortBio")}
+        error={errors.shortBio?.message}
+      >
         <textarea
           id="shortBio"
           rows={3}
@@ -566,12 +600,16 @@ function ProfileForm() {
       </Field>
       <Field
         id="longBioTitle"
-        label="Long bio title"
+        label={t("familyDashboard.longBioTitle")}
         error={errors.longBioTitle?.message}
       >
         <Input id="longBioTitle" {...register("longBioTitle")} />
       </Field>
-      <Field id="longBio" label="Long bio" error={errors.longBio?.message}>
+      <Field
+        id="longBio"
+        label={t("familyDashboard.longBio")}
+        error={errors.longBio?.message}
+      >
         <textarea
           id="longBio"
           rows={6}
@@ -581,7 +619,7 @@ function ProfileForm() {
       </Field>
 
       <div className="space-y-1.5">
-        <Label>Preferences</Label>
+        <Label>{t("familyDashboard.preferences")}</Label>
         <div className="space-y-2">
           {PREFERENCE_OPTIONS.map(({ key, label }) => (
             <ToggleSwitch
@@ -596,20 +634,20 @@ function ProfileForm() {
 
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <Label>Certificates</Label>
+          <Label>{t("familyDashboard.certificates")}</Label>
           <Button
             type="button"
             variant="outline"
             size="sm"
             onClick={addCertificate}
           >
-            Add certificate
+            {t("familyDashboard.addCertificate")}
           </Button>
         </div>
 
         {certificates.length === 0 && (
           <p className="text-xs text-muted-foreground">
-            No certificates added yet.
+            {t("familyDashboard.noCertificate")}
           </p>
         )}
 
@@ -635,14 +673,14 @@ function ProfileForm() {
                   </div>
                   <div className="flex-1 space-y-2">
                     <Input
-                      placeholder="Certificate type"
+                      placeholder={t("familyDashboard.certificateType")}
                       value={cert.type}
                       onChange={(e) =>
                         updateCertificate(cert.id, "type", e.target.value)
                       }
                     />
                     <textarea
-                      placeholder="Description"
+                      placeholder={t("familyDashboard.description")}
                       rows={2}
                       className="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus:border-primary"
                       value={cert.description}
@@ -675,7 +713,7 @@ function ProfileForm() {
                         className="flex items-center gap-1 text-xs font-semibold text-destructive"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
-                        Remove
+                        {t("familyDashboard.remove")}
                       </button>
                     </div>
                   </div>
@@ -688,7 +726,9 @@ function ProfileForm() {
 
       <div className="flex justify-end">
         <Button type="submit" disabled={isSubmitting || isSaving}>
-          {isSaving ? "Saving…" : "Edit Information"}
+          {isSaving
+            ? t("familyDashboard.Saving")
+            : t("familyDashboard.editInformation")}
         </Button>
       </div>
     </form>
@@ -696,6 +736,7 @@ function ProfileForm() {
 }
 
 function PasswordForm() {
+      const { t } = useI18n();
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [changePassword, { isLoading }] = useUserPasswordChangeMutation();
@@ -727,7 +768,7 @@ function PasswordForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-5">
       <Field
         id="currentPassword"
-        label="Current Password"
+        label={t("familyDashboard.currentPass")}
         error={errors.currentPassword?.message}
       >
         <div className="relative">
@@ -744,7 +785,7 @@ function PasswordForm() {
       </Field>
       <Field
         id="newPassword"
-        label="New Password"
+        label={t("familyDashboard.newPass")}
         error={errors.newPassword?.message}
       >
         <div className="relative">
@@ -758,7 +799,9 @@ function PasswordForm() {
       </Field>
       <div className="flex justify-end">
         <Button type="submit" disabled={isSubmitting || isLoading}>
-          {isLoading ? "Updating…" : "Update Password"}
+          {isLoading
+            ? t("familyDashboard.update")
+            : t("familyDashboard.updatePass")}
         </Button>
       </div>
     </form>

@@ -278,17 +278,17 @@ function ProfileSummary({
           </span>
         </div>
 
-        {profile.shortBioTitle && (
+        {/* {profile.shortBioTitle && (
           <h2 className="mt-8 font-serif text-[28px] font-semibold leading-tight text-[#1E1E22]">
             {profile.shortBioTitle}
           </h2>
-        )}
+        )} */}
 
-        {profile.shortBio && (
+        {/* {profile.shortBio && (
           <p className="mt-5 max-w-[530px] font-sans text-xl leading-[1.35] text-[#2F3037]">
             {profile.shortBio}
           </p>
-        )}
+        )} */}
 
         {tags.length > 0 && (
           <div className="mt-4 flex flex-wrap gap-1">

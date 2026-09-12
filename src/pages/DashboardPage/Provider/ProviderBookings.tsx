@@ -194,7 +194,7 @@ export function ProviderBookings() {
                   colSpan={8}
                   className="px-4 py-10 text-center text-sm text-muted-foreground"
                 >
-                  Couldn&apos;t load your bookings.
+                  {t("familyDashboard.noBookingLoad")}
                 </TableCell>
               </TableRow>
             )}

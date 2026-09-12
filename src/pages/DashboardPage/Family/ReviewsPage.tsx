@@ -249,7 +249,7 @@ const {t}=useI18n();
             disabled={page <= 1}
             onClick={() => setPage((p) => p - 1)}
           >
-            Previous
+            {t("bookings.previous")}
           </Button>
           <span className="text-sm text-muted-foreground">
             Page {meta.page} of {meta.totalPage}
@@ -260,7 +260,7 @@ const {t}=useI18n();
             disabled={page >= meta.totalPage}
             onClick={() => setPage((p) => p + 1)}
           >
-            Next
+            {t("bookings.next")}
           </Button>
         </div>
       )}

@@ -59,7 +59,7 @@ export function YourCalendar({ bookings }: { bookings: CalendarBooking[] }) {
           to="/dashboard/provider/calendar"
           className="text-sm font-medium text-primary hover:underline"
         >
-          {t("provider.openCalendar") /* falls back to key if missing */}
+          {t("familyDashboard.openCalendar") /* falls back to key if missing */}
         </Link>
       }
     >
@@ -100,7 +100,7 @@ export function YourCalendar({ bookings }: { bookings: CalendarBooking[] }) {
       <div className="mt-4 flex flex-col gap-2">
         {appointments.length === 0 ? (
           <p className="py-6 text-center text-sm text-muted-foreground">
-            No appointments this day.
+            {t("familyDashboard.noAppointments")}
           </p>
         ) : (
           appointments.map((b) => (

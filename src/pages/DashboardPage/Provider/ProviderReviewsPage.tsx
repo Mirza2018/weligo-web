@@ -1,29 +1,14 @@
 // src/pages/dashboard/family/ReviewsPage.tsx
+import { useDebounce } from "@/hooks/useDebounce";
+import {
+  useDeleteReviewMutation,
+  useGetMyReviewsQuery,
+  useUpdateReviewMutation,
+} from "@/redux/api/websiteApi";
+import { Star } from "lucide-react";
 import { useState } from "react";
-import { MoreHorizontal, Pencil, Star, Trash2 } from "lucide-react";
-import { Input } from "../../../components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../../../components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../../../components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "../../../components/ui/dialog";
+import { toast } from "sonner";
+import { UserAvatar } from "../../../components/common/UserAvatar";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -35,25 +20,36 @@ import {
   AlertDialogTitle,
 } from "../../../components/ui/alert-dialog";
 import { Button } from "../../../components/ui/button";
-import { Textarea } from "../../../components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "../../../components/ui/dialog";
+import { Input } from "../../../components/ui/input";
 import { Label } from "../../../components/ui/label";
 import { Skeleton } from "../../../components/ui/skeleton";
-import { UserAvatar } from "../../../components/common/UserAvatar";
-import { toast } from "sonner";
-import { useDebounce } from "@/hooks/useDebounce";
 import {
-  useGetMyReviewsQuery,
-  useUpdateReviewMutation,
-  useDeleteReviewMutation,
-} from "@/redux/api/websiteApi";
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../../../components/ui/table";
+import { Textarea } from "../../../components/ui/textarea";
 
-import { isPopulatedPerson, type ReviewListItem } from "@/types/reviews";
+import { useI18n } from "@/lib/i18n";
 import { getImageUrl } from "@/redux/getBaseUrl";
+import { isPopulatedPerson, type ReviewListItem } from "@/types/reviews";
 
 const PAGE_SIZE = 10;
 
 export function ProviderReviewsPage() {
   const [query, setQuery] = useState("");
+  const { t }=useI18n()
   const [page, setPage] = useState(1);
   const [editing, setEditing] = useState<ReviewListItem | null>(null);
   const [deleting, setDeleting] = useState<ReviewListItem | null>(null);
@@ -105,9 +101,11 @@ export function ProviderReviewsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h2 className="font-serif text-3xl font-medium">Reviews</h2>
+      <h2 className="font-serif text-3xl font-medium">
+        {t("familyDashboard.reviews")}
+      </h2>
       <Input
-        placeholder="Search..."
+        placeholder={t("familyDashboard.search")}
         value={query}
         onChange={(e) => {
           setQuery(e.target.value);
@@ -120,9 +118,9 @@ export function ProviderReviewsPage() {
         <Table>
           <TableHeader>
             <TableRow className="bg-secondary/60">
-              <TableHead>Provider Name</TableHead>
-              <TableHead>Ratings</TableHead>
-              <TableHead>Your Review</TableHead>
+              <TableHead> {t("familyDashboard.providerName")}</TableHead>
+              <TableHead>{t("familyDashboard.ratings")}</TableHead>
+              <TableHead>{t("familyDashboard.yourReview")}</TableHead>
               {/* <TableHead>Provider Reply</TableHead> */}
               {/* <TableHead className="w-16 text-right">Action</TableHead> */}
             </TableRow>
@@ -143,7 +141,7 @@ export function ProviderReviewsPage() {
                   colSpan={5}
                   className="py-8 text-center text-muted-foreground"
                 >
-                  Couldn&apos;t load your reviews.
+                  {t("familyDashboard.notLoadReview")}
                 </TableCell>
               </TableRow>
             )}
@@ -154,7 +152,7 @@ export function ProviderReviewsPage() {
                   colSpan={5}
                   className="py-8 text-center text-muted-foreground"
                 >
-                  You haven&apos;t left any reviews yet.
+                  {t("familyDashboard.leftReview")}
                 </TableCell>
               </TableRow>
             )}
@@ -241,7 +239,7 @@ export function ProviderReviewsPage() {
             disabled={page <= 1}
             onClick={() => setPage((p) => p - 1)}
           >
-            Previous
+            {t("familyDashboard.previous")}
           </Button>
           <span className="text-sm text-muted-foreground">
             Page {meta.page} of {meta.totalPage}
@@ -252,7 +250,7 @@ export function ProviderReviewsPage() {
             disabled={page >= meta.totalPage}
             onClick={() => setPage((p) => p + 1)}
           >
-            Next
+            {t("familyDashboard.next")}
           </Button>
         </div>
       )}
@@ -260,7 +258,7 @@ export function ProviderReviewsPage() {
       <Dialog open={!!editing} onOpenChange={(o) => !o && setEditing(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit Review</DialogTitle>
+            <DialogTitle> {t("familyDashboard.editReview")}</DialogTitle>
             <DialogDescription>
               {isPopulatedPerson(editing?.receiverId ?? "")
                 ? (editing?.receiverId as any).fullName
@@ -269,7 +267,9 @@ export function ProviderReviewsPage() {
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <Label className="mb-2 block">Rating</Label>
+              <Label className="mb-2 block">
+                {t("familyDashboard.rating")}
+              </Label>
               <div className="flex gap-1">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <button
@@ -291,7 +291,7 @@ export function ProviderReviewsPage() {
             </div>
             <div>
               <Label htmlFor="comment" className="mb-2 block">
-                Comment
+                {t("familyDashboard.comment")}
               </Label>
               <Textarea
                 id="comment"
@@ -303,10 +303,12 @@ export function ProviderReviewsPage() {
           </div>
           <DialogFooter>
             <Button variant="ghost" onClick={() => setEditing(null)}>
-              Cancel
+              {t("familyDashboard.cancel")}
             </Button>
             <Button onClick={saveEdit} disabled={isSaving}>
-              {isSaving ? "Saving…" : "Save Changes"}
+              {isSaving
+                ? t("familyDashboard.saving")
+                : t("familyDashboard.saveChange")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -318,23 +320,27 @@ export function ProviderReviewsPage() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete this review?</AlertDialogTitle>
+            <AlertDialogTitle>
+              {t("familyDashboard.deleteThisReview")}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. Your review for{" "}
+              {t("familyDashboard.actionCannotBeUndone")}
               {isPopulatedPerson(deleting?.receiverId ?? "")
                 ? (deleting?.receiverId as any).fullName
-                : "this provider"}{" "}
-              will be permanently removed.
+                : t("familyDashboard.thisProvider")}
+              {t("familyDashboard.permanentlyRemoved")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t("familyDashboard.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDelete}
               disabled={isDeleting}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {isDeleting ? "Deleting…" : "Delete"}
+              {isDeleting
+                ? t("familyDashboard.deleting")
+                : t("familyDashboard.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

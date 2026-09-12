@@ -48,7 +48,8 @@ export function NextBookings({ booking }: { booking: NextBooking | null }) {
     return (
       <SectionCard title={t("overview.nextBooking")}>
         <p className="py-8 text-center text-sm text-muted-foreground">
-          No upcoming bookings yet.
+         
+          {t("familyDashboard.noUpcoming")}
         </p>
       </SectionCard>
     );
@@ -56,18 +57,18 @@ export function NextBookings({ booking }: { booking: NextBooking | null }) {
 
   const { otherParty } = booking;
     const handleMessage = async () => {
-      const toastId = toast.loading("Please wait...");
+      const toastId = toast.loading(t("familyDashboard.pleaseWait"));
       try {
         const res = await createChat({ users: [otherParty?._id] }).unwrap();
   
         navigate(`/dashboard/provider/message?chatId=/${res?.data?._id}`);
   
-        toast.success(res?.message, {
+        toast.success(t("familyDashboard.chatSuccess"), {
           id: toastId,
           duration: 2000,
         });
       } catch (error) {
-        toast.error(error?.data?.message || "Couldn't create chat.", {
+        toast.error(t("familyDashboard.chatNotCreated"), {
           id: toastId,
           duration: 2000,
         });

@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useEffect, useState } from "react";
+import { UserAvatar } from "../../../components/common/UserAvatar";
+import { Input } from "../../../components/ui/input";
 import {
   Table,
   TableBody,
@@ -8,19 +10,10 @@ import {
   TableHeader,
   TableRow,
 } from "../../../components/ui/table";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../../../components/ui/select";
-import { UserAvatar } from "../../../components/common/UserAvatar";
-import { useGetTransactionsQuery } from "../../../redux/api/websiteApi"; // adjust to the real path
-import { useI18n } from "../../../lib/i18n";
 import { formatCHF } from "../../../lib/format";
+import { useI18n } from "../../../lib/i18n";
 import { cn } from "../../../lib/utils";
-import { Input } from "../../../components/ui/input";
+import { useGetTransactionsQuery } from "../../../redux/api/websiteApi"; // adjust to the real path
 
 ;
 
@@ -143,7 +136,7 @@ export function ProviderEarningsPage() {
                   colSpan={7}
                   className="px-4 py-8 text-center text-sm text-muted-foreground"
                 >
-                  Loading earnings...
+                  {t("familyDashboard.loadingEarnings")}
                 </TableCell>
               </TableRow>
             ) : isError ? (
@@ -152,7 +145,7 @@ export function ProviderEarningsPage() {
                   colSpan={7}
                   className="px-4 py-8 text-center text-sm text-destructive"
                 >
-                  Failed to load earnings.
+                  {t("familyDashboard.failedloading")}
                 </TableCell>
               </TableRow>
             ) : pageItems.length === 0 ? (
@@ -161,7 +154,7 @@ export function ProviderEarningsPage() {
                   colSpan={7}
                   className="px-4 py-8 text-center text-sm text-muted-foreground"
                 >
-                  No earnings found.
+                  {t("familyDashboard.noEarnings")}
                 </TableCell>
               </TableRow>
             ) : (

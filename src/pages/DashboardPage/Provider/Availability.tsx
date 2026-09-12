@@ -431,7 +431,10 @@ const Availability = () => {
               }`}
             />
           </span>
-          <span className="text-sm font-medium">Accepting bookings</span>
+          <span className="text-sm font-medium">
+            {" "}
+            {t("familyDashboard.acceptingBookings")}
+          </span>
           <Switch
             checked={!!bookingRules?.acceptingBookings}
             onCheckedChange={handleAcceptingBookingsToggle}
@@ -443,7 +446,9 @@ const Availability = () => {
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-5 items-start">
         {/* Weekly schedule */}
         <div className="rounded-[var(--radius)] border border-[var(--border)] bg-[var(--card)] p-6">
-          <h3 className="text-base font-semibold mb-4">Weekly schedule</h3>
+          <h3 className="text-base font-semibold mb-4">
+            {t("familyDashboard.weeklySchedule")}
+          </h3>
 
           <div className="flex flex-col divide-y divide-[var(--border)]">
             {sortedSchedule.map((day) => (
@@ -461,7 +466,9 @@ const Availability = () => {
                   <div className="leading-tight">
                     <p className="text-sm font-medium">{DAY_LABEL[day.day]}</p>
                     <p className="text-xs text-[var(--muted-foreground)]">
-                      {day.isAvailable ? "Available" : "Off"}
+                      {day.isAvailable
+                        ? t("familyDashboard.available")
+                        : t("familyDashboard.off")}
                     </p>
                   </div>
                 </div>
@@ -496,7 +503,8 @@ const Availability = () => {
                         className="flex items-center gap-1 text-sm font-medium text-[var(--primary)] hover:opacity-80 px-2 py-1.5"
                       >
                         <Plus className="h-3.5 w-3.5" />
-                        Add slot
+
+                        {t("familyDashboard.addSlot")}
                       </button>
                     </>
                   ) : (
@@ -513,12 +521,14 @@ const Availability = () => {
         {/* Right column */}
         <div className="flex flex-col gap-5">
           <div className="rounded-[var(--radius)] border border-[var(--border)] bg-[var(--card)] p-6">
-            <h3 className="text-base font-semibold mb-4">Booking rules</h3>
+            <h3 className="text-base font-semibold mb-4">
+              {t("familyDashboard.bookingRules")}
+            </h3>
 
             <div className="space-y-4">
               <div className="space-y-1.5">
                 <Label className="text-sm text-[var(--muted-foreground)]">
-                  Minimum booking hour
+                  {t("familyDashboard.minimumBooking")}
                 </Label>
                 <Select
                   value={String(bookingRules?.minimumBookingHours ?? "")}
@@ -539,7 +549,7 @@ const Availability = () => {
 
               <div className="space-y-1.5">
                 <Label className="text-sm text-[var(--muted-foreground)]">
-                  Max bookings per day
+                  {t("familyDashboard.maxBooking")}
                 </Label>
                 <Select
                   value={String(bookingRules?.maxBookingsPerDay ?? "")}
@@ -562,7 +572,7 @@ const Availability = () => {
 
           <div className="rounded-[var(--radius)] border border-[var(--border)] bg-[var(--card)] p-6">
             <h3 className="text-base font-semibold mb-4">
-              This week at a glance
+              {t("familyDashboard.thisWeek")}
             </h3>
             <div className="grid grid-cols-7 gap-1.5 text-center">
               {weekAtAGlance.map((d, i) => (
@@ -584,10 +594,10 @@ const Availability = () => {
                       d.isAvailable ? "bg-emerald-500" : "bg-transparent"
                     }`}
                   />
-                  <span className="text-[10px] text-[var(--muted-foreground)]">
+                  <span className="text-[8px] text-[var(--muted-foreground)]">
                     {d.isAvailable
                       ? `${d.slotCount} slot${d.slotCount === 1 ? "" : "s"}`
-                      : "Off"}
+                      : t("familyDashboard.off")}
                   </span>
                 </div>
               ))}
@@ -596,7 +606,7 @@ const Availability = () => {
               type="button"
               className="mt-4 text-sm font-medium text-[var(--primary)] hover:opacity-80"
             >
-              Open full calendar →
+              {t("familyDashboard.openFullCalendar")} →
             </button>
           </div>
         </div>

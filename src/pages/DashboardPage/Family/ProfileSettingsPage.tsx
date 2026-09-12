@@ -27,6 +27,7 @@ import { setUserInfo } from "@/redux/slices/authSlice";
 import type { RootState } from "@/redux/store";
 import { getImageUrl } from "@/redux/getBaseUrl";
 import type { GeoPoint } from "@/types/website";
+import { useI18n } from "@/lib/i18n";
 
 const profileSchema = z.object({
   firstName: z.string().min(1, "Required"),
@@ -51,13 +52,22 @@ const passwordSchema = z
 type PasswordValues = z.infer<typeof passwordSchema>;
 
 export function ProfileSettingsPage() {
+
+  const {t}=useI18n();
   return (
     <div className="flex max-w-md flex-col gap-6 pb-24">
-      <h2 className="font-serif text-3xl font-medium">Profile Settings</h2>
+      <h2 className="font-serif text-3xl font-medium">
+        {" "}
+        {t("familyDashboard.profileSettings")}
+      </h2>
       <Tabs defaultValue="profile">
         <TabsList>
-          <TabsTrigger value="profile">Profile</TabsTrigger>
-          <TabsTrigger value="password">Change Password</TabsTrigger>
+          <TabsTrigger value="profile">
+            {t("familyDashboard.profile")}
+          </TabsTrigger>
+          <TabsTrigger value="password">
+            {t("familyDashboard.changePassword")}
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="profile">
           <ProfileForm />
@@ -72,6 +82,7 @@ export function ProfileSettingsPage() {
 
 function ProfileForm() {
   const dispatch = useDispatch();
+    const { t } = useI18n();
   const storedUser = useSelector((state: RootState) => state.auth.userInfo);
   // Refetches on mount so settings always reflects the latest server state,
   // even if the Redux copy is stale.
@@ -207,30 +218,42 @@ function ProfileForm() {
 
       <Field
         id="firstName"
-        label="First Name"
+        label={t("familyDashboard.firstName")}
         error={errors.firstName?.message}
       >
         <Input id="firstName" {...register("firstName")} />
       </Field>
-      <Field id="lastName" label="Last Name" error={errors.lastName?.message}>
+      <Field
+        id="lastName"
+        label={t("familyDashboard.lastName")}
+        error={errors.lastName?.message}
+      >
         <Input id="lastName" {...register("lastName")} />
       </Field>
-      <Field id="email" label="Email" error={errors.email?.message}>
+      <Field
+        id="email"
+        label={t("familyDashboard.eamil")}
+        error={errors.email?.message}
+      >
         <Input id="email" type="email" disabled {...register("email")} />
       </Field>
-      <Field id="phone" label="Phone Number" error={errors.phone?.message}>
+      <Field
+        id="phone"
+        label={t("familyDashboard.phone")}
+        error={errors.phone?.message}
+      >
         <Input id="phone" {...register("phone")} />
       </Field>
 
       <Field
         id="address"
-        label="Address"
+        label={t("familyDashboard.address")}
         error={errors.address?.message}
-        hint="Start typing and pick your address from the list - it fills in city, postal code, and your saved location."
+        hint={t("familyDashboard.startType")}
       >
         <AddressAutocompleteField
           value={addressValue}
-          placeholder="Start typing your address..."
+          placeholder={t("familyDashboard.addressPh")}
           className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs outline-none focus:border-primary"
           onChange={(v) => {
             setAddressValue(v);
@@ -264,12 +287,16 @@ function ProfileForm() {
         />
       </Field>
 
-      <Field id="city" label="City" error={errors.city?.message}>
+      <Field
+        id="city"
+        label={t("familyDashboard.city")}
+        error={errors.city?.message}
+      >
         <Input id="city" {...register("city")} />
       </Field>
       <Field
         id="postalCode"
-        label="Postal Code"
+        label={t("familyDashboard.postalCode")}
         error={errors.postalCode?.message}
       >
         <Input id="postalCode" {...register("postalCode")} />
@@ -277,7 +304,9 @@ function ProfileForm() {
 
       <div className="flex justify-end">
         <Button type="submit" disabled={isSubmitting || isSaving}>
-          {isSaving ? "Saving…" : "Edit Information"}
+          {isSaving
+            ? t("familyDashboard.Saving")
+            : t("familyDashboard.editInformation")}
         </Button>
       </div>
     </form>
@@ -285,6 +314,7 @@ function ProfileForm() {
 }
 
 function PasswordForm() {
+    const { t } = useI18n();
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [changePassword, { isLoading }] = useUserPasswordChangeMutation();
@@ -305,10 +335,10 @@ function PasswordForm() {
         oldPassword: values.currentPassword,
         newPassword: values.newPassword,
       }).unwrap();
-      toast.success(res?.message || "Password updated");
+      toast.success(t("familyDashboard.passwordUpdated"));
       reset();
     } catch (error: any) {
-      toast.error(error?.data?.message || "Couldn't update your password.");
+      toast.error(t("familyDashboard.updatePassword"));
     }
   };
 
@@ -316,7 +346,7 @@ function PasswordForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-5">
       <Field
         id="currentPassword"
-        label="Current Password"
+        label={t("familyDashboard.currentPass")}
         error={errors.currentPassword?.message}
       >
         <div className="relative">
@@ -333,7 +363,7 @@ function PasswordForm() {
       </Field>
       <Field
         id="newPassword"
-        label="New Password"
+        label={t("familyDashboard.newPass")}
         error={errors.newPassword?.message}
       >
         <div className="relative">
@@ -347,7 +377,9 @@ function PasswordForm() {
       </Field>
       <div className="flex justify-end">
         <Button type="submit" disabled={isSubmitting || isLoading}>
-          {isLoading ? "Updating…" : "Update Password"}
+          {isLoading
+            ? t("familyDashboard.update")
+            : t("familyDashboard.updatePass")}
         </Button>
       </div>
     </form>

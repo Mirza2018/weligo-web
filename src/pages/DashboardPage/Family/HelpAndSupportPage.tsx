@@ -34,17 +34,10 @@ import {
 } from "@/redux/api/websiteApi";
 
 import type { TicketStatus } from "@/types/support";
-import { issueTypes } from "@/assets/data/tickets";
+import { useIssueTypes } from "@/assets/data/tickets";
 import { Label } from "@/components/ui/label";
 import { getImageUrl } from "@/redux/getBaseUrl";
-
-const STATUS_FILTERS: { value: TicketStatus | "ALL"; label: string }[] = [
-  { value: "ALL", label: "All" },
-  { value: "OPEN", label: "Open" },
-  { value: "IN_PROGRESS", label: "In Progress" },
-  { value: "RESOLVED", label: "Resolved" },
-  { value: "CLOSED", label: "Closed" },
-];
+import { useI18n } from "@/lib/i18n";
 
 const ticketStatusBadge: Record<TicketStatus, string> = {
   OPEN: "bg-sky-100 text-sky-700 border-sky-300",
@@ -71,6 +64,7 @@ const PAGE_SIZE = 10;
 
 export function HelpAndSupportPage() {
   const [open, setOpen] = useState(false);
+    const { t } = useI18n();
   const [activeTicketId, setActiveTicketId] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [searchInput, setSearchInput] = useState("");
@@ -102,6 +96,14 @@ export function HelpAndSupportPage() {
     resolver: zodResolver(schema),
     defaultValues: { subject: "", title: "", description: "" },
   });
+const STATUS_FILTERS: { value: TicketStatus | "ALL"; label: string }[] = [
+  { value: "ALL", label: t("familyDashboard.all") },
+  { value: "OPEN", label: t("familyDashboard.open") },
+  { value: "IN_PROGRESS", label: t("familyDashboard.inProgress") },
+  { value: "RESOLVED", label: t("familyDashboard.resolved") },
+  { value: "CLOSED", label: t("familyDashboard.closed") },
+];
+
 
   const subject = watch("subject");
 
@@ -124,12 +126,17 @@ export function HelpAndSupportPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h2 className="font-serif text-3xl font-medium">Help &amp; Support</h2>
+      <h2 className="font-serif text-3xl font-medium">
+        {t("familyDashboard.helpSupport")}
+      </h2>
 
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h3 className="text-lg font-semibold">Your Tickets</h3>
+        <h3 className="text-lg font-semibold">
+          {" "}
+          {t("familyDashboard.yourTickets")}
+        </h3>
         <Button onClick={() => setOpen(true)} className="gap-2">
-          <Plus className="h-4 w-4" /> New Ticket
+          <Plus className="h-4 w-4" /> {t("familyDashboard.newTickets")}
         </Button>
       </div>
 
@@ -142,7 +149,7 @@ export function HelpAndSupportPage() {
               setSearchInput(e.target.value);
               setPage(1);
             }}
-            placeholder="Search your tickets"
+            placeholder={t("familyDashboard.search")}
             className="pl-9"
           />
         </div>
@@ -174,19 +181,19 @@ export function HelpAndSupportPage() {
 
         {isError && !isLoading && (
           <p className="py-6 text-center text-sm text-muted-foreground">
-            Couldn&apos;t load your tickets. Please try again.
+            {t("familyDashboard.noLoadTickets")}
           </p>
         )}
 
         {!isLoading && !isFetching && !isError && tickets.length === 0 && (
           <p className="py-6 text-center text-sm text-muted-foreground">
-            No support tickets yet.
+            {t("familyDashboard.noTickets")}
           </p>
         )}
 
         {!isLoading &&
           !isFetching &&
-          tickets.map((t) => (
+          tickets.map((t: any) => (
             <article
               key={t._id}
               onClick={() => setActiveTicketId(t._id)}
@@ -227,7 +234,7 @@ export function HelpAndSupportPage() {
             disabled={page <= 1}
             onClick={() => setPage((p) => p - 1)}
           >
-            Previous
+            {t("bookings.previous")}
           </Button>
           <span className="text-sm text-muted-foreground">
             Page {meta.page} of {meta.totalPage}
@@ -238,7 +245,7 @@ export function HelpAndSupportPage() {
             disabled={page >= meta.totalPage}
             onClick={() => setPage((p) => p + 1)}
           >
-            Next
+            {t("bookings.next")}
           </Button>
         </div>
       )}
@@ -256,23 +263,24 @@ export function HelpAndSupportPage() {
       >
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="text-xl">Open a support ticket</DialogTitle>
+            <DialogTitle className="text-xl">
+              {t("familyDashboard.openSupportTickets")}
+            </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-1.5">
-              <Label>What do you need help with?</Label>
+              <Label>{t("familyDashboard.whatHelp")}</Label>
               <Select
-              
                 value={subject}
                 onValueChange={(v) =>
                   setValue("subject", v, { shouldValidate: true })
                 }
               >
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select an issue type..." />
+                  <SelectValue placeholder={t("familyDashboard.selectIssue")} />
                 </SelectTrigger>
                 <SelectContent>
-                  {issueTypes.map((it) => (
+                  {useIssueTypes().map((it) => (
                     <SelectItem key={it} value={it}>
                       {it}
                     </SelectItem>
@@ -286,10 +294,10 @@ export function HelpAndSupportPage() {
               )}
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="title">Subject</Label>
+              <Label htmlFor="title">{t("familyDashboard.subject")}</Label>
               <Input
                 id="title"
-                placeholder="Brief summary of your issue"
+                placeholder={t("familyDashboard.briefSummary")}
                 {...register("title")}
               />
               {errors.title && (
@@ -299,11 +307,13 @@ export function HelpAndSupportPage() {
               )}
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description">
+                {t("familyDashboard.description")}
+              </Label>
               <Textarea
                 id="description"
                 rows={5}
-                placeholder="Please give as much detail as possible — dates, times, what happened..."
+                placeholder={t("familyDashboard.descriptionPh")}
                 {...register("description")}
               />
               {errors.description && (
@@ -313,11 +323,24 @@ export function HelpAndSupportPage() {
               )}
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="attachment">Attachment (optional)</Label>
+              <Label htmlFor="attachment">
+                {t("familyDashboard.attachment")}
+              </Label>
+
+              <label
+                htmlFor="attachment"
+                className="flex h-10 w-full cursor-pointer items-center rounded-md border border-input bg-background px-3 py-2 text-sm text-muted-foreground"
+              >
+                {attachment
+                  ? attachment.name
+                  : t("familyDashboard.attachmentPh")}
+              </label>
+
               <Input
                 id="attachment"
                 type="file"
                 accept=".pdf,.jpg,.jpeg,.png"
+                className="hidden"
                 onChange={(e) => setAttachment(e.target.files?.[0] ?? null)}
               />
             </div>
@@ -326,7 +349,9 @@ export function HelpAndSupportPage() {
               className="w-full"
               disabled={isSubmitting || isCreating}
             >
-              {isCreating ? "Submitting…" : "Submit Ticket"}
+              {isCreating
+                ? t("familyDashboard.submitting")
+                : t("familyDashboard.submitTicket")}
             </Button>
           </form>
         </DialogContent>
