@@ -154,7 +154,7 @@ function HowItWorks() {
                 src={s.img}
                 alt=""
                 loading="lazy"
-                className="h-full w-full object-cover"
+                className=" w-full object-contain "
               />
             </div>
           </div>
@@ -225,7 +225,7 @@ function HowProviderWorks() {
                 src={s.img}
                 alt=""
                 loading="lazy"
-                className="h-full w-full object-cover"
+                className="w-full object-contain"
               />
             </div>
           </div>

@@ -41,6 +41,14 @@ import a1 from "./Images/about/a1.avif";
 import a2 from "./Images/about/a2.avif";
 import popup from "./Images/popup.jpeg";
 
+import pl1 from "./Images/family/pl1.png";
+import pl2 from "./Images/family/pl2.png";
+import pl3 from "./Images/family/pl3.png";
+import pl4 from "./Images/family/pl4.png";
+import pl5 from "./Images/family/pl5.png";
+import pl6 from "./Images/family/pl6.png";
+import fl1 from "./Images/family/fl1.png";
+
 
 import map from "./Images/providers/map.png";
 
@@ -87,7 +95,14 @@ const AllImages = {
   w6,
   p1,
   a1,
-  a2
+  a2,
+  fl1,
+  pl1,
+  pl2,
+  pl3,
+  pl4,
+  pl5,
+  pl6,
 };
 
 export default AllImages;

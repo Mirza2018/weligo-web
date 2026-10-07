@@ -766,7 +766,7 @@ export function howItWorksContent(lang: Lang) {
               en: "Reschedule or cancel bookings",
             }),
           ],
-          img: AllImages.w5,
+          img: AllImages.fl1,
         },
       ],
     },
@@ -815,7 +815,7 @@ export function howItWorksContent(lang: Lang) {
               en: "Set your availability and service area",
             }),
           ],
-          img: AllImages.w6,
+          img: AllImages.pl1,
         },
         {
           title: pick(lang, { de: "Profil verifizieren", en: "Get Verified" }),
@@ -841,7 +841,7 @@ export function howItWorksContent(lang: Lang) {
               en: "Set your availability and service area",
             }),
           ],
-          img: AllImages.w6,
+          img: AllImages.pl2,
         },
         {
           title: pick(lang, {
@@ -870,7 +870,7 @@ export function howItWorksContent(lang: Lang) {
               en: "Accept or decline requests",
             }),
           ],
-          img: AllImages.w6,
+          img: AllImages.pl3,
         },
         {
           title: pick(lang, {
@@ -899,7 +899,7 @@ export function howItWorksContent(lang: Lang) {
               en: "Provide the agreed service",
             }),
           ],
-          img: AllImages.w6,
+          img: AllImages.pl4,
         },
         {
           title: pick(lang, {
@@ -928,7 +928,7 @@ export function howItWorksContent(lang: Lang) {
               en: "Get discovered by new customers",
             }),
           ],
-          img: AllImages.w6,
+          img: AllImages.pl5,
         },
         {
           title: pick(lang, {
@@ -961,7 +961,7 @@ export function howItWorksContent(lang: Lang) {
               en: "View your reviews",
             }),
           ],
-          img: AllImages.w6,
+          img: AllImages.pl6,
         },
       ],
     },
