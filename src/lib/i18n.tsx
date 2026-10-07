@@ -1199,7 +1199,10 @@ export const dict = {
   },
 
   footer: {
-    tagline: { de: "Betreuung, einfach gemacht.", en: "Care, made simple." },
+    tagline: {
+      de: "Gemeinsam wird Alltag leichter",
+      en: "Together, Everyday Life Gets Easier.",
+    },
     platform: { de: "Plattform", en: "Platform" },
     families: { de: "Familien", en: "Families" },
     providers: { de: "Dienstleister", en: "Providers" },

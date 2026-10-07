@@ -32,7 +32,7 @@ export function ForProvidersPage() {
       <BuiltFor c={c.built} />
       <ProvidersFlow c={c.flow} />
       <HowCompares c={c.compare} />
-      <Verify c={c.verify} />
+      {/* <Verify c={c.verify} /> */}
       <NextChapterCTA c={c.cta} />
       {/* <SiteFooter /> */}
     </div>

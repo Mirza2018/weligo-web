@@ -46,56 +46,62 @@ export function familiesContent(lang: Lang) {
   return {
     hero: {
       eyebrow: pick(lang, { de: "FAMILIEN", en: "FAMILIES" }),
-      titleA: pick(lang, { de: "Pflege, die zu", en: "Care that fits" }),
-      titleB: pick(lang, { de: "Ihrem Leben passt.", en: "your life." }),
+      titleA: pick(lang, {
+        de: "Unterstützung, die zu",
+        en: "Support That Fits",
+      }),
+      titleB: pick(lang, {
+        de: "Ihrem Alltag passt.",
+        en: "Your Everyday Life.",
+      }),
       sub: pick(lang, {
-        de: "Verifizierte Betreuer. Transparente Preise. In Minuten gebucht. Gemacht für Schweizer Familien, die keine Zeit zu verlieren haben.",
-        en: "Verified caregivers. Transparent pricing. Booked in minutes. Built for Swiss families who don't have time to waste.",
+        de: "Vertrauenswürdige Dienstleister entdecken, vergleichen und direkt buchen - einfach und übersichtlich mit Weligo.",
+        en: "Discover, compare, and book trusted service providers - simply and conveniently with Weligo.",
       }),
     },
     why: {
       eyebrow: pick(lang, { de: "WARUM WELIGO", en: "WHY WELIGO" }),
-      titleA: pick(lang, { de: "Gemacht für echtes", en: "Built for real" }),
-      titleB: pick(lang, { de: "Schweizer Leben.", en: "Swiss life." }),
+      titleA: pick(lang, { de: "Gemacht für den", en: "Built for Real" }),
+      titleB: pick(lang, { de: "echten Alltag.", en: "Everyday Life." }),
       items: [
         {
           title: pick(lang, {
-            de: "Pflege sollte leicht zu finden sein, nicht zum Zweitjob werden",
-            en: "Care should be easy to find, not a second job",
+            de: "Die richtige Unterstützung zu finden, sollte einfach sein.",
+            en: "Finding the right support should be simple.",
           }),
           body: pick(lang, {
-            de: "Die meisten Schweizer Familien suchen wochenlang nach einer vertrauenswürdigen Betreuung. Wir haben Weligo so gebaut, dass die Suche Minuten dauert, nicht Wochen.",
-            en: "Most Swiss families spend weeks searching for a trustworthy caregiver. We built Weligo so that search takes minutes, not weeks.",
+            de: "Ob Kinderbetreuung, Nachhilfe, Haushaltshilfe, Seniorenunterstützung oder Tierbetreuung - Weligo bringt verschiedene Dienstleistungen an einem Ort zusammen. So finden Sie einfacher die Unterstützung, die zu Ihnen und Ihrem Alltag passt.",
+            en: "Whether you need childcare, tutoring, household help, senior support, or pet care, Weligo brings different everyday services together in one place - making it easier to find support that fits your needs and your life.",
           }),
         },
         {
           title: pick(lang, {
-            de: "Vertrauen sollte nicht davon abhängen, wen Sie kennen",
-            en: "Trust shouldn't depend on who you know",
+            de: "Vertrauen beginnt mit Transparenz.",
+            en: "Trust starts with transparency.",
           }),
           body: pick(lang, {
-            de: "Mundpropaganda übersieht die Familien, die neu in einer Stadt, neu in der Schweiz sind oder einfach nicht die richtigen Verbindungen haben.",
-            en: "Word of mouth leaves out the families who are new to a city, new to Switzerland, or simply don't have the right connections.",
+            de: "Bevor Sie sich entscheiden, können Sie Profile, Erfahrungen, Bewertungen, Preise, Verfügbarkeiten und vorhandene Verifizierungen einsehen. So haben Sie mehr Informationen, um selbst die richtige Wahl zu treffen.",
+            en: "Before making a decision, you can explore profiles, experience, reviews, prices, availability, and available verification information. This gives you the information you need to make your own informed choice.",
           }),
         },
         {
           title: pick(lang, {
-            de: "Jede Familie verdient den gleichen Zugang",
-            en: "Every family deserves the same access",
+            de: "Unterstützung sollte zu Ihnen passen.",
+            en: "Support should fit your needs.",
           }),
           body: pick(lang, {
-            de: "Ob in Zürich oder im Wallis, alleinerziehend oder mit zwei Einkommen — gute Betreuung sollte für alle gleich erreichbar sein.",
-            en: "Whether you're in Zurich or Valais, a single parent or a two-income household, great care should be equally within reach.",
+            de: "Jeder Mensch und jeder Alltag ist anders. Deshalb können Sie gezielt nach Ihren Bedürfnissen suchen und verschiedene Dienstleister miteinander vergleichen.",
+            en: "Every person and every situation is different. Weligo lets you search based on what matters to you and compare different service providers before making a decision.",
           }),
         },
         {
           title: pick(lang, {
-            de: "Und jede Familie verdient es, sich sicher zu fühlen",
-            en: "And every family deserves to feel safe",
+            de: "Direkter Kontakt schafft Sicherheit.",
+            en: "Direct communication builds confidence.",
           }),
           body: pick(lang, {
-            de: "Sicher in dem, wen Sie zu sich nach Hause einladen. Sicher in der Art, wie Ihr Geld gehandhabt wird. Sicher zu wissen, dass Hilfe da ist, wenn etwas schief läuft.",
-            en: "Safe in who you invite into their home. Safe in how your money is handled. Safe in knowing help is there if something goes wrong.",
+            de: "Schreiben Sie Dienstleistern direkt über Weligo, stellen Sie Ihre Fragen und klären Sie wichtige Details vor einer Buchung. Auf Wunsch können Sie sich auch per Videoanruf persönlich kennenlernen.",
+            en: "Message service providers directly through Weligo, ask questions, and discuss important details before booking. If you prefer, you can also get to know each other through a video call.",
           }),
         },
       ],
@@ -103,68 +109,68 @@ export function familiesContent(lang: Lang) {
     promise: {
       eyebrow: pick(lang, { de: "UNSER VERSPRECHEN", en: "OUR PROMISE" }),
       title: pick(lang, {
-        de: "Worauf jede Weligo-Familie zählen kann.",
-        en: "What every Weligo family can count on.",
+        de: "Darauf können Sie bei Weligo zählen.",
+        en: "What You Can Count on with Weligo.",
       }),
       items: [
         {
           title: pick(lang, {
-            de: "Jeder Anbieter wird verifiziert, bevor Sie sein Profil sehen.",
-            en: "Every provider is verified before you see their profile.",
+            de: "Transparente Profile",
+            en: "Transparent Profiles",
           }),
           body: pick(lang, {
-            de: "Wir überprüfen manuell Identität, Strafregister, Erste-Hilfe-Zertifizierung und Referenzen. Kein Anbieter geht unverifiziert live.",
-            en: "We manually check identity, criminal record, first aid certification and references. No provider goes live unverified.",
+            de: "Sehen Sie wichtige Informationen zu Dienstleistern auf einen Blick – von Erfahrung und angebotenen Dienstleistungen bis zu Preisen, Bewertungen und vorhandenen Verifizierungen.",
+            en: "See important information about service providers at a glance – from experience and services offered to prices, reviews, and available verification information.",
           }),
         },
         {
           title: pick(lang, {
-            de: "Sie kennen den genauen Preis, bevor Sie buchen.",
-            en: "You know the exact price before you book.",
+            de: "Klare Preise vor der Buchung.",
+            en: "Clear Prices Before You Book.",
           }),
           body: pick(lang, {
-            de: "Stundensätze werden von Anbietern festgelegt und im Voraus angezeigt. Wir berechnen 5 % Servicegebühr. Nichts weiter.",
-            en: "Hourly rates are set by providers and shown upfront. We add a flat 5% service fee. Nothing else.",
+            de: "Sehen Sie die angegebenen Preise, bevor Sie eine Buchungsanfrage senden. So wissen Sie von Anfang an, welche Kosten Sie erwarten.",
+            en: "See the listed prices before sending a booking request, so you know what to expect from the beginning.",
           }),
         },
         {
           title: pick(lang, {
-            de: "Ihr Geld wird sicher gehalten, bis die Betreuung bestätigt ist.",
-            en: "Your money is held safely until care is confirmed.",
+            de: "Direkte Kommunikation",
+            en: "Direct Communication",
           }),
           body: pick(lang, {
-            de: "Sie zahlen auf der Plattform. Wir halten die Gelder, bis Ihre Buchung abgeschlossen ist. Keine Zahlung verlässt Weligo, bis beide Seiten bestätigen.",
-            en: "You pay on the platform. We hold the funds until your booking is complete. No payment leaves Weligo until both sides confirm.",
+            de: "Kontaktieren Sie Dienstleister direkt über Weligo, stellen Sie Fragen und besprechen Sie wichtige Details, bevor Sie sich entscheiden.",
+            en: "Contact service providers directly through Weligo, ask questions, and discuss important details before making your decision.",
           }),
         },
         {
           title: pick(lang, {
-            de: "Stornieren bis 24 Stunden vorher, volle Rückerstattung.",
-            en: "Cancel up to 24 hours before, for a full refund.",
+            de: "Persönliches Kennenlernen per Video",
+            en: "Get to Know Each Other by Video",
           }),
           body: pick(lang, {
-            de: "Das Leben ist unvorhersehbar. Unser 24-Stunden-Stornierungsfenster bedeutet, dass Sie nie Geld für einen Planwechsel verlieren.",
-            en: "Life is unpredictable. Our 24-hour cancellation window means you never lose money to a change of plan.",
+            de: "Bei persönlichen Dienstleistungen ist Vertrauen besonders wichtig. Lernen Sie einen Dienstleister auf Wunsch vor der Buchung bequem per Videoanruf kennen.",
+            en: "Trust matters when choosing someone for a personal service. If you wish, meet your service provider through a video call before booking.",
           }),
         },
         {
           title: pick(lang, {
-            de: "Wenn etwas schief läuft, sind wir da.",
-            en: "If something goes wrong, we're here.",
+            de: "Bewertungen aus echten Buchungen",
+            en: "Reviews from Completed Bookings",
           }),
           body: pick(lang, {
-            de: "Unser Schweizer Team bearbeitet jeden Streitfall direkt. Sie werden nicht zu einem Chatbot geschickt. Echte Menschen. Echte Lösungen.",
-            en: "Our Swiss-based team handles every dispute directly. You won't be sent to a chatbot. Real people. Real resolution.",
+            de: "Bewertungen nach abgeschlossenen Buchungen helfen Ihnen dabei, Erfahrungen anderer Nutzer einzuschätzen und den passenden Dienstleister zu finden.",
+            en: "Reviews following completed bookings help you learn from other users' experiences and make a more informed choice.",
           }),
         },
         {
           title: pick(lang, {
-            de: "Ihre Daten sind privat. Wir verkaufen sie nicht.",
-            en: "Your data is private. We don't sell it.",
+            de: "Ihre Daten bleiben geschützt.",
+            en: "Your Data Is Protected.",
           }),
           body: pick(lang, {
-            de: "Wir sind FADP-konform und verkaufen niemals persönliche Daten an Werbetreibende, Dritte oder irgendjemand sonst.",
-            en: "We're FADP-compliant and never sell personal data to advertisers, third parties or anyone else.",
+            de: "Wir behandeln Ihre persönlichen Daten verantwortungsvoll und setzen auf einen sicheren und transparenten Umgang mit Ihren Informationen.",
+            en: "We handle your personal information responsibly and are committed to keeping your data secure and treated transparently.",
           }),
         },
       ],
@@ -300,7 +306,10 @@ export function providersContent(lang: Lang) {
     hero: {
       eyebrow: pick(lang, { de: "ANBIETER", en: "PROVIDERS" }),
       titleA: pick(lang, { de: "Verdienen Sie", en: "Earn" }),
-      titleB: pick(lang, { de: "flexibel. Wirken Sie etwas.", en: "flexibly. Make a difference." }),
+      titleB: pick(lang, {
+        de: "flexibel. Wirken Sie etwas.",
+        en: "flexibly. Make a difference.",
+      }),
       sub: pick(lang, {
         de: "Legen Sie Ihre Sätze fest. Wählen Sie Ihre Stunden. Werden Sie wöchentlich per TWINT bezahlt. Bauen Sie eine Karriere in der Betreuung zu Ihren Bedingungen auf.",
         en: "Set your rates. Choose your hours. Get paid weekly via TWINT. Build a caregiving career on your own terms.",
@@ -309,11 +318,20 @@ export function providersContent(lang: Lang) {
     },
     earnings: {
       eyebrow: pick(lang, { de: "EINNAHMEN", en: "EARNINGS" }),
-      titleA: pick(lang, { de: "Sehen Sie, was Sie", en: "See what you could" }),
+      titleA: pick(lang, {
+        de: "Sehen Sie, was Sie",
+        en: "See what you could",
+      }),
       titleB: pick(lang, { de: "verdienen könnten.", en: "earn." }),
-      hoursPerWeek: pick(lang, { de: "Stunden pro Woche", en: "Hours per week" }),
+      hoursPerWeek: pick(lang, {
+        de: "Stunden pro Woche",
+        en: "Hours per week",
+      }),
       hourlyRate: pick(lang, { de: "Ihr Stundensatz", en: "Your hourly rate" }),
-      bookingsPerWeek: pick(lang, { de: "Buchungen pro Woche", en: "Bookings per week" }),
+      bookingsPerWeek: pick(lang, {
+        de: "Buchungen pro Woche",
+        en: "Bookings per week",
+      }),
       perMonth: pick(lang, { de: "/Mo", en: "/mo" }),
       estimated: pick(lang, {
         de: "Geschätzt basierend auf {hrs} Std/Woche × CHF {rate}/h × 50 Wochen",
@@ -324,51 +342,82 @@ export function providersContent(lang: Lang) {
         en: "After 15% platform fee — Weligo handles taxes, invoicing, and payouts.",
       }),
       takeHome: pick(lang, { de: "Auszahlung (85%)", en: "Take-home (85%)" }),
-      platformFee: pick(lang, { de: "Plattformgebühr (15%)", en: "Platform fee (15%)" }),
+      platformFee: pick(lang, {
+        de: "Plattformgebühr (15%)",
+        en: "Platform fee (15%)",
+      }),
     },
     built: {
+  
+      // titleA2: pick(lang, {
+      //   de: "seien Sie Ihr eigener Chef.",
+      //   en: "be your own Boss.",
+      // }),
       eyebrow: pick(lang, { de: "WARUM WELIGO", en: "WHY WELIGO" }),
-      titleA: pick(lang, { de: "Gebaut für", en: "Built for" }),
-      titleB: pick(lang, { de: "Betreuer,", en: "caregivers," }),
-      titleA2: pick(lang, { de: "seien Sie Ihr eigener Chef.", en: "be your own Boss." }),
+      titleA: pick(lang, {
+        de: "Arbeiten Sie selbstbestimmt",
+        en: "Work on Your Terms",
+      }),
+      titleB: pick(lang, { de: "mit Weligo.", en: "with Weligo." }),
       items: [
         {
-          title: pick(lang, { de: "Legen Sie Ihre eigenen Sätze fest", en: "Set your own rates" }),
+          title: pick(lang, {
+            de: "Bestimmen Sie Ihren eigenen Preis",
+            en: "Set Your Own Prices",
+          }),
           body: pick(lang, {
-            de: "Von CHF 22 bis CHF 60+ pro Stunde. Jederzeit anpassen, basierend auf Nachfrage und Ihrer Erfahrung.",
-            en: "From CHF 22 to CHF 60+ per hour. Adjust anytime based on demand and your experience.",
+            de: "Sie entscheiden, was Ihre Dienstleistung wert ist. Legen Sie Ihre Preise selbst fest und passen Sie diese jederzeit an.",
+            en: "You decide what your services are worth. Set your own prices and adjust them whenever you need to.",
           }),
         },
         {
-          title: pick(lang, { de: "Wählen Sie Ihren eigenen Zeitplan", en: "Choose your own schedule" }),
+          title: pick(lang, {
+            de: "Arbeiten Sie, wann es zu Ihnen passt",
+            en: "Work When It Suits You",
+          }),
           body: pick(lang, {
-            de: "Blockieren Sie Abende, Wochenenden, Feiertage. Sie legen den Kalender fest — Kunden buchen Ihre freien Slots.",
-            en: "Block out evenings, weekends, holidays. You set the calendar — clients book your free slots.",
+            de: "Sie bestimmen Ihre Verfügbarkeit und Ihren Einsatzbereich selbst. Entscheiden Sie, wann, wo und wie viel Sie arbeiten möchten.",
+            en: "You decide your own availability and service area. Choose when, where, and how much you want to work.",
           }),
         },
         {
-          title: pick(lang, { de: "Wöchentlich per TWINT bezahlt", en: "Get paid weekly via TWINT" }),
+          title: pick(lang, {
+            de: "Direkt auf Ihr Bankkonto",
+            en: "Paid Directly to Your Bank Account",
+          }),
           body: pick(lang, {
-            de: "Bis Sonntag abgeschlossene Buchungen sind bis Dienstag auf Ihrem Konto. Keine Rechnungen, keine Verfolgung.",
-            en: "Bookings completed Sunday → in your account by Tuesday. No invoicing, no chasing.",
+            de: "Ihre Einnahmen werden sicher und unkompliziert direkt auf Ihr hinterlegtes Bankkonto überwiesen.",
+            en: "Your earnings are transferred securely and conveniently directly to your registered bank account.",
           }),
         },
         {
-          title: pick(lang, { de: "Echter Support, echte Menschen", en: "Real support, real humans" }),
+          title: pick(lang, {
+            de: "Bauen Sie Vertrauen & Ihren Ruf auf",
+            en: "Build Trust & Your Reputation",
+          }),
           body: pick(lang, {
-            de: "Schweizer Team an 7 Tagen die Woche erreichbar. Streitigkeiten, Fragen, alles — wir sind für Sie da.",
-            en: "Swiss-based team available 7 days a week. Disputes, questions, anything — we've got you.",
+            de: "Mit einem starken Profil, Verifizierungen und guten Bewertungen bauen Sie sich auf Weligo Schritt für Schritt einen vertrauenswürdigen Ruf auf und können von neuen Kunden entdeckt werden.",
+            en: "Build a trusted reputation on Weligo through a strong profile, verification, and positive reviews - helping new customers discover and choose your services.",
           }),
         },
       ],
     },
     flow: {
       eyebrow: pick(lang, { de: "WIE ES FUNKTIONIERT", en: "HOW IT WORKS" }),
-      titleA: pick(lang, { de: "Von der Anmeldung zur ersten", en: "From signup to first" }),
-      titleB: pick(lang, { de: "Buchung in einer Woche.", en: "booking in a week." }),
+      titleA: pick(lang, {
+        de: "Von der Anmeldung zur ersten",
+        en: "From signup to first",
+      }),
+      titleB: pick(lang, {
+        de: "Buchung in einer Woche.",
+        en: "booking in a week.",
+      }),
       steps: [
         {
-          title: pick(lang, { de: "Erstellen Sie Ihr Profil", en: "Create your profile" }),
+          title: pick(lang, {
+            de: "Erstellen Sie Ihr Profil",
+            en: "Create your profile",
+          }),
           sub: pick(lang, { de: "10 Minuten", en: "10 Minutes" }),
         },
         {
@@ -376,22 +425,40 @@ export function providersContent(lang: Lang) {
           sub: pick(lang, { de: "2-3 Werktage", en: "2-3 Business Days" }),
         },
         {
-          title: pick(lang, { de: "Buchungsanfrage erhalten", en: "Receive booking request" }),
-          sub: pick(lang, { de: "Normalerweise innerhalb 48 Stunden", en: "Usually Within 48 Hours" }),
+          title: pick(lang, {
+            de: "Buchungsanfrage erhalten",
+            en: "Receive booking request",
+          }),
+          sub: pick(lang, {
+            de: "Normalerweise innerhalb 48 Stunden",
+            en: "Usually Within 48 Hours",
+          }),
         },
         {
-          title: pick(lang, { de: "Wöchentlich bezahlt werden", en: "Get paid weekly" }),
-          sub: pick(lang, { de: "TWINT oder Bank, Ihre Wahl", en: "TWINT Or Bank, Your Choice" }),
+          title: pick(lang, {
+            de: "Wöchentlich bezahlt werden",
+            en: "Get paid weekly",
+          }),
+          sub: pick(lang, {
+            de: "TWINT oder Bank, Ihre Wahl",
+            en: "TWINT Or Bank, Your Choice",
+          }),
         },
       ],
     },
     compare: {
-      eyebrow: pick(lang, { de: "WARUM NICHT EINFACH...", en: "WHY NOT JUST..." }),
+      eyebrow: pick(lang, {
+        de: "WARUM NICHT EINFACH...",
+        en: "WHY NOT JUST...",
+      }),
       titleA: pick(lang, { de: "Wie Weligo", en: "How Weligo" }),
       titleB: pick(lang, { de: "abschneidet.", en: "compares." }),
       cols: [
         {
-          name: pick(lang, { de: "Klassische Agentur", en: "Traditional agency" }),
+          name: pick(lang, {
+            de: "Klassische Agentur",
+            en: "Traditional agency",
+          }),
           highlight: false,
           items: [
             pick(lang, {
@@ -409,10 +476,16 @@ export function providersContent(lang: Lang) {
           ],
         },
         {
-          name: pick(lang, { de: "Facebook / Mundpropaganda", en: "Facebook / Word of mouth" }),
+          name: pick(lang, {
+            de: "Facebook / Mundpropaganda",
+            en: "Facebook / Word of mouth",
+          }),
           highlight: false,
           items: [
-            pick(lang, { de: "Unzuverlässige Kundenbasis", en: "Unreliable client base" }),
+            pick(lang, {
+              de: "Unzuverlässige Kundenbasis",
+              en: "Unreliable client base",
+            }),
             pick(lang, {
               de: "Sie kümmern sich selbst um Rechnungen und jagen Zahlungen hinterher",
               en: "You handle your own invoicing and chase late payments",
@@ -427,9 +500,18 @@ export function providersContent(lang: Lang) {
           name: "Weligo",
           highlight: true,
           items: [
-            pick(lang, { de: "Legen Sie Ihre eigenen Sätze fest", en: "Set your own rates" }),
-            pick(lang, { de: "Wählen Sie Ihre eigenen Stunden", en: "Choose your own hours" }),
-            pick(lang, { de: "Automatisch wöchentlich bezahlt", en: "Get paid automatically weekly" }),
+            pick(lang, {
+              de: "Legen Sie Ihre eigenen Sätze fest",
+              en: "Set your own rates",
+            }),
+            pick(lang, {
+              de: "Wählen Sie Ihre eigenen Stunden",
+              en: "Choose your own hours",
+            }),
+            pick(lang, {
+              de: "Automatisch wöchentlich bezahlt",
+              en: "Get paid automatically weekly",
+            }),
             pick(lang, {
               de: "Voller Plattform-Support und Streitbeilegung",
               en: "Full platform support and dispute resolution",
@@ -439,12 +521,21 @@ export function providersContent(lang: Lang) {
       ],
     },
     verify: {
-      eyebrow: pick(lang, { de: "WARUM NICHT EINFACH...", en: "WHY NOT JUST..." }),
-      titleA: pick(lang, { de: "Was Sie zur Verifizierung", en: "What you'll need to get" }),
+      eyebrow: pick(lang, {
+        de: "WARUM NICHT EINFACH...",
+        en: "WHY NOT JUST...",
+      }),
+      titleA: pick(lang, {
+        de: "Was Sie zur Verifizierung",
+        en: "What you'll need to get",
+      }),
       titleB: pick(lang, { de: "benötigen.", en: "verified." }),
       items: [
         {
-          title: pick(lang, { de: "Gültiger Schweizer Ausweis", en: "Valid Swiss ID" }),
+          title: pick(lang, {
+            de: "Gültiger Schweizer Ausweis",
+            en: "Valid Swiss ID",
+          }),
           body: pick(lang, {
             de: "Oder eine gültige Schweizer Aufenthaltsbewilligung.",
             en: "Or a valid Swiss residence permit.",
@@ -452,10 +543,16 @@ export function providersContent(lang: Lang) {
         },
         {
           title: pick(lang, { de: "Strafregister", en: "Criminal record" }),
-          body: pick(lang, { de: "Aktueller Strafregisterauszug.", en: "Recent Strafregisterauszug." }),
+          body: pick(lang, {
+            de: "Aktueller Strafregisterauszug.",
+            en: "Recent Strafregisterauszug.",
+          }),
         },
         {
-          title: pick(lang, { de: "Erste-Hilfe-Zertifikat", en: "First aid certificate" }),
+          title: pick(lang, {
+            de: "Erste-Hilfe-Zertifikat",
+            en: "First aid certificate",
+          }),
           body: pick(lang, {
             de: "Gültiges Zertifikat (für Kinderbetreuung).",
             en: "Valid certification (for child care).",
@@ -471,7 +568,10 @@ export function providersContent(lang: Lang) {
       ],
     },
     cta: {
-      title: pick(lang, { de: "Ihr nächstes Kapitel.", en: "Your next chapter." }),
+      title: pick(lang, {
+        de: "Ihr nächstes Kapitel.",
+        en: "Your next chapter.",
+      }),
       titleB: pick(lang, { de: "Beginnt hier.", en: "Starts here." }),
       button: pick(lang, { de: "Anbieter werden", en: "Become a provider" }),
     },
@@ -496,153 +596,174 @@ export function howItWorksContent(lang: Lang) {
       tabProviders: pick(lang, { de: "Für Anbieter", en: "For Providers" }),
     },
     families: {
-      eyebrow: pick(lang, { de: "FÜR FAMILIEN", en: "FOR FAMILIES" }),
+      eyebrow: pick(lang, { de: "FÜR KUNDEN", en: "FOR CUSTOMERS" }),
       titleA: pick(lang, {
-        de: "Vom Bedarf zur Buchung,",
-        en: "From need to booking,",
+        de: "Von der Suche zur passenden Unterstützung",
+        en: "From searching to finding the right support",
       }),
-      titleB: pick(lang, { de: "in Minuten.", en: "in minutes." }),
+      titleB: pick(lang, {
+        de: "einfach und unkompliziert.",
+        en: "simple and straightforward.",
+      }),
       steps: [
         {
-          title: pick(lang, { de: "Suchen", en: "Search" }),
+          title: pick(lang, {
+            de: "Suchen & entdecken",
+            en: "Search & Discover",
+          }),
           body: pick(lang, {
-            de: "Geben Sie Ihren Standort ein, wählen Sie eine Betreuungsart und legen Sie Ihren Zeitplan fest. Unsere intelligente Filterung hilft Ihnen, genau das zu finden, was Sie brauchen.",
-            en: "Enter your location, choose a care type, and set your schedule. Our smart filters help you find exactly what you need.",
+            de: "Wählen Sie die gewünschte Dienstleistung, geben Sie Ihren Standort ein und entdecken Sie passende Dienstleister in Ihrer Umgebung.",
+            en: "Choose the service you need, enter your location, and discover suitable service providers in your area.",
           }),
           points: [
             pick(lang, {
-              de: "Nach Verfügbarkeit, Sprache und Erfahrung filtern",
-              en: "Filter by availability, language, and experience",
+              de: "Nach Standort und Entfernung suchen",
+              en: "Search by location and distance",
             }),
             pick(lang, {
-              de: "In Echtzeit nach Standorten suchen",
-              en: "See real-time provider locations",
+              de: "Nach Preis, Verfügbarkeit und weiteren Kriterien filtern",
+              en: "Filter by price, availability, and other criteria",
             }),
             pick(lang, {
-              de: "Sätze, Bewertungen und Profile vergleichen",
-              en: "Compare rates, reviews and profiles",
+              de: "Passende Dienstleister entdecken",
+              en: "Discover suitable service providers",
             }),
           ],
           img: AllImages.w1,
         },
         {
           title: pick(lang, {
-            de: "Verifizierte Profile durchsuchen",
-            en: "Browse verified profiles",
+            de: "Profile vergleichen",
+            en: "Compare Profiles",
           }),
           body: pick(lang, {
-            de: "Jeder Anbieter auf Weligo wurde manuell verifiziert. Lesen Sie Bewertungen, prüfen Sie Zertifikate und finden Sie Ihre Übereinstimmung.",
-            en: "Every provider on Weligo has been manually verified. Read reviews, check certifications, and find your match.",
+            de: "Schauen Sie sich die Profile der Dienstleister an und finden Sie die Person, die am besten zu Ihren Bedürfnissen passt.",
+            en: "Explore service provider profiles and find the person who best matches your individual needs.",
           }),
           points: [
             pick(lang, {
-              de: "Identität und Hintergrund verifiziert",
-              en: "Identity and background verified",
+              de: "Erfahrungen und Qualifikationen ansehen",
+              en: "View experience and qualifications",
             }),
             pick(lang, {
-              de: "Echte Bewertungen aus abgeschlossenen Buchungen",
-              en: "Real reviews from completed bookings",
+              de: "Preise und Verfügbarkeiten vergleichen",
+              en: "Compare prices and availability",
             }),
             pick(lang, {
-              de: "Sehen Sie die Verfügbarkeit live und Zertifikate",
-              en: "See live availability and certifications",
+              de: "Bewertungen anderer Nutzer lesen",
+              en: "Read reviews from other users",
+            }),
+            pick(lang, {
+              de: "Zertifikate und Verifizierungen einsehen",
+              en: "View certificates and verification status",
             }),
           ],
           img: AllImages.w2,
         },
         {
           title: pick(lang, {
-            de: "Nachricht oder Video-Anruf",
-            en: "Message or video-call",
+            de: "Kontakt aufnehmen & kennenlernen",
+            en: "Connect & Get to Know Each Other",
           }),
           body: pick(lang, {
-            de: "Sprechen Sie zuerst. Stellen Sie Fragen. Treffen Sie sich virtuell, bevor Sie Ihre Buchung bestätigen.",
-            en: "Talk first. Ask questions. Meet virtually before you confirm your booking.",
+            de: "Sie haben einen passenden Dienstleister gefunden? Schreiben Sie direkt über Weligo und klären Sie offene Fragen. Auf Wunsch können Sie sich vor der Buchung auch persönlich per Videoanruf kennenlernen.",
+            en: "Found a service provider who seems like the right fit? Send them a message directly through Weligo and clarify any questions. If you prefer, you can also get to know each other through a video call before booking.",
           }),
           points: [
             pick(lang, {
-              de: "Sicheres In-App-Messaging",
-              en: "Secure in-app messaging",
+              de: "Sichere Nachrichten über Weligo",
+              en: "Secure messaging through Weligo",
             }),
             pick(lang, {
-              de: "Kostenlose Videoanrufe",
-              en: "Free video calls",
+              de: "Fragen und Details direkt klären",
+              en: "Discuss questions and important details directly",
             }),
             pick(lang, {
-              de: "Antworten in der Regel innerhalb 1 Stunde",
-              en: "Replies usually within 1 hour",
+              de: "Persönliches Kennenlernen per Videoanruf",
+              en: "Get to know each other through a video call",
             }),
           ],
           img: AllImages.w3,
         },
         {
-          title: pick(lang, { de: "Buchen und bezahlen", en: "Book and pay" }),
+          title: pick(lang, {
+            de: "Buchungsanfrage senden",
+            en: "Send a Booking Request",
+          }),
           body: pick(lang, {
-            de: "Bestätigen Sie Ihre Buchung in wenigen Klicks. Zahlen Sie sicher per TWINT oder Karte — Ihr Geld wird gehalten, bis die Betreuung abgeschlossen ist.",
-            en: "Confirm your booking in a few taps. Pay securely via TWINT or card — your money is held safely until care is complete.",
+            de: "Wählen Sie den gewünschten Termin und senden Sie eine Buchungsanfrage. Der Dienstleister kann die Anfrage prüfen und bestätigen.",
+            en: "Choose your preferred date and time and send a booking request. The service provider can review the details and confirm your request.",
           }),
           points: [
             pick(lang, {
-              de: "TWINT und Kartenzahlungen",
-              en: "TWINT and card payments",
+              de: "Datum und Uhrzeit auswählen",
+              en: "Select your preferred date and time",
             }),
             pick(lang, {
-              de: "Daten reservieren und Buchungen verwalten",
-              en: "Reserve dates and manage bookings",
+              de: "Buchungsanfrage direkt senden",
+              en: "Send a booking request directly",
             }),
             pick(lang, {
-              de: "Volle Rückerstattung bei Stornierung innerhalb 24 Stunden",
-              en: "Full refund on cancellation within 24h",
+              de: "Bestätigung vom Dienstleister erhalten",
+              en: "Receive confirmation from the service provider",
+            }),
+            pick(lang, {
+              de: "Buchungsstatus jederzeit einsehen",
+              en: "Check your booking status at any time",
             }),
           ],
           img: AllImages.w4,
         },
         {
           title: pick(lang, {
-            de: "Bewerten und erneut buchen",
-            en: "Review & rebook",
+            de: "Bewerten & wieder buchen",
+            en: "Review & Book Again",
           }),
           body: pick(lang, {
-            de: "Nach jeder Buchung hinterlassen Sie eine Bewertung, um Ihrem Anbieter zu helfen. Speichern Sie Ihre Lieblingsanbieter für eine einfache erneute Buchung.",
-            en: "After each booking, leave a review to help your provider. Save your favourite providers for easy re-booking.",
+            de: "Nach einer abgeschlossenen Buchung können Sie Ihre Erfahrung teilen und den Dienstleister bewerten. War alles passend? Dann finden Sie Ihren bevorzugten Dienstleister schnell wieder.",
+            en: "After a completed booking, you can share your experience and leave a review. Found someone you trust? Save your preferred service providers and easily book them again.",
           }),
           points: [
             pick(lang, {
-              de: "Bewertungen aus verifizierten Buchungen",
-              en: "Reviews from verified bookings",
+              de: "Bewertungen nach abgeschlossenen Buchungen",
+              en: "Leave reviews after completed bookings",
             }),
             pick(lang, {
-              de: "1-Klick-Wiederbuchung",
-              en: "1-click rebooking",
+              de: "Favorisierte Dienstleister speichern",
+              en: "Save your favourite service providers",
             }),
             pick(lang, {
-              de: "Bauen Sie Ihr vertrautes Anbieter-Netzwerk auf",
-              en: "Build your trusted provider network",
+              de: "Einfach erneut anfragen und buchen",
+              en: " Easily request and book again",
             }),
           ],
           img: AllImages.w5,
         },
         {
           title: pick(lang, {
-            de: "Familien-Dashboard",
-            en: "Family Dashboard",
+            de: "Ihr Kunden-Dashboard-",
+            en: "Your Customer Dashboard",
           }),
           body: pick(lang, {
-            de: "Alle Ihre Buchungen, in einer Ansicht. Beschreibung. Sehen Sie kommende, abgeschlossene und stornierte Buchungen. Buchen Sie erneut oder stornieren Sie in wenigen Taps.",
-            en: "All your bookings, in one view. Description. See upcoming, completed and cancelled bookings. Re-book or cancel in two taps.",
+            de: "Behalten Sie alles an einem Ort im Blick. Über Ihr persönliches Dashboard verwalten Sie Ihre Buchungen, Nachrichten und Favoriten.",
+            en: "Keep everything in one place. Your personal dashboard gives you an overview of your bookings, messages, favourites, and important information.",
           }),
           points: [
             pick(lang, {
-              de: "Alle Ihre Buchungen, in einer Ansicht",
-              en: "All your bookings, in one view",
+              de: "Aktuelle und vergangene Buchungen verwalten",
+              en: "Manage current and previous bookings",
             }),
             pick(lang, {
-              de: "Nachrichten an Anbieter verwalten",
-              en: "Manage your messages with providers",
+              de: "Nachrichten zentral einsehen",
+              en: "View all messages in one place",
             }),
             pick(lang, {
-              de: "Alle Zahlungen und Quittungen",
-              en: "All payments and receipts",
+              de: "Favoriten speichern",
+              en: "Save your favourite service providers",
+            }),
+            pick(lang, {
+              de: "Buchungen ändern oder stornieren",
+              en: "Reschedule or cancel bookings",
             }),
           ],
           img: AllImages.w5,
@@ -650,51 +771,75 @@ export function howItWorksContent(lang: Lang) {
       ],
     },
     providers: {
-      eyebrow: pick(lang, { de: "FÜR ANBIETER", en: "FOR PROVIDERS" }),
-      titleA: pick(lang, {
-        de: "Von der Anmeldung zum Verdienen,",
-        en: "From signup to earning,",
+      eyebrow: pick(lang, {
+        de: "FÜR DIENSTLEISTER",
+        en: "FOR SERVICE PROVIDERS",
       }),
-      titleB: pick(lang, { de: "in einer Woche.", en: "in a week." }),
+      titleA: pick(lang, {
+        de: "Vom eigenen Profil zum passenden Auftrag",
+        en: "From creating your profile to finding the right opportunities",
+      }),
+      titleB: pick(lang, {
+        de: "einfach mit Weligo.",
+        en: "simple with Weligo",
+      }),
       steps: [
         {
           title: pick(lang, {
-            de: "Erstellen Sie Ihr Profil",
-            en: "Create your profile",
+            de: "Profil erstellen",
+            en: "Create Your Profile",
           }),
           body: pick(lang, {
-            de: "Bauen Sie Ihr professionelles Profil in weniger als 30 Minuten auf. Fügen Sie Erfahrung, Zertifikate und Ihren Stundensatz hinzu.",
-            en: "Build a professional profile in less than 30 minutes. Add experience, certifications and your hourly rate.",
+            de: "Erstellen Sie Ihr persönliches Profil und zeigen Sie potenziellen Kunden, wer Sie sind und welche Dienstleistungen Sie anbieten.",
+            en: "Create your personal profile and show potential customers who you are and which services you offer.",
           }),
           points: [
             pick(lang, {
-              de: "Fügen Sie ein Foto und eine Bio hinzu",
-              en: "Add a photo and a bio",
+              de: "Profilfoto und persönliche Beschreibung hinzufügen",
+              en: "Add a profile photo and personal introduction",
             }),
             pick(lang, {
-              de: "Legen Sie Ihre Sätze fest (CHF 22-60+)",
-              en: "Set your own rates (CHF 22–60+)",
+              de: "Dienstleistungen auswählen",
+              en: "Select the services you offer",
             }),
             pick(lang, {
-              de: "Laden Sie Sprachen und Zertifikate hoch",
-              en: "Upload languages and certificates",
+              de: "Eigene Preise festlegen",
+              en: "Set your own prices",
+            }),
+            pick(lang, {
+              de: "Erfahrung, Sprachen und Qualifikationen angeben",
+              en: "Add your experience, languages, and qualifications",
+            }),
+            pick(lang, {
+              de: "Verfügbarkeit und Einsatzgebiet festlegen",
+              en: "Set your availability and service area",
             }),
           ],
           img: AllImages.w6,
         },
         {
-          title: pick(lang, { de: "Verifiziert werden", en: "Get verified" }),
+          title: pick(lang, { de: "Profil verifizieren", en: "Get Verified" }),
           body: pick(lang, {
-            de: "Unser Team prüft Ihre Dokumente und kontaktiert Ihre Referenzen. Die meisten Anbieter werden in weniger als 2 Werktagen verifiziert.",
-            en: "Our team reviews your documents and contacts your references. Most providers are verified in less than 2 business days.",
+            de: "Schaffen Sie zusätzliches Vertrauen, indem Sie Ihre Identität bestätigen und relevante Dokumente oder Zertifikate hinterlegen.",
+            en: "Build additional trust by verifying your identity and adding relevant documents or certificates to your profile.",
           }),
           points: [
-            pick(lang, { de: "Ausweis-Verifizierung", en: "ID verification" }),
             pick(lang, {
-              de: "Hintergrundprüfung — Strafregisterauszug",
-              en: "Background check — Strafregisterauszug",
+              de: "Identität bestätigen",
+              en: "Verify your identity",
             }),
-            pick(lang, { de: "Referenzprüfungen", en: "Reference checks" }),
+            pick(lang, {
+              de: "Dokumente und Zertifikate hochladen",
+              en: "Upload documents and certificates",
+            }),
+            pick(lang, {
+              de: "Relevante Nachweise hinterlegen",
+              en: "Add relevant qualifications and credentials",
+            }),
+            pick(lang, {
+              de: "Verifizierungsstatus im Profil anzeigen",
+              en: "Set your availability and service area",
+            }),
           ],
           img: AllImages.w6,
         },
@@ -704,95 +849,115 @@ export function howItWorksContent(lang: Lang) {
             en: "Receive booking requests",
           }),
           body: pick(lang, {
-            de: "Sobald verifiziert, können Sie Familien finden und buchen. Sie kontrollieren Ihren Kalender — akzeptieren oder lehnen Sie Anfragen zu Ihren Bedingungen ab.",
-            en: "Once verified, families can find and book you. You control your calendar — accept or decline requests on your terms.",
+            de: "Kunden können Ihr Profil entdecken, Sie kontaktieren und Ihnen Buchungsanfragen senden. Sie entscheiden selbst, welche Aufträge zu Ihnen passen.",
+            en: "Customers can discover your profile, contact you, and send booking requests. You decide which opportunities are right for you.",
           }),
           points: [
             pick(lang, {
-              de: "Anfragen in Echtzeit",
-              en: "Real-time request alerts",
+              de: "Neue Buchungsanfragen erhalten",
+              en: "Receive new booking requests",
             }),
             pick(lang, {
-              de: "Legen Sie Ihre eigenen Akzeptanzrichtlinien fest",
-              en: "Set your own acceptance policies",
+              de: "Termin und Details prüfen",
+              en: "Review dates and booking details",
             }),
             pick(lang, {
-              de: "Verwalten Sie alles in Ihrer App",
-              en: "Manage everything in one app",
+              de: "Direkt mit Kunden kommunizieren",
+              en: "Communicate directly with customers",
+            }),
+            pick(lang, {
+              de: "Anfragen annehmen oder ablehnen",
+              en: "Accept or decline requests",
             }),
           ],
           img: AllImages.w6,
         },
         {
           title: pick(lang, {
-            de: "Bieten Sie grossartige Betreuung",
-            en: "Provide great care",
+            de: "Kunden kennenlernen & Auftrag durchführen",
+            en: "Connect & Provide Your Service",
           }),
           body: pick(lang, {
-            de: "Zeigen Sie sich, machen Sie einen tollen Job, aktualisieren Sie die App und bauen Sie Ihren Ruf auf.",
-            en: "Show up, do a great job, update the app log, and build your reputation.",
+            de: "Klären Sie offene Fragen über den Weligo-Chat oder lernen Sie den Kunden vorab per Videoanruf kennen. Nach der Bestätigung können Sie den vereinbarten Auftrag durchführen.",
+            en: "Discuss any remaining questions through Weligo messaging or get to know the customer through a video call before the appointment. Once everything is confirmed, provide the agreed service.",
           }),
           points: [
             pick(lang, {
-              de: "Sichere In-App-Nachrichten an Familien",
-              en: "Secure in-app messages to families",
+              de: "Direkte Nachrichten über Weligo",
+              en: "Communicate directly through Weligo",
             }),
             pick(lang, {
-              de: "Foto-Updates und Bewertungen",
-              en: "Photo updates and ratings",
+              de: "Videoanrufe für ein persönliches Kennenlernen",
+              en: "Use video calls to get to know customers",
             }),
             pick(lang, {
-              de: "Bauen Sie Ihre Bewertungen auf",
-              en: "Build up your reviews",
+              de: "Termine und Buchungen verwalten",
+              en: "Manage appointments and bookings",
+            }),
+            pick(lang, {
+              de: "Dienstleistung wie vereinbart durchführen",
+              en: "Provide the agreed service",
             }),
           ],
           img: AllImages.w6,
         },
         {
           title: pick(lang, {
-            de: "Wöchentlich bezahlt werden",
-            en: "Get paid weekly",
+            de: "Bewertungen & Vertrauen aufbauen",
+            en: "Build Reviews & Trust",
           }),
           body: pick(lang, {
-            de: "Abgeschlossene Buchungen werden jeden Dienstag per TWINT auf Ihre Bank überwiesen. Keine Rechnungen, keine Verzögerungen.",
-            en: "Completed bookings are paid out every Tuesday via TWINT or bank transfer. No invoicing, no chasing payments.",
+            de: "Nach abgeschlossenen Buchungen können Kunden ihre Erfahrung bewerten. Gute Bewertungen stärken Ihr Profil und helfen zukünftigen Kunden bei ihrer Entscheidung.",
+            en: "After completed bookings, customers can share their experience and leave a review. Positive reviews strengthen your profile and help future customers make informed decisions.",
           }),
           points: [
             pick(lang, {
-              de: "Wöchentliche Auszahlungen per TWINT oder Bank",
-              en: "Weekly payouts via TWINT or bank",
+              de: "Bewertungen von Kunden erhalten",
+              en: "Receive reviews from customers",
             }),
             pick(lang, {
-              de: "Klare Einnahmenübersicht",
-              en: "Clear earnings overview",
+              de: "Vertrauen und Reputation aufbauen",
+              en: "Build trust and your reputation",
             }),
             pick(lang, {
-              de: "Weligo übernimmt Steuern und Papierkram",
-              en: "Weligo handles taxes and paperwork",
+              de: "Profil mit Erfahrungen weiter stärken",
+              en: "Strengthen your profile with experience",
+            }),
+            pick(lang, {
+              de: "Von neuen Kunden entdeckt werden",
+              en: "Get discovered by new customers",
             }),
           ],
           img: AllImages.w6,
         },
         {
           title: pick(lang, {
-            de: "Anbieter-Dashboard",
-            en: "Provider Dashboard",
+            de: "Ihr Dienstleister-Dashboard",
+            en: "Your Service Provider Dashboard",
           }),
           body: pick(lang, {
-            de: "Ihre Einnahmen auf einen Blick. Beschreibung. Sehen Sie monatliche Einnahmen, abgeschlossene Buchungen und Ihre Bewertung — alles auf einem Bildschirm.",
-            en: "Your earnings at a glance. Description. See monthly earnings, completed bookings and your rating — all on one screen.",
+            de: "Verwalten Sie Ihre Tätigkeit auf Weligo zentral an einem Ort. Behalten Sie Anfragen, Buchungen, Nachrichten, Verfügbarkeit und Bewertungen im Überblick.",
+            en: "Manage your activity on Weligo from one central place. Keep track of requests, bookings, messages, availability, and reviews.",
           }),
           points: [
             pick(lang, {
-              de: "Ihre Einnahmen auf einen Blick",
-              en: "Your earnings at a glance",
+              de: "Buchungsanfragen und Aufträge verwalten-",
+              en: "Manage booking requests and jobs",
             }),
             pick(lang, {
-              de: "Verwalten Sie Ihren Kalender",
-              en: "Manage your calendar",
+              de: "Kalender und Verfügbarkeit aktualisieren",
+              en: "Update your calendar and availability",
             }),
             pick(lang, {
-              de: "Ihre Bewertungen anzeigen",
+              de: "Nachrichten zentral verwalten",
+              en: "Manage messages in one place",
+            }),
+            pick(lang, {
+              de: "Dienstleistungen und Preise anpassen",
+              en: "Update your services and prices",
+            }),
+            pick(lang, {
+              de: "Bewertungen einsehen",
               en: "View your reviews",
             }),
           ],
@@ -808,87 +973,131 @@ export function aboutContent(lang: Lang) {
   return {
     hero: {
       eyebrow: pick(lang, { de: "ÜBER WELIGO", en: "ABOUT WELIGO" }),
-      titleA: pick(lang, { de: "Pflege sollte sich", en: "Care should feel" }),
-      titleB: pick(lang, { de: "so gut anfühlen wie sie ist.", en: "as good as care feels." }),
+      titleA: pick(lang, {
+        de: "Unterstützung im Alltag.",
+        en: "Support for Everyday Life.",
+      }),
+      titleB: pick(lang, {
+        de: "Menschen, denen man vertrauen kann.",
+        en: "People You Can Trust.",
+      }),
       sub: pick(lang, {
-        de: "Wir haben Weligo gebaut, weil vertrauensvolle Betreuung in der Schweiz nicht Tage voller Anrufe und Mundpropaganda kosten sollte. Es sollte sich anfühlen wie das Öffnen einer App.",
-        en: "We built Weligo because finding trusted care in Switzerland shouldn't take days of phone calls and word-of-mouth. It should feel like opening an app.",
+        de: "Weligo wurde mit einer einfachen Idee gegründet: Menschen dabei zu helfen, schnell und unkompliziert vertrauenswürdige Unterstützung für ihren Alltag zu finden. Ob Kinderbetreuung, Nachhilfe, Haushaltshilfe, Seniorenbetreuung oder andere Dienstleistungen - die Suche nach der richtigen Person sollte einfach, transparent und zuverlässig sein. Genau dafür gibt es Weligo.",
+        en: "Weligo was founded with a simple idea: to help people find trustworthy support for everyday life quickly and easily. Whether it's childcare, tutoring, household help, senior support, or other services, finding the right person should be simple, transparent, and reliable. That's what Weligo is here for",
       }),
     },
     story: {
       eyebrow: pick(lang, { de: "UNSERE GESCHICHTE", en: "OUR STORY" }),
-      titleA: pick(lang, { de: "Gegründet in Zürich, gebaut für", en: "Founded in Zürich, built for" }),
+      titleA: pick(lang, {
+        de: "Gegründet in Zürich. Für",
+        en: "Founded in Zurich. Built for",
+      }),
       titleB: pick(lang, { de: "die Schweiz.", en: "Switzerland." }),
       paragraphs: [
         pick(lang, {
-          de: "Als meine Mutter 2023 nach ihrer Hüftoperation Pflege brauchte, verbrachten wir zwei Wochen mit Telefonaten. Bis wir jemanden fanden, hatte sie das Krankenhaus bereits verlassen. Wir wussten, dass es einen besseren Weg geben musste.",
-          en: "When my mother needed care after her hip surgery in 2023, we spent two weeks making calls. By the time we found someone, she'd already left the hospital. We knew there had to be a better way.",
+          de: "Die Idee hinter Weligo entstand aus einer einfachen Frage:",
+          en: "The idea behind Weligo started with a simple question:",
         }),
         pick(lang, {
-          de: "Anna und ich hatten jahrelang Software zusammen gebaut, aber das war anders. Hier ging es nicht darum, eine Branche zu disruptieren oder einen Markt zu erobern. Es ging um unsere eigenen Familien — und jede Familie wie unsere.",
-          en: "Anna and I had been building software together for years, but this was different. This wasn't about disrupting an industry or capturing a market. This was about our own families — and every family like ours.",
+          de: "Warum ist es heute noch so kompliziert, die richtige Person zu finden, wenn man Unterstützung im Alltag braucht?",
+          en: "Why is it still so complicated to find the right person when you need support in everyday life?",
+        }),
+        pick(lang, {
+          de: "Heute können wir fast alles innerhalb weniger Minuten online organisieren. Doch wenn es darum geht, eine vertrauenswürdige Person für alltägliche Aufgaben und persönliche Unterstützung zu finden, ist die Suche oft noch zeitaufwendig und unübersichtlich.",
+          en: "Today, we can organize almost everything online within minutes. Yet when it comes to finding someone you can trust with everyday tasks and personal support, the process can still be time-consuming and complicated.",
         }),
       ],
       quote: pick(lang, {
-        de: "„Wir wussten, dass es einen besseren Weg geben musste.“",
-        en: "\"We knew there had to be a better way.\"",
+        de: "„Wir glauben, dass es einen einfacheren Weg geben sollte.“",
+        en: '"We believe there should be an easier way."',
       }),
       paragraphs2: [
         pick(lang, {
-          de: "Wir fingen klein an — nur Zürich, nur Kinderbetreuung, eine Handvoll verifizierter Anbieter. Aber jede Familie, der wir halfen, erzählte es zwei weiteren. Jeder Betreuer, der dazukam, empfahl eine Kollegin. Innerhalb von sechs Monaten waren wir in Bern und Basel. Innerhalb eines Jahres in der ganzen Deutschschweiz.",
-          en: "We started small — just Zürich, just childcare, just a handful of verified providers. But every family we helped told two more. Every caregiver who joined recommended a colleague. Within six months, we had expanded to Bern and Basel. Within a year, all of German-speaking Switzerland.",
+          de: "Mit Weligo schaffen wir eine Plattform, auf der Menschen passende Dienstleister entdecken, Profile vergleichen, Verfügbarkeiten prüfen, direkt miteinander kommunizieren und die gewünschte Unterstützung organisieren können - alles an einem Ort.",
+          en: "With Weligo, we are building a platform where people can discover suitable service providers, compare profiles, check availability, communicate directly, and organize the support they need - all in one place.",
         }),
         pick(lang, {
-          de: "Heute verbindet Weligo monatlich Tausende Schweizer Familien mit verifizierten, vertrauensvollen Betreuern. Aber wir genehmigen immer noch jedes Profil manuell. Wir rufen immer noch jede Referenz an. Wir behandeln Vertrauen immer noch als das einzige Feature, das wirklich zählt.",
-          en: "Today, Weligo connects thousands of Swiss families with verified, trusted caregivers every month. But we still approve every profile manually. We still call every reference. We still treat trust as the only feature that really matters.",
+          de: "Es geht darum, Menschen zusammenzubringen.",
+          en: "It's about bringing people together.",
         }),
         pick(lang, {
-          de: "Weil Pflege keine Ware ist. Es ist das, was alles andere möglich macht.",
-          en: "Because care isn't a commodity. It's the thing that makes everything else possible.",
+          de: "Vertrauen, Transparenz und Einfachheit stehen im Mittelpunkt von Weligo. Unser Ziel ist es, unseren Nutzern die Informationen und Werkzeuge zu geben, die sie brauchen, um selbst die passende Person für ihre individuellen Bedürfnisse zu finden.",
+          en: "Trust, transparency, and simplicity are at the heart of Weligo. Our goal is to give users the information and tools they need to choose the right person for their individual needs.",
+        }),
+        pick(lang, {
+          de: "Weligo startet mit der Kinderbetreuung und wird Schritt für Schritt um weitere Bereiche wie Nachhilfe, Haushaltshilfe, Seniorenbetreuung, Tierbetreuung und weitere Dienstleistungen erweitert.",
+          en: "Weligo is starting with childcare and will gradually expand into additional areas such as tutoring, household help, senior support, pet care, and other everyday services.",
+        }),
+        pick(lang, {
+          de: "Unsere Vision ist einfach:",
+          en: "Our vision is simple:",
+        }),
+        pick(lang, {
+          de: "Eine vertrauenswürdige Plattform für Unterstützung im Alltag - in der ganzen Schweiz.",
+          en: "One trusted platform for everyday support across Switzerland.",
+        }),
+        pick(lang, {
+          de: "Aus Zürich. Für die Schweiz. Für den Alltag..",
+          en: "From Zurich. For Switzerland. For everyday life.",
         }),
       ],
     },
     values: {
       eyebrow: pick(lang, { de: "WERTE", en: "VALUES" }),
       titleA: pick(lang, { de: "Was wir", en: "What we" }),
-      titleB: pick(lang, { de: "glauben.", en: "believe." }),
+      titleB: pick(lang, { de: "Glauben.", en: "Believe." }),
       items: [
         {
-          title: pick(lang, { de: "Vertrauen wird verdient", en: "Trust is earned" }),
+          title: pick(lang, {
+            de: "Vertrauen steht an erster Stelle",
+            en: "Trust Comes First",
+          }),
           body: pick(lang, {
-            de: "Wir verifizieren manuell jedes Profil. Keine Abkürzungen, keine automatischen Genehmigungen. Vertrauen ist das einzige Feature, das in der Pflege zählt.",
-            en: "We manually verify every profile. No shortcuts, no automated approvals. Trust is the only feature that matters in caregiving.",
+            de: "Wenn Menschen Unterstützung in ihren Alltag holen, ist Vertrauen entscheidend. Weligo schafft Transparenz und gibt Nutzern die Informationen, die sie brauchen, um selbst die richtige Person zu finden.",
+            en: "When people invite support into their everyday lives, trust matters. Weligo creates transparency and gives users the information they need to choose the right person for themselves.",
           }),
         },
         {
-          title: pick(lang, { de: "Pflege ist Handwerk", en: "Care is a craft" }),
+          title: pick(lang, {
+            de: "Menschen machen den Unterschied",
+            en: "People Make the Difference",
+          }),
           body: pick(lang, {
-            de: "Betreuer sind keine Gig-Worker. Sie sind Profis mit Können, Intuition und Herz. Wir behandeln sie entsprechend.",
-            en: "Caregivers aren't gig workers. They're professionals with skill, intuition, and heart. We treat them accordingly.",
+            de: "Hinter jeder Dienstleistung steht ein Mensch. Weligo bringt Menschen zusammen, die Unterstützung suchen und anbieten - persönlich, direkt und auf Augenhöhe.",
+            en: "Behind every service is a person. Weligo brings together people who need support and people who provide it - personally, directly, and on equal terms.",
           }),
         },
         {
-          title: pick(lang, { de: "Einfach ist menschlich", en: "Simple is humane" }),
+          title: pick(lang, {
+            de: "Einfach soll auch einfach sein",
+            en: "Simple Should Be Simple",
+          }),
           body: pick(lang, {
-            de: "Komplexität ist eine Steuer auf gestresste Eltern und müde Familien. Jedes Feature, das wir veröffentlichen, macht Pflege leichter zu finden, nicht schwerer.",
-            en: "Complexity is a tax on stressed parents and tired families. Every feature we ship makes care easier to find, not harder.",
+            de: "Die Suche nach Unterstützung sollte nicht kompliziert sein. Profile entdecken, vergleichen, kommunizieren und organisieren - Weligo bringt alles übersichtlich an einen Ort.",
+            en: "Finding support shouldn't be complicated. Discover profiles, compare options, communicate, and organize everything you need - Weligo brings it all together in one place.",
           }),
         },
         {
-          title: pick(lang, { de: "Gebaut, wo es genutzt wird", en: "Built where it's used" }),
+          title: pick(lang, {
+            de: "Für den Alltag gemacht",
+            en: "Made for Everyday Life",
+          }),
           body: pick(lang, {
-            de: "Wir sind Schweizer. Unser Team lebt hier, erzieht hier Kinder, kümmert sich hier um Eltern. Wir bauen, was wir für unsere eigenen Familien wollten.",
-            en: "We're Swiss. Our team lives here, raises children here, looks after parents here. We build what we'd want for our own families.",
+            de: "Jeder Alltag ist anders. Deshalb entwickelt sich Weligo mit den Bedürfnissen seiner Nutzer - von Kinderbetreuung und Nachhilfe bis hin zu Haushaltshilfe, Seniorenbetreuung und Tierbetreuung.",
+            en: "Everyday life is different for everyone. That's why Weligo grows with the needs of its users - from childcare and tutoring to household help, senior support, and pet care.",
           }),
         },
       ],
     },
     mission: {
-      titleA: pick(lang, { de: "Unsere Mission:", en: "Our mission:" }),
-      titleB: pick(lang, { de: "Pflege für alle.", en: "care, for everyone." }),
+      titleA: pick(lang, { de: "Unsere Mission", en: "Our Mission" }),
+      titleB: pick(lang, {
+        de: "Unterstützung im Alltag einfacher machen.",
+        en: "Making Everyday Support Easier.",
+      }),
       sub: pick(lang, {
-        de: "Wir bauen das vertrauenswürdigste Zuhause der Schweiz für Pflege — einen verifizierten Anbieter nach dem anderen.",
-        en: "Building Switzerland's most trusted home for caregiving — one verified provider at a time.",
+        de: "Wir bringen Menschen in der ganzen Schweiz mit vertrauenswürdigen Dienstleistern zusammen - einfach, transparent und an einem Ort.",
+        en: "We connect people across Switzerland with trustworthy service providers - simply, transparently, and all in one place.",
       }),
     },
   };
