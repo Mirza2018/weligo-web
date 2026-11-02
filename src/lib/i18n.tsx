@@ -469,7 +469,7 @@ export const dict = {
       de: "Dienstleistende konnten derzeit nicht geladen werden.",
       en: "Couldn't load providers right now.",
     },
-    eyebrow: { de: "VERTRAUENSVOLLE BETREUUNG", en: "TRUSTED CARE" },
+    eyebrow: { de: "VERTRAUENSVOLLE ALLTAGSHILFE", en: "TRUSTED EVERYDAY ASSISTANCE" },
     titleA: {
       de: "Vertrauensvolle Unterstützung für",
       en: "Trusted support for",
@@ -501,7 +501,7 @@ export const dict = {
       en: "No providers available right now.",
     },
     servicesEyebrow: { de: "LEISTUNGEN", en: "SERVICES" },
-    servicesTitleA: { de: "Betreuung für ", en: "Care for " },
+    servicesTitleA: { de: "Alltagshilfe für ", en: "Everyday Assistance for " },
     servicesTitleB: { de: "jeden Lebensabschnitt", en: "every chapter" },
     servicesTitleC: { de: " des Lebens.", en: " of life." },
     svcChildDesc: {
@@ -533,8 +533,8 @@ export const dict = {
     providersTitleB: { de: "Betreuer:innen.", en: "caregivers." },
     familiesEyebrow: { de: "FAMILIEN", en: "FAMILIES" },
     familiesTitleA: {
-      de: "Betreuung, die fünf Sterne verdient, ",
-      en: "Care that earns five stars, ",
+      de: "Alltagshilfe, die fünf Sterne verdient, ",
+      en: "Everyday Assistance that earns five stars, ",
     },
     familiesTitleB: { de: "jedes Mal.", en: "every time." },
     quote: {
@@ -638,8 +638,8 @@ export const dict = {
   services: {
     eyebrow: { de: "LEISTUNGEN", en: "SERVICES" },
     titleA: {
-      de: "Betreuung, die zu dir kommt",
-      en: "Care that meets you ",
+      de: "Alltagshilfe, die zu dir kommt",
+      en: "Everyday Assistance that meets you ",
     },
     titleB: { de: "wo du bist.", en: "where you are." },
     sub: {
@@ -651,7 +651,7 @@ export const dict = {
     senior: { de: "Seniorenbetreuung.", en: "Senior Care." },
     cleaning: { de: "Hausreinigung.", en: "House Cleaning." },
     pet: { de: "Tierbetreuung.", en: "Pet Care." },
-    everyday: { de: "Alltagshilfe.", en: "Everyday Support." },
+    everyday: { de: "Alltagshilfe.", en: "Everyday Assistance." },
     childcareDesc: {
       de: "Von Neugeborenenbetreuung bis zur Nachmittagsbetreuung nach der Schule. Verifiziert, hintergrundgeprüft und von Familien bewertet.",
       en: "From newborn nannies to after-school care. Verified, background-checked, and rated by families.",
@@ -674,7 +674,7 @@ export const dict = {
     },
     everydayDesc: {
       de: "Verlässliche Unterstützung im Alltag, damit tägliche Aufgaben einfacher und stressfrei werden.",
-      en: "Trusted everyday support to make daily tasks easier, smoother, and stress-free.",
+      en: "Trusted everyday assistance to make daily tasks easier, smoother, and stress-free.",
     },
     comingSoon: { de: "Bald verfügbar", en: "Coming Soon" },
     providers: { de: "Dienstleister", en: "providers" },
@@ -704,7 +704,7 @@ export const dict = {
     steps: {
       chooseProvider: { de: "Anbieter wählen", en: "Choose provider" },
       dateTime: { de: "Datum & Zeit", en: "Date & time" },
-      careDetails: { de: "Betreuungsdetails", en: "Care details" },
+      careDetails: { de: "Details zur Alltagshilfe", en: "Everyday assistance details" },
       review: { de: "Überprüfung", en: "Review" },
       confirmation: { de: "Bestätigung", en: "Confirmation" },
     },
@@ -912,7 +912,7 @@ export const dict = {
       },
     },
     footer: {
-      tagline: { de: "Pflege, einfach gemacht.", en: "Care, made simple." },
+      tagline: { de: "Alltagshilfe, einfach gemacht.", en: "Everyday Assistance, made simple." },
       platform: { de: "Plattform", en: "Platform" },
       families: { de: "Familien", en: "Families" },
       providers: { de: "Anbieter", en: "Providers" },
@@ -955,11 +955,11 @@ export const dict = {
   providers: {
     // eyebrow: { de: "LEISTUNGEN", en: "SERVICES" },
     titleA: {
-      de: "Betreuung, die zu dir kommt",
-      en: "Find trusted",
+      de: "Alltagshilfe, die zu dir kommt",
+      en: "Everyday Assistance that meets you",
     },
-    titleB: { de: "wo du bist.", en: "childcare" },
-    titleC: { de: "wo du bist.", en: "near you" },
+    titleB: { de: "wo du bist.", en: "where you are." },
+    titleC: { de: "", en: "" },
     sub: {
       de: "Jeder Weligo-Dienstleister wird identitätsgeprüft, hintergrundüberprüft und von anderen Schweizer Familien bewertet.",
       en: "Every Weligo provider is identity-checked, background-screened and reviewed by other Swiss families.",
@@ -969,7 +969,7 @@ export const dict = {
     senior: { de: "Seniorenbetreuung.", en: "Senior Care." },
     cleaning: { de: "Hausreinigung.", en: "House Cleaning." },
     pet: { de: "Tierbetreuung.", en: "Pet Care." },
-    everyday: { de: "Alltagshilfe.", en: "Everyday Support." },
+    everyday: { de: "Alltagshilfe.", en: "Everyday Assistance." },
     childcareDesc: {
       de: "Von Neugeborenenbetreuung bis zur Nachmittagsbetreuung nach der Schule. Verifiziert, hintergrundgeprüft und von Familien bewertet.",
       en: "From newborn nannies to after-school care. Verified, background-checked, and rated by families.",
@@ -992,7 +992,7 @@ export const dict = {
     },
     everydayDesc: {
       de: "Verlässliche Unterstützung im Alltag, damit tägliche Aufgaben einfacher und stressfrei werden.",
-      en: "Trusted everyday support to make daily tasks easier, smoother, and stress-free.",
+      en: "Trusted everyday assistance to make daily tasks easier, smoother, and stress-free.",
     },
     comingSoon: { de: "Bald verfügbar", en: "Coming Soon" },
     providers: { de: "Dienstleister", en: "providers" },

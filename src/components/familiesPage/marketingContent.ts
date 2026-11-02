@@ -285,8 +285,8 @@ export function familiesContent(lang: Lang) {
     },
     cta: {
       title: pick(lang, {
-        de: "Ihre Familie verdient grossartige Betreuung.",
-        en: "Your family deserves great care.",
+        de: "Ihre Familie verdient grossartige Alltagshilfe.",
+        en: "Your family deserves great everyday assistance.",
       }),
       sub: pick(lang, {
         de: "Tausende Schweizer Familien haben ihren Betreuer auf Weligo gefunden. Ihre könnte die nächste sein.",
@@ -1034,7 +1034,7 @@ export function aboutContent(lang: Lang) {
         }),
         pick(lang, {
           de: "Eine vertrauenswürdige Plattform für Unterstützung im Alltag - in der ganzen Schweiz.",
-          en: "One trusted platform for everyday support across Switzerland.",
+          en: "One trusted platform for everyday assistance across Switzerland.",
         }),
         pick(lang, {
           de: "Aus Zürich. Für die Schweiz. Für den Alltag..",
@@ -1093,7 +1093,7 @@ export function aboutContent(lang: Lang) {
       titleA: pick(lang, { de: "Unsere Mission", en: "Our Mission" }),
       titleB: pick(lang, {
         de: "Unterstützung im Alltag einfacher machen.",
-        en: "Making Everyday Support Easier.",
+        en: "Making Everyday Assistance Easier.",
       }),
       sub: pick(lang, {
         de: "Wir bringen Menschen in der ganzen Schweiz mit vertrauenswürdigen Dienstleistern zusammen - einfach, transparent und an einem Ort.",
