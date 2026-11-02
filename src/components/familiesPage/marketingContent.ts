@@ -406,11 +406,11 @@ export function providersContent(lang: Lang) {
       eyebrow: pick(lang, { de: "WIE ES FUNKTIONIERT", en: "HOW IT WORKS" }),
       titleA: pick(lang, {
         de: "Von der Anmeldung zur ersten",
-        en: "From signup to first",
+        en: "From registration to your first",
       }),
       titleB: pick(lang, {
-        de: "Buchung in einer Woche.",
-        en: "booking in a week.",
+        de: "Buchung am selben Tag.",
+        en: "booking on the same day.",
       }),
       steps: [
         {
@@ -422,7 +422,10 @@ export function providersContent(lang: Lang) {
         },
         {
           title: pick(lang, { de: "Verifiziert werden", en: "Get verified" }),
-          sub: pick(lang, { de: "2-3 Werktage", en: "2-3 Business Days" }),
+          sub: pick(lang, {
+            de: "Verifizierung am selben Tag",
+            en: "Same-day verification",
+          }),
         },
         {
           title: pick(lang, {
