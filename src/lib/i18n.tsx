@@ -441,6 +441,7 @@ export const dict = {
     bookings: { de: "Dashboard", en: "Bookings" },
   },
   common: {
+    perHr: { de: "/ Std.", en: "/ hr" },
     joinWaitlist: { de: "Warteliste beitreten", en: "Join the waitlist" },
     backHome: { de: "Zurück zur Startseite", en: "Back to home" },
     comingSoon: { de: "Bald verfügbar.", en: "Coming soon." },
@@ -452,6 +453,22 @@ export const dict = {
   },
   home: {
     anonymous: { de: "Anonymer Benutzer", en: "Anonymous user" },
+    feedbackEmpty: {
+      de: "Noch keine Bewertungen vorhanden – seien Sie die Ersten, die eine teilen.",
+      en: "No reviews yet — be the first to share yours.",
+    },
+    feedbackLoadError: {
+      de: "Bewertungen konnten derzeit nicht geladen werden.",
+      en: "Couldn't load reviews right now.",
+    },
+    providersGenericCategory: {
+      de: "Dienstleistung",
+      en: "Service",
+    },
+    providersLoadError: {
+      de: "Dienstleistende konnten derzeit nicht geladen werden.",
+      en: "Couldn't load providers right now.",
+    },
     eyebrow: { de: "VERTRAUENSVOLLE BETREUUNG", en: "TRUSTED CARE" },
     titleA: {
       de: "Vertrauensvolle Unterstützung für",
@@ -540,8 +557,8 @@ export const dict = {
       en: "Browse verified profiles",
     },
     step1Desc: {
-      de: "Suche nach Servicetyp, Standort und Verfügbarkeit. Jede Betreuungsperson wurde einer Hintergrundprüfung unterzogen und verifiziert – mit echten Bewertungen von Schweizer Familien.",
-      en: "Search by service type, location, and availability. Every caregiver has been background-checked and verified, with real reviews from Swiss families.",
+      de: "Suche nach Servicetyp, Standort und Verfügbarkeit. Alle Dienstleistenden werden sorgfältig geprüft und verifiziert – mit echten Bewertungen von Schweizer Familien.",
+      en: "Search by service type, location, and availability. Providers are carefully reviewed and verified, with real reviews from Swiss families.",
     },
     step2Title: {
       de: "Chatten und sofort buchen",
@@ -562,6 +579,38 @@ export const dict = {
     faqEyebrow: { de: "FRAGEN", en: "QUESTIONS" },
     faqTitleA: { de: "Alles, was du dich ", en: "Everything you " },
     faqTitleB: { de: "fragst", en: "might wonder" },
+    faq1Q: {
+      de: "Wie werden Dienstleistende verifiziert?",
+      en: "How are providers verified?",
+    },
+    faq1A: {
+      de: "Dienstleistende auf Weligo erstellen ein aussagekräftiges Profil mit ihren Qualifikationen, Erfahrungen und Nachweisen. Unser Team prüft die Identität und die eingereichten Dokumente und Zertifikate sorgfältig vor der Freischaltung. Zudem sorgen verifizierte Bewertungen von Familien für echte Transparenz und Vertrauen.",
+      en: "Providers on Weligo create a detailed profile with their qualifications, experience, and certificates. Our team carefully verifies their identity and reviews submitted documents and certificates before profile approval. In addition, verified reviews from families provide genuine transparency and trust.",
+    },
+    faq2Q: {
+      de: "Wie funktionieren Zahlungen?",
+      en: "How do payments work?",
+    },
+    faq2A: {
+      de: "Sichere Bezahlung bequem per TWINT, Kreditkarte oder Rechnung. Dienstleistende werden jede Woche automatisch ausbezahlt.",
+      en: "Secure payments via TWINT, credit card or invoice. Caregivers are paid automatically each week.",
+    },
+    faq3Q: {
+      de: "Was passiert, wenn ich stornieren muss?",
+      en: "What if I need to cancel?",
+    },
+    faq3A: {
+      de: "Kostenlose Stornierung bis zu 24 Stunden vor dem gebuchten Einsatz.",
+      en: "Free cancellation up to 24 hours before the booking.",
+    },
+    faq4Q: {
+      de: "Ist Weligo in der gesamten Schweiz verfügbar?",
+      en: "Is Weligo available across all of Switzerland?",
+    },
+    faq4A: {
+      de: "Ja, Weligo ist in der gesamten Schweiz verfügbar. Sie können in allen Schweizer Kantonen und Regionen nach passenden Dienstleistenden suchen und diese buchen.",
+      en: "Yes, Weligo is available throughout all of Switzerland. You can find and book qualified providers across all cantons and regions.",
+    },
     // earnTitle: { de: "Flexibel verdienen.", en: "Earn flexibly." },
     // earnTitle2: { de: "Mach den Unterschied.", en: "Make a difference." },
     // earnDesc: {
@@ -572,8 +621,8 @@ export const dict = {
     earnTitle2: { de: " ersten Familien auf", en: "families on " },
     earnTitle3: { de: "Weligo", en: "Weligo." },
     earnDesc: {
-      de: "Wir starten bald in Zürich. Treten Sie der Warteliste bei und erhalten Sie frühen Zugang vor dem öffentlichen Start.",
-      en: "We're launching soon in Zürich. Join the waitlist and get early access before the public launch.",
+      de: "Treten Sie der Warteliste bei und sichern Sie sich frühen Zugang vor dem offiziellen Start in der Schweiz.",
+      en: "Join the waitlist and get early access before our official launch across Switzerland.",
     },
     becomeProvider: { de: "Dienstleister werden", en: "Become a provider" },
     statRateLabel: {
@@ -1836,7 +1885,24 @@ function resolve(obj: any, path: string): any {
 // Change this
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [lang, setLang] = useState<Lang>("en");
+  const [lang, setLangState] = useState<Lang>(() => {
+    try {
+      const saved = localStorage.getItem("weligo_lang");
+      if (saved === "de" || saved === "en") return saved;
+    } catch {
+      // ignore
+    }
+    return "de";
+  });
+
+  const setLang = useCallback((l: Lang) => {
+    setLangState(l);
+    try {
+      localStorage.setItem("weligo_lang", l);
+    } catch {
+      // ignore
+    }
+  }, []);
   const t = useCallback(
     (path: string, params?: Record<string, string | number>) => {
       const node = resolve(dict, path);

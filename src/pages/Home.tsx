@@ -54,54 +54,49 @@ export function Home() {
     }, 300);
   };
 
-  if (!showPopup) {
-    return (
-      <div>
-        {" "}
-        <Hero2 />
-        <ServicesStrip />
-        <CaregiverPreview />
-        <Testimonial />
-        <HowItWorks />
-        <FAQ />
-        <ProviderCTA />
-      </div>
-    );
-  }
   return (
     <div>
       <Hero2 />
-      <div
-        className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-300 ease-out ${
-          isVisible ? "bg-black/60 opacity-100" : "bg-black/0 opacity-0"
-        }`}
-      >
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div
-            className={`relative w-full max-w-3xl transform transition-all duration-500 ease-out ${
-              isVisible
-                ? "translate-y-0 scale-100 opacity-100"
-                : "translate-y-8 scale-95 opacity-0"
-            }`}
-          >
-            {/* Close Button */}
-            <button
-              onClick={handleClose}
-              className="absolute -right-3 -top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white text-black shadow-lg transition-all duration-200 hover:scale-110 hover:bg-gray-100 active:scale-95"
-              aria-label="Close"
-            >
-              <X size={20} />
-            </button>
+      <ServicesStrip />
+      <CaregiverPreview />
+      <Testimonial />
+      <HowItWorks />
+      <FAQ />
+      <ProviderCTA />
 
-            {/* Image */}
-            <img
-              src={AllImages.popup}
-              alt="Popup"
-              className="max-h-[85vh] w-full rounded-2xl object-contain shadow-2xl"
-            />
+      {showPopup && (
+        <div
+          className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-300 ease-out ${
+            isVisible ? "bg-black/60 opacity-100" : "bg-black/0 opacity-0"
+          }`}
+        >
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+            <div
+              className={`relative w-full max-w-3xl transform transition-all duration-500 ease-out ${
+                isVisible
+                  ? "translate-y-0 scale-100 opacity-100"
+                  : "translate-y-8 scale-95 opacity-0"
+              }`}
+            >
+              {/* Close Button */}
+              <button
+                onClick={handleClose}
+                className="absolute -right-3 -top-3 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white text-black shadow-lg transition-all duration-200 hover:scale-110 hover:bg-gray-100 active:scale-95"
+                aria-label="Close"
+              >
+                <X size={20} />
+              </button>
+
+              {/* Image */}
+              <img
+                src={AllImages.popup}
+                alt="Popup"
+                className="max-h-[85vh] w-full rounded-2xl object-contain shadow-2xl"
+              />
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
@@ -458,7 +453,7 @@ function CaregiverPreview() {
                     {provider.postalCode ? ` ${provider.postalCode}` : ""}
                   </p>
                   <span className="mt-3 inline-flex rounded-full bg-primary px-3 py-1 font-mono text-[10px] uppercase tracking-wider">
-                    CHF {provider.hourlyRate ?? 0} / hr
+                    CHF {provider.hourlyRate ?? 0} {t("common.perHr")}
                   </span>
                 </div>
               </>
@@ -727,28 +722,20 @@ function FAQ() {
   const { t } = useI18n();
   const items = [
     {
-      q: "How are providers verified?",
-      a: "Every provider on Weligo undergoes a strict vetting process. This includes identity verification, a criminal background check (strafregisterauszug), a review of certifications, and a personal interview. We only accept about 15% of applicants to ensure highest quality care.",
+      q: t("home.faq1Q"),
+      a: t("home.faq1A"),
     },
     {
-      q: "How do payments work?",
-      a: "Secure payments via TWINT, credit card or invoice. Caregivers are paid automatically each week.",
+      q: t("home.faq2Q"),
+      a: t("home.faq2A"),
     },
     {
-      q: "Are the services insured?",
-      a: "Yes, all bookings are covered by Weligo's liability insurance.",
-    },
-    // {
-    //   q: "Do I need to declare AHV / social security?",
-    //   a: "Weligo handles all the paperwork for compliant Swiss employment.",
-    // },
-    {
-      q: "What if I need to cancel?",
-      a: "Free cancellation up to 24h before the booking.",
+      q: t("home.faq3Q"),
+      a: t("home.faq3A"),
     },
     {
-      q: "Is Weligo available across all of Switzerland?",
-      a: "We launch in Zürich, Genève, Basel, Bern and expand quickly.",
+      q: t("home.faq4Q"),
+      a: t("home.faq4A"),
     },
   ];
   const [open, setOpen] = useState<number | null>(0);

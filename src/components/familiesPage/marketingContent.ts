@@ -232,55 +232,55 @@ export function familiesContent(lang: Lang) {
         de: "SICHERHEIT & VERIFIZIERUNG",
         en: "SAFETY & VERIFICATION",
       }),
-      titleA: pick(lang, { de: "Vier Prüfungen.", en: "Four checks." }),
-      titleB: pick(lang, { de: "Keine Abkürzungen.", en: "No shortcuts." }),
+      titleA: pick(lang, { de: "Sorgfältig geprüft.", en: "Carefully checked." }),
+      titleB: pick(lang, { de: "Volle Transparenz.", en: "Full transparency." }),
       sub: pick(lang, {
-        de: "Bevor ein Anbieter in Ihren Suchergebnissen erscheint, durchläuft er einen vierstufigen Verifizierungsprozess. Wir prüfen. Dann prüfen wir nochmal.",
-        en: "Before any provider can appear in your search results, they complete a four-step verification process. We check. Then we check again.",
+        de: "Bevor Dienstleistende auf Weligo aktiv werden, durchlaufen sie unseren Prüfprozess für Identität und Qualifikationen.",
+        en: "Before providers become active on Weligo, they undergo our verification process for identity and qualifications.",
       }),
       items: [
         {
           title: pick(lang, { de: "Identitätsprüfung", en: "Identity check" }),
           body: pick(lang, {
-            de: "Gültiger Schweizer Ausweis, Aufenthaltsbewilligung oder Pass — manuell von unserem Trust-Team innerhalb von 48 Stunden verifiziert.",
-            en: "Valid Swiss ID, residence permit or passport — verified manually by our trust team within 48 hours.",
+            de: "Gültiger amtlicher Ausweis, Aufenthaltsbewilligung oder Pass — sorgfältig von unserem Team überprüft.",
+            en: "Valid official ID, residence permit or passport — carefully verified by our team.",
           }),
         },
         {
           title: pick(lang, {
-            de: "Strafregisterprüfung",
-            en: "Criminal record check",
+            de: "Qualifikationsprüfung",
+            en: "Qualification review",
           }),
           body: pick(lang, {
-            de: "Strafregisterauszug erforderlich für alle Anbieter in Kinder- und Seniorenbetreuung. Alle 12 Monate erneuert.",
-            en: "Strafregisterauszug required for all child-facing and senior care providers. Renewed every 12 months.",
+            de: "Sorgfältige Prüfung relevanter Nachweise, Diplome und Zertifikate je nach Tätigkeitsbereich.",
+            en: "Careful review of relevant documents, diplomas, and certifications depending on the service area.",
           }),
         },
         {
           title: pick(lang, {
-            de: "Erste-Hilfe-Zertifikat",
-            en: "First aid certificate",
+            de: "Transparente Profile",
+            en: "Transparent profiles",
           }),
           body: pick(lang, {
-            de: "Aktuelles Schweizer-Rotes-Kreuz-Erste-Hilfe-Zertifikat für alle Kinder- und Seniorenbetreuer. Ablaufdatum im Profil sichtbar.",
-            en: "Current Swiss Red Cross first aid certification for all childcare and senior care providers. Expiry date shown on profile.",
+            de: "Geprüfte Qualifikationen, Erfahrungen und hinterlegte Nachweise sind direkt im Profil für Familien einsehbar.",
+            en: "Verified credentials, experience, and uploaded certificates are clearly visible directly on profiles for families.",
           }),
         },
         {
-          title: pick(lang, { de: "Referenzprüfung", en: "Reference check" }),
+          title: pick(lang, { de: "Echte Bewertungen", en: "Verified reviews" }),
           body: pick(lang, {
-            de: "Zwei berufliche oder persönliche Referenzen werden direkt von unserem Team kontaktiert. Alle Weligo-Bewertungen stammen nur aus verifizierten Buchungen.",
-            en: "Two professional or character references contacted directly by our team. All Weligo reviews are verified bookings only.",
+            de: "Authentische Bewertungen und Erfahrungsberichte ausschliesslich von Familien nach durchgeführten Einsätzen.",
+            en: "Authentic reviews and ratings exclusively from families following completed bookings.",
           }),
         },
       ],
       passRate: pick(lang, {
-        de: "Nur 68 % der Bewerber bestehen unsere Verifizierung.",
-        en: "Only 68% of applicants pass our verification.",
+        de: "Sorgfältige Prüfung für Ihr Vertrauen.",
+        en: "Careful verification for your peace of mind.",
       }),
       passSub: pick(lang, {
-        de: "Wir lehnen 32 % der Anbieterbewerbungen ab. Das ist der Standard.",
-        en: "We reject 32% of provider applications. That's the standard.",
+        de: "Geprüfte Profile, verifizierte Nachweise und echte Bewertungen von Schweizer Familien.",
+        en: "Verified profiles, checked credentials, and genuine reviews from Swiss families.",
       }),
     },
     cta: {
@@ -542,27 +542,27 @@ export function providersContent(lang: Lang) {
           }),
         },
         {
-          title: pick(lang, { de: "Strafregister", en: "Criminal record" }),
+          title: pick(lang, { de: "Nachweise & Zertifikate", en: "Credentials & certificates" }),
           body: pick(lang, {
-            de: "Aktueller Strafregisterauszug.",
-            en: "Recent Strafregisterauszug.",
+            de: "Relevante Diplome, Nachweise oder Zertifikate für Ihre angebotenen Dienstleistungen.",
+            en: "Relevant diplomas, credentials, or certificates for the services you offer.",
           }),
         },
         {
           title: pick(lang, {
-            de: "Erste-Hilfe-Zertifikat",
-            en: "First aid certificate",
+            de: "Profil- und Kontaktdaten",
+            en: "Profile & contact details",
           }),
           body: pick(lang, {
-            de: "Gültiges Zertifikat (für Kinderbetreuung).",
-            en: "Valid certification (for child care).",
+            de: "Vollständige Angaben zu Ihrer Person, Erfahrung und Verfügbarkeit.",
+            en: "Complete information regarding your background, experience, and availability.",
           }),
         },
         {
-          title: pick(lang, { de: "Referenzen", en: "References" }),
+          title: pick(lang, { de: "Erfahrung & Referenzen", en: "Experience & references" }),
           body: pick(lang, {
-            de: "Charakter-Referenzen, die wir kontaktieren können.",
-            en: "Character references we can contact.",
+            de: "Aussagekräftige Angaben zu Ihren bisherigen Tätigkeiten und Erfahrungen.",
+            en: "Meaningful details about your past work and caregiving experience.",
           }),
         },
       ],
